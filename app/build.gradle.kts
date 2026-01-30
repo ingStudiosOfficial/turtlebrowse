@@ -23,6 +23,8 @@ dependencies {
 
     // This dependency is used by the application.
     implementation(libs.guava)
+
+    implementation("me.friwi:jcefmaven:141.0.10")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -34,7 +36,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "org.example.App"
+    mainClass = "ingstudios.turtlebrowse.Main"
 }
 
 tasks.named<Test>("test") {
