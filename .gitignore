@@ -6,7 +6,6 @@ build
 
 # Ignore Kotlin plugin data
 .kotlin
-<<<<<<< HEAD
 
 # Igonore jcef files
 app/jcef-bundle/
@@ -17,5 +16,3 @@ app/jcef-bundle/
 app/bin/
 
 .vscode
-=======
->>>>>>> 0df6a9ca2319db716bf36a1c3e302d105e68b353
