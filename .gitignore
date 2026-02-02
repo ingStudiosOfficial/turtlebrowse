@@ -1,0 +1,18 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+# Ignore Kotlin plugin data
+.kotlin
+
+# Igonore jcef files
+app/jcef-bundle/
+*.pak
+*.bin
+*.dll
+
+app/bin/
+
+.vscode
