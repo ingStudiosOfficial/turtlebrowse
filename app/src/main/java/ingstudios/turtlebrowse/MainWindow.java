@@ -20,6 +20,7 @@ import org.cef.CefSettings;
 import org.cef.OS;
 import org.cef.CefApp.CefAppState;
 import org.cef.browser.CefBrowser;
+import org.cef.browser.CefFrame;
 import org.cef.browser.CefMessageRouter;
 import org.cef.handler.CefDisplayHandlerAdapter;
 import org.cef.handler.CefFocusHandlerAdapter;
@@ -45,7 +46,7 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/logo_full_trans.png"));
+        final Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/logo_full_trans.png"));
         setIconImage(icon);
 
         root = new JPanel(new BorderLayout());
@@ -93,6 +94,20 @@ public class MainWindow extends JFrame {
             }
         });
 
+        // Address bar
+        final AddressBar addressBar = new AddressBar(cefClient, cefBrowser, START_URL, browserFocused);
+
+        // Tab bar
+        final TabBar tabBar = new TabBar();
+
+        // Top panel (address + tab)
+        final JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(tabBar, BorderLayout.NORTH);
+        topPanel.add(addressBar, BorderLayout.SOUTH);
+
+        root.add(topPanel, BorderLayout.NORTH);
+        root.add(browserUi, BorderLayout.CENTER);
+
         cefClient.addDisplayHandler(new CefDisplayHandlerAdapter() {
             @Override
             public void onTitleChange(CefBrowser browser, String title) {
@@ -100,13 +115,14 @@ public class MainWindow extends JFrame {
                     updateWindowTitle(title);
                 });
             }
+
+            @Override
+            public void onAddressChange(CefBrowser cefBrowser, CefFrame frame, String url) {
+                System.out.print("Navigated to:");
+                System.out.println(url);
+                addressBar.updateUrl(url);
+            }
         });
-
-        // Address bar
-        final AddressBar addressBar = new AddressBar(cefClient, cefBrowser, START_URL, browserFocused);
-
-        root.add(addressBar, BorderLayout.NORTH);
-        root.add(browserUi, BorderLayout.CENTER);
 
         addWindowListener(new WindowAdapter() {
             @Override
