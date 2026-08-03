@@ -18,7 +18,7 @@ public class TurtlebrowseFocusHandler extends CefFocusHandlerAdapter {
 
 	@Override
 	public void onGotFocus(CefBrowser browser) {
-		System.out.println("Browser got focus");
+		System.out.println("Browser got focus.");
 
 		if (parent.isUiFocused.get()) {
 			browser.setFocus(false);
