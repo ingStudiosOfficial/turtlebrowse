@@ -15,6 +15,7 @@ import org.kordamp.ikonli.material2.Material2OutlinedAL;
 import com.jfoenix.controls.JFXButton;
 
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.embed.swing.JFXPanel;
@@ -31,6 +32,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Paint;
+import javafx.util.Duration;
 
 public class TabBar extends JPanel {
 	private final Map<CefBrowser, HBox> tabMap = new HashMap<>();
@@ -126,6 +128,11 @@ public class TabBar extends JPanel {
 				});
 		});
 
+		tabBox.setTranslateY(100);
+		final TranslateTransition boxTransition = new TranslateTransition(Duration.seconds(0.3), tabBox);
+		boxTransition.setFromY(100);
+		boxTransition.setToY(0);
+
 		closeButton.prefHeightProperty().bind(tabBox.heightProperty().multiply(0.8));
 		closeButton.setOnMouseEntered(event -> {
 			closeButton.setCursor(Cursor.HAND);
@@ -145,10 +152,18 @@ public class TabBar extends JPanel {
 		tabMap.put(browser, tabBox);
 
 		root.getChildren().add(Math.max(0, root.getChildren().size() - 1), tabBox);
+
+		boxTransition.play();
 	}
 
 	private void closeTab(HBox tabBox, CefBrowser browser) {
-		root.getChildren().remove(tabBox);
+		final TranslateTransition boxTransition = new TranslateTransition(Duration.seconds(0.3), tabBox);
+		boxTransition.setFromY(0);
+		boxTransition.setToY(100);
+		boxTransition.setOnFinished(e -> {
+			root.getChildren().remove(tabBox);
+		});
+		boxTransition.play();
 
 		SwingUtilities.invokeLater(() -> {
 			tabMap.remove(browser);
