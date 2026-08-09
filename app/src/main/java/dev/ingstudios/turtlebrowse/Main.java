@@ -260,20 +260,27 @@ public class Main {
 
 		final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
 		final String classpath = System.getProperty("java.class.path");
+		final String appPath = System.getProperty("jpackage.app-path");
 
-		List<String> command = new ArrayList<>();
-		command.add(javaBin);
+		final List<String> command = new ArrayList<>();
 
-		final RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
-		List<String> vmArguments = runtimeMxBean.getInputArguments();
-		for (String arg : vmArguments) {
-			if (!arg.contains("-agentlib") && !arg.contains("-javaagent")) {
-				command.add(arg);
+		if (appPath != null && !appPath.isEmpty()) {
+			command.add(appPath);
+		} else {
+			command.add(javaBin);
+
+			final RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+			final List<String> vmArguments = runtimeMxBean.getInputArguments();
+			for (String arg : vmArguments) {
+				if (!arg.contains("-agentlib") && !arg.contains("-javaagent")) {
+					command.add(arg);
+				}
 			}
+
+			command.add("-cp");
+			command.add(classpath);
 		}
 
-		command.add("-cp");
-		command.add(classpath);
 		command.add("dev.ingstudios.turtlebrowse.Main");
 		command.add("--open-picker");
 		command.add("true");
