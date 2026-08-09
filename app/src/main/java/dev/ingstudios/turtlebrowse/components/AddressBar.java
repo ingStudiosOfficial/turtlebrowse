@@ -292,6 +292,8 @@ public class AddressBar extends JPanel {
 					}
 				} else if (event.getCode() == KeyCode.ESCAPE) {
 					autoSuggestPopup.hide();
+				} else if (event.isControlDown() && event.getCode() == KeyCode.A) {
+					addressField.selectAll();
 				}
 			});
 

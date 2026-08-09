@@ -65,6 +65,7 @@ dependencies {
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(25)
+        vendor.set(JvmVendorSpec.ADOPTIUM)
     }
 }
 
@@ -117,6 +118,25 @@ application {
 tasks.jpackage {
     verbose = true
 
+    mainJar.set("app-all.jar")
+    mainClass.set("dev.ingstudios.turtlebrowse.Main")
+
+    // IMPORTANT: WHEN INSTALLING A NEW DEPENDENCY MAKE SURE TO ADD THIS TO THIS LIST OF MODULES
+    addModules = listOf(
+        // Core & UI
+        "java.base",
+        "java.desktop",
+        "java.logging",
+        "java.sql",
+        "java.naming",
+        "java.management",
+        "java.xml",
+        "java.net.http",
+        "java.scripting",
+        "jdk.unsupported",
+        "jdk.incubator.vector"
+    )
+
     jLinkOptions = listOf(
         "--bind-services",
         "--strip-native-commands",
@@ -131,7 +151,7 @@ tasks.jpackage {
     
     appName = "Turtlebrowse"
     vendor = "(ing) Studios"
-    appVersion = "1.4.2"
+    appVersion = "1.4.3"
     copyright = "2026 (ing) Studios and Ethan Lee"
 
     input = layout.buildDirectory.dir("libs")

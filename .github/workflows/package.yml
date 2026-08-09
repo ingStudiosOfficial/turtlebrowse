@@ -22,6 +22,17 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
 
+      - name: Install Linux Packaging Tools & JMODs
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          # Install jmods package for Java 25 along with packaging tools
+          sudo apt-get install -y openjdk-25-jmods fakeroot dpkg devscripts
+
+          if [ "${{ matrix.os-name }}" = "Fedora" ]; then
+            sudo apt-get install -y rpm
+          fi
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
@@ -103,6 +114,8 @@ jobs:
 
       - name: Run jpackage via Gradle
         shell: bash
+        env:
+          JAVA_HOME: ${{ env.JAVA_HOME }}
         run: |
           ./gradlew jpackage \
             -PtargetOs="${{ matrix.os-name }}" \
