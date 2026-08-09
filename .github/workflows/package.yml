@@ -26,7 +26,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build Shadow JAR
-        run: ./gradlew shadowJar
+        run: ./gradlew shadowJar -Porg.gradle.java.installations.auto-detect=false \
+             -Porg.gradle.java.installations.fromEnv=JAVA_HOME \
 
       - name: Upload Shadow JAR Artifact
         uses: actions/upload-artifact@v4
@@ -92,6 +93,11 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
 
+      - name: Debug JDK
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          ls "$JAVA_HOME/jmods" | head
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
@@ -103,10 +109,10 @@ jobs:
 
       - name: Run jpackage via Gradle
         shell: bash
-        env:
-          JAVA_HOME: ${{ env.JAVA_HOME }}
         run: |
           ./gradlew jpackage \
+            -Porg.gradle.java.installations.auto-detect=false \
+            -Porg.gradle.java.installations.fromEnv=JAVA_HOME \
             -PtargetOs="${{ matrix.os-name }}" \
             -PtargetArch="${{ matrix.arch }}" \
             -PtargetPkgType="${{ matrix.pkg-type }}" --info

@@ -123,7 +123,6 @@ tasks.jpackage {
 
     // IMPORTANT: WHEN INSTALLING A NEW DEPENDENCY MAKE SURE TO ADD THIS TO THIS LIST OF MODULES
     addModules = listOf(
-        // Core & UI
         "java.base",
         "java.desktop",
         "java.logging",
