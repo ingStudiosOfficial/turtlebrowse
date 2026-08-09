@@ -117,7 +117,13 @@ application {
 tasks.jpackage {
     verbose = true
 
-    runtimeImage = file(System.getProperty("java.home"))
+    jLinkOptions = listOf(
+        "--bind-services",
+        "--strip-native-commands",
+        "--strip-debug",
+        "--no-man-pages",
+        "--no-header-files"
+    )
 
     javaLauncher = javaToolchains.launcherFor {
         languageVersion = JavaLanguageVersion.of(25)
@@ -125,7 +131,7 @@ tasks.jpackage {
     
     appName = "Turtlebrowse"
     vendor = "(ing) Studios"
-    appVersion = "1.4.0"
+    appVersion = "1.4.1"
     copyright = "2026 (ing) Studios and Ethan Lee"
 
     input = layout.buildDirectory.dir("libs")
