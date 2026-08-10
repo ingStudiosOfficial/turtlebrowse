@@ -26,4 +26,10 @@ export default defineNuxtConfig({
 	build: {
 		transpile: ['@m3e/icons'],
 	},
+
+	nitro: {
+		experimental: {
+			wasm: true,
+		},
+	},
 });
