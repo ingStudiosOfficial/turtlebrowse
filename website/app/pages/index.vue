@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useSeoMeta({
-	title: 'Turtlebrowse - The Open Source Web Browser Built for the Agentic Era',
+	title: 'Home',
 	description:
 		'Download Turtlebrowse, the Material You themed JVM based agentic browser made with the Java Chromium Embedded Framework. Turtlebrowse is powered by the latest on device Gemma 4 models and is built by (ing) Studios.',
 	ogType: 'website',

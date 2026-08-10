@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useSeoMeta({
-	title: 'Download | Turtlebrowse - The Open Source Web Browser Built for the Agentic Era',
+	title: 'Download',
 	description:
 		'Download Turtlebrowse for Debian Linux, Ubuntu Linux, Fedora Linux, openSUSE Linux, Windows 10, Windows 11, and macOS. Built by (ing) Studios.',
 	ogType: 'website',
