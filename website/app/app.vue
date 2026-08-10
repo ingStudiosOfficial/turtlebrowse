@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import '@m3e/icons/outlined';
-</script>
+<script setup lang="ts"></script>
 
 <template>
 	<div>

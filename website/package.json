@@ -12,10 +12,9 @@
 		"format:check": "oxfmt --check ."
 	},
 	"dependencies": {
-		"@fortawesome/fontawesome-free": "^7.3.1",
-		"@m3e/icons": "^1.0.4",
 		"@m3e/web": "^2.5.6",
 		"@nuxt/eslint": "^1.17.0",
+		"@nuxt/icon": "^2.5.0",
 		"@nuxtjs/seo": "^5.3.11",
 		"@takumi-rs/core": "^2.6.1",
 		"@takumi-rs/wasm": "^2.6.1",
@@ -26,6 +25,9 @@
 		"vue-router": "^5.2.0"
 	},
 	"devDependencies": {
+		"@iconify-json/ic": "^1.2.4",
+		"@iconify-json/material-symbols": "^1.2.88",
+		"@iconify-json/mdi": "^1.2.3",
 		"oxfmt": "^0.62.0"
 	},
 	"engines": {

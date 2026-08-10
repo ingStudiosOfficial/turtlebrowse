@@ -2,11 +2,8 @@
 export default defineNuxtConfig({
 	compatibilityDate: '2025-07-15',
 	devtools: { enabled: true },
-	modules: ['@nuxt/eslint', '@nuxtjs/seo'],
+	modules: ['@nuxt/eslint', '@nuxtjs/seo', '@nuxt/icon'],
 	css: ['@/assets/css/main.css'],
-	ogImage: {
-		zeroRuntime: true
-	},
 
 	site: {
 		url: 'https://turtlebrowse.ingstudios.dev',
@@ -17,16 +14,13 @@ export default defineNuxtConfig({
 		head: {
 			link: [
 				{ rel: 'icon', type: 'image/png', href: '/logo_full_trans.png' },
-				{
-					rel: 'stylesheet',
-					type: 'text/css',
-					href: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css',
-				},
 			],
 		},
 	},
 
-	build: {
-		transpile: ['@m3e/icons'],
+	vue: {
+		compilerOptions: {
+			isCustomElement: (tag) => tag.startsWith('m3e-'),
+		},
 	},
 });

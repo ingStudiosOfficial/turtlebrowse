@@ -1,10 +1,4 @@
-<script setup lang="ts">
-import '@m3e/web/list';
-import '@m3e/web/avatar';
-import '@m3e/web/icon';
-import '@m3e/web/button';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-</script>
+<script setup lang="ts"></script>
 
 <template>
 	<div class="oss-section-wrapper">
@@ -15,43 +9,43 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 		<m3e-list class="feat-list">
 			<m3e-list-item>
 				<m3e-avatar slot="leading" class="feat-avtr">
-					<m3e-icon name="code" />
+					<Icon name="material-symbols:code" />
 				</m3e-avatar>
 				<span class="feat-label">Free and open-source</span>
 			</m3e-list-item>
 			<m3e-list-item>
 				<m3e-avatar slot="leading" class="feat-avtr">
-					<i class="fa-brands fa-chrome" />
+					<Icon name="mdi:google-chrome" />
 				</m3e-avatar>
 				<span class="feat-label">Built with the Java CEF framework</span>
 			</m3e-list-item>
 			<m3e-list-item>
 				<m3e-avatar slot="leading" class="feat-avtr">
-					<m3e-icon name="colors" />
+					<Icon name="material-symbols:palette" />
 				</m3e-avatar>
 				<span class="feat-label">Material 3 Expressive user interface</span>
 			</m3e-list-item>
 			<m3e-list-item>
 				<m3e-avatar slot="leading" class="feat-avtr">
-					<m3e-icon name="privacy_tip" />
+					<Icon name="material-symbols:privacy-tip" />
 				</m3e-avatar>
 				<span class="feat-label">Always private</span>
 			</m3e-list-item>
 			<m3e-list-item>
 				<m3e-avatar slot="leading" class="feat-avtr">
-					<m3e-icon name="robot_2" />
+					<Icon name="material-symbols:robot-2" />
 				</m3e-avatar>
 				<span class="feat-label">Opt-in on-device agentic AI features</span>
 			</m3e-list-item>
 			<m3e-list-item>
 				<m3e-avatar slot="leading" class="feat-avtr">
-					<i class="fa-brands fa-discord" />
+					<Icon name="ic:baseline-discord" />
 				</m3e-avatar>
 				<span class="feat-label">Connects to Discord Presence</span>
 			</m3e-list-item>
 		</m3e-list>
 		<m3e-button variant="filled" size="medium" @click="navigateTo('/download')">
-			<m3e-icon slot="icon" name="download" />
+			<Icon slot="icon" name="material-symbols:download" />
 			Download Turtlebrowse
 		</m3e-button>
 	</div>

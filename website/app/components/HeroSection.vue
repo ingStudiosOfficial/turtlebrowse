@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import '@m3e/web/button';
-import '@m3e/web/icon';
-
 function openGithub() {
 	window.open('https://github.com/ingStudiosOfficial/turtlebrowse', '_blank');
 }
@@ -15,11 +12,11 @@ function openGithub() {
 			<h1 class="hero-title">built to be <span class="browser-feat">agentic</span></h1>
 		</div>
 		<m3e-button variant="filled" size="medium" @click="navigateTo('/download')">
-			<m3e-icon slot="icon" name="download" />
+			<Icon slot="icon" name="material-symbols:download" />
 			Download Turtlebrowse
 		</m3e-button>
 		<m3e-button variant="text" size="medium" @click="openGithub()">
-			<i slot="icon" class="devicon-github-original" />
+			<Icon slot="icon" name="mdi:github" />
 			View project on GitHub
 		</m3e-button>
 		<img class="newtab-image" src="/newtab.png" loading="lazy" />

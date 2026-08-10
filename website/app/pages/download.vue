@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import '@m3e/web/list';
-import '@m3e/web/card';
-import '@m3e/web/avatar';
-
 useSeoMeta({
 	title: 'Download | Turtlebrowse - The Open Source Web Browser Built for the Agentic Era',
 	description:
@@ -33,37 +29,37 @@ function download(url: string) {
 			<m3e-action-list slot="content" variant="segmented">
 				<m3e-list-action @click="download('debian_amd64.deb')">
 					<m3e-avatar slot="leading">
-						<i class="devicon-debian-plain" />
+						<Icon name="mdi:debian" />
 					</m3e-avatar>
 					Debian/Ubuntu Linux amd64</m3e-list-action
 				>
 				<m3e-list-action @click="download('debian_arm64.deb')">
 					<m3e-avatar slot="leading">
-						<i class="devicon-debian-plain" />
+						<Icon name="mdi:debian" />
 					</m3e-avatar>
 					Debian/Ubuntu Linux arm64
 				</m3e-list-action>
 				<m3e-list-action @click="download('fedora_amd64.rpm')">
 					<m3e-avatar slot="leading">
-						<i class="devicon-fedora-plain" />
+						<Icon name="mdi:fedora" />
 					</m3e-avatar>
 					Fedora/openSUSE Linux amd64
 				</m3e-list-action>
 				<m3e-list-action @click="download('fedora_arm64.rpm')">
 					<m3e-avatar slot="leading">
-						<i class="devicon-fedora-plain" />
+						<Icon name="mdi:fedora" />
 					</m3e-avatar>
 					Fedora/openSUSE Linux arm64
 				</m3e-list-action>
 				<m3e-list-action @click="download('windows_amd64.exe')">
 					<m3e-avatar slot="leading">
-						<i class="devicon-windows11-original" />
+						<Icon name="mdi:microsoft" />
 					</m3e-avatar>
 					Windows 10/11 amd64
 				</m3e-list-action>
 				<m3e-list-action @click="download('macos_arm64.pkg')">
 					<m3e-avatar slot="leading">
-						<i class="devicon-apple-original" />
+						<Icon name="mdi:apple" />
 					</m3e-avatar>
 					macOS arm64
 				</m3e-list-action>
