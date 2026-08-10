@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
 	compatibilityDate: '2025-07-15',
 	devtools: { enabled: true },
-	modules: ['@nuxt/content', '@nuxt/eslint', '@nuxtjs/seo'],
+	modules: ['@nuxt/eslint', '@nuxtjs/seo'],
 	css: ['@/assets/css/main.css'],
 	ogImage: {
 		zeroRuntime: true
