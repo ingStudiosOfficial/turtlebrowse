@@ -9,8 +9,9 @@ useSeoMeta({
 	ogDescription:
 		'Turtlebrowse is a Material You themed JVM based agentic browser made with the Java Chromium Embedded Framework.',
 	ogImage: 'https://turtlebrowse.ingstudios.dev/logo_full_trans.png',
-	ogImageWidth: 400,
-	ogImageHeight: 400,
+	ogImageWidth: 500,
+	ogImageHeight: 500,
+	ogSiteName: 'Turtlebrowse',
 });
 
 definePageMeta({

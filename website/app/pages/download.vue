@@ -9,8 +9,9 @@ useSeoMeta({
 	ogDescription:
 		'Download Turtlebrowse for Debian Linux, Ubuntu Linux, Fedora Linux, openSUSE Linux, Windows 10, Windows 11, and macOS.',
 	ogImage: 'https://turtlebrowse.ingstudios.dev/logo_full_trans.png',
-	ogImageWidth: 400,
-	ogImageHeight: 400,
+	ogImageWidth: 500,
+	ogImageHeight: 500,
+	ogSiteName: 'Turtlebrowse',
 });
 
 const RELEASE_VERSION = 'latest';
