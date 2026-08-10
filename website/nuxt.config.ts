@@ -12,9 +12,7 @@ export default defineNuxtConfig({
 
 	app: {
 		head: {
-			link: [
-				{ rel: 'icon', type: 'image/png', href: '/logo_full_trans.png' },
-			],
+			link: [{ rel: 'icon', type: 'image/png', href: '/logo_full_trans.png' }],
 		},
 	},
 
@@ -22,5 +20,10 @@ export default defineNuxtConfig({
 		compilerOptions: {
 			isCustomElement: (tag) => tag.startsWith('m3e-'),
 		},
+	},
+
+	routeRules: {
+		'/': { prerender: true },
+		'/download': { prerender: true },
 	},
 });

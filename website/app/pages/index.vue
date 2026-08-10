@@ -12,6 +12,29 @@ useSeoMeta({
 	ogImageWidth: 400,
 	ogImageHeight: 400,
 });
+
+definePageMeta({
+    sitemap: {
+        images: [
+			{
+				loc: '/logo_full_trans.png',
+				title: 'Turtlebrowse Logo',
+			},
+            {
+                loc: '/newtab.png',
+                title: 'Turtlebrowse Preview',
+            },
+			{
+                loc: '/ai_sidebar.png',
+                title: 'Turtlebrowse AI Sidebar',
+            },
+			{
+				loc: '/agentic.mp4',
+				title: 'Turtlebrowse Agent',
+			},
+        ],
+    },
+})
 </script>
 
 <template>
