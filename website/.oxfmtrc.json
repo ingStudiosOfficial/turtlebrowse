@@ -1,6 +1,10 @@
 {
-  "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "semi": true,
-  "singleQuote": true,
-  "vueIndentScriptAndStyle": false,
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"semi": true,
+	"singleQuote": true,
+	"vueIndentScriptAndStyle": false,
+	"useTabs": true,
+	"tabWidth": 4,
+	"htmlVoidSelfClosing": true,
+	"ignorePatterns": [".nuxt", ".output", "node_modules", "dist"]
 }
