@@ -4,6 +4,9 @@ export default defineNuxtConfig({
 	devtools: { enabled: true },
 	modules: ['@nuxt/content', '@nuxt/eslint', '@nuxtjs/seo'],
 	css: ['@/assets/css/main.css'],
+	ogImage: {
+		zeroRuntime: true
+	},
 
 	site: {
 		url: 'https://turtlebrowse.ingstudios.dev',
@@ -25,11 +28,5 @@ export default defineNuxtConfig({
 
 	build: {
 		transpile: ['@m3e/icons'],
-	},
-
-	nitro: {
-		experimental: {
-			wasm: true,
-		},
 	},
 });
