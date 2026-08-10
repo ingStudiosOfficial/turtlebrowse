@@ -19,6 +19,7 @@
 		"@nuxt/eslint": "^1.17.0",
 		"@nuxtjs/seo": "^5.3.11",
 		"@takumi-rs/core": "^2.6.1",
+		"@takumi-rs/wasm": "^2.6.1",
 		"better-sqlite3": "^12.11.1",
 		"eslint": "^10.8.1",
 		"nuxt": "^4.5.2",
