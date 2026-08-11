@@ -34,6 +34,7 @@ import dev.ingstudios.turtlebrowse.components.AddressBar;
 import dev.ingstudios.turtlebrowse.components.TabBar;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase;
 import dev.ingstudios.turtlebrowse.db.MainDatabase.ProfileStructureWithId;
+import dev.ingstudios.turtlebrowse.db.ProfileDatabase.AISettings;
 import dev.ingstudios.turtlebrowse.handlers.CefKeyboardHandler;
 import dev.ingstudios.turtlebrowse.handlers.SwingKeyboardHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseContextMenuHandler;
@@ -84,6 +85,7 @@ public class MainWindow extends JFrame {
 	private final ProfileDatabase profileDatabase;
 	public String defaultSearchProvider = SearchURLTemplates.searchTemplates.get("brave");
 	public boolean enableDiscordPresence = false;
+	public AISettings aiSettings = new AISettings(false, "gemma4:e2b");
 
 	public MainWindow(ProfileStructureWithId profile) {
 		super("Turtlebrowse");
@@ -96,6 +98,7 @@ public class MainWindow extends JFrame {
 
 		defaultSearchProvider = SearchURLTemplates.searchTemplates.get(profileDatabase.getDefaultSearchEngine());
 		enableDiscordPresence = profileDatabase.getDiscordPresenceSetting();
+		aiSettings = profileDatabase.getAISettings();
 
 		windowId = "%s_main_window".formatted(profile.getIdAsString());
 		WindowsManager.getInstance()
@@ -397,6 +400,20 @@ public class MainWindow extends JFrame {
 					DiscordPresenceManager.getInstance().disableDiscordPresence();
 				}
 				profileDatabase.setDiscordPresenceSetting(discordSettingToSet);
+				return "\"ok\"";
+			}
+
+			case "GET_AI_SETTINGS": {
+				final AISettings aiSettings = profileDatabase.getAISettings();
+				return gson.toJson(aiSettings);
+			}
+
+			case "SET_AI_SETTINGS": {
+				final boolean enabled = params.get("enabled").getAsBoolean();
+				final String model = params.get("model").getAsString();
+				final AISettings settings = new AISettings(enabled, model);
+				aiSettings = settings;
+				profileDatabase.setAISettings(settings);
 				return "\"ok\"";
 			}
 

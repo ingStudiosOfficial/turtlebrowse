@@ -77,6 +77,7 @@ public class ProfileDatabase {
 		}
 
 		searchEngineDocument.put("engine", searchEngine);
+
 		settingsCollection.update(searchEngineDocument);
 	}
 
@@ -109,6 +110,49 @@ public class ProfileDatabase {
 		}
 
 		discordDocument.put("enabled", enabled);
+
 		settingsCollection.update(discordDocument);
+	}
+
+	public AISettings getAISettings() {
+		final Document aiDocument = settingsCollection.find(where("setting").eq("aiFeatures"))
+				.firstOrNull();
+
+		if (aiDocument == null) {
+			final Document newAIDocument = Document.createDocument().put("setting", "aiFeatures")
+					.put("enabled", false)
+					.put("model", "gemma4:e2b");
+			settingsCollection.insert(newAIDocument);
+			return new AISettings(false, "gemma4:e2b");
+		}
+
+		final boolean enabled = Boolean.valueOf(aiDocument.get("enabled").toString());
+		final String model = aiDocument.get("model").toString();
+
+		return new AISettings(enabled, model);
+	}
+
+	public void setAISettings(AISettings settings) {
+		System.out.printf("Setting AI settings: %s\n", settings.toString());
+
+		final Document aiDocument = settingsCollection.find(where("setting").eq("aiFeatures"))
+				.firstOrNull();
+
+		if (aiDocument == null) {
+			System.err.println("AI document is null.");
+			final Document newAIDocument = Document.createDocument().put("setting", "aiFeatures")
+					.put("enabled", settings.enabled())
+					.put("model", settings.model());
+			settingsCollection.insert(newAIDocument);
+			return;
+		}
+
+		aiDocument.put("enabled", settings.enabled());
+		aiDocument.put("model", settings.model());
+
+		settingsCollection.update(aiDocument);
+	}
+
+	public record AISettings(boolean enabled, String model) {
 	}
 }

@@ -1,3 +1,4 @@
+import type { AISettings } from "@/interfaces/AISettings";
 import type { SearchEngine } from "@/types/SearchEngine";
 
 export async function fetchFromJava(request: string, params?: Record<string, string>): Promise<string | void> {
@@ -77,5 +78,35 @@ export async function setDiscordPresenceSetting(enabled: boolean) {
 		await fetchFromJava('SET_DISCORD_SETTING', { enabled: enabled.toString() });
 	} catch (error) {
 		console.error('Failed to set Discord setting:', error);
+	}
+}
+
+export async function getAISettings(): Promise<AISettings> {
+	try {
+		const settingsString = await fetchFromJava('GET_AI_SETTINGS') as string | undefined;
+		if (!settingsString) {
+			return {
+				enabled: false,
+				model: 'gemma4:e2b',
+			};
+		}
+
+		const settings = JSON.parse(settingsString);
+
+		return settings;
+	} catch (error) {
+		console.error('Error while getting AI settings:', error);
+		return {
+			enabled: false,
+			model: 'gemma4:e2b',
+		};
+	}
+}
+
+export async function setAISettings(settings: AISettings) {
+	try {
+		await fetchFromJava('SET_AI_SETTINGS', { enabled: settings.enabled.toString(), model: settings.model });
+	} catch (error) {
+		console.error('Failed to set AI setting:', error);
 	}
 }

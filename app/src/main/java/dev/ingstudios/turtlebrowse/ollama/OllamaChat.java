@@ -43,7 +43,7 @@ public class OllamaChat {
 
 			final List<Model> models = ollama.listModels();
 
-			final String chatModel = "gemma4:e2b";
+			final String chatModel = parent.aiSettings.model();
 
 			final List<String> modelNames = new ArrayList<>();
 			models.forEach(model -> {

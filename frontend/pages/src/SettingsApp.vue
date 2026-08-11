@@ -6,6 +6,7 @@ import '@m3e/web/icon';
 import { useDialog } from './composables/dialog';
 import PrivacyDialog from './components/settings/PrivacyDialog.vue';
 import SearchEnginesDialog from './components/settings/SearchEnginesDialog.vue';
+import AIDialog from './components/settings/AIDialog.vue';
 
 const { showDialog } = useDialog();
 </script>
@@ -27,11 +28,18 @@ const { showDialog } = useDialog();
 					</m3e-avatar>
 					<span class="settings-text">Search engines</span>
 				</m3e-list-action>
+				<m3e-list-action @click="showDialog('ai')">
+					<m3e-avatar slot="leading">
+						<m3e-icon optical-size="30" weight="600" name="robot_2"></m3e-icon>
+					</m3e-avatar>
+					<span class="settings-text">AI integrations</span>
+				</m3e-list-action>
 			</m3e-action-list>
 		</m3e-card>
 
 		<PrivacyDialog></PrivacyDialog>
 		<SearchEnginesDialog></SearchEnginesDialog>
+		<AIDialog></AIDialog>
 	</div>
 </template>
 
