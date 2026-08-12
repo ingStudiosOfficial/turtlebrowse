@@ -3,6 +3,11 @@ import { getUserName, searchWeb } from '@/utils/java_bridge';
 import { onMounted, ref } from 'vue';
 import '@m3e/web/form-field';
 import '@m3e/web/icon';
+import '@m3e/web/icon-button';
+import NewtabSettingsDialog from './components/newtab/NewtabSettingsDialog.vue';
+import { useDialog } from './composables/dialog';
+
+const { showDialog } = useDialog();
 
 const userName = ref<string>('');
 const searchQuery = ref<string>('');
@@ -31,6 +36,10 @@ onMounted(async () => {
 			<m3e-icon slot="prefix" name="search"></m3e-icon>
 			<label slot="hint">{{ errorMessage }}</label>
 		</m3e-form-field>
+		<m3e-icon-button class="settings-btn" @click="showDialog('ns')">
+			<m3e-icon name="settings"></m3e-icon>
+		</m3e-icon-button>
+		<NewtabSettingsDialog></NewtabSettingsDialog>
 	</div>
 </template>
 
@@ -48,5 +57,11 @@ onMounted(async () => {
 
 .search-bar {
 	width: 50%;
+}
+
+.settings-btn {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
 }
 </style>

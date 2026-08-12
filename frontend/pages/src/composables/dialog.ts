@@ -4,9 +4,10 @@ import { ref } from "vue";
 const privacyDialog = ref<M3eDialogElement | null>(null);
 const searchEnginesDialog = ref<M3eDialogElement | null>(null);
 const aiDialog = ref<M3eDialogElement | null>(null);
+const newtabSettingsDialog = ref<M3eDialogElement | null>(null);
 
 export function useDialog() {
-	function showDialog(dialog: 'privacy' | 'search' | 'ai') {
+	function showDialog(dialog: 'privacy' | 'search' | 'ai' | 'ns') {
 		console.log('Showing dialog:', dialog);
 
 		switch (dialog) {
@@ -22,8 +23,12 @@ export function useDialog() {
 				aiDialog.value?.show();
 				break;
 			}
+			case 'ns': {
+				newtabSettingsDialog.value?.show();
+				break;
+			}
 		}
 	}
 
-	return { privacyDialog, searchEnginesDialog, aiDialog, showDialog };
+	return { privacyDialog, searchEnginesDialog, aiDialog, newtabSettingsDialog, showDialog };
 }

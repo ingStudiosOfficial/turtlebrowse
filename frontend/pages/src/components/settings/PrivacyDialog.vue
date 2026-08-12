@@ -29,7 +29,7 @@ onMounted(async () => {
 </script>
 
 <template>
-	<m3e-dialog ref="dialog">
+	<m3e-dialog ref="dialog" dismissible>
 		<span slot="header">Privacy & security</span>
 		<div class="privacy-dialog">
 			<div class="toggle-setting">

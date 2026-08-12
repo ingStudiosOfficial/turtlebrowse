@@ -35,7 +35,7 @@ onMounted(async () => {
 </script>
 
 <template>
-	<m3e-dialog ref="dialog">
+	<m3e-dialog ref="dialog" dismissible>
 		<span slot="header">AI integrations</span>
 		<div class="ai-dialog">
 			<div class="toggle-setting">
