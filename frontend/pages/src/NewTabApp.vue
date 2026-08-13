@@ -6,6 +6,7 @@ import '@m3e/web/icon';
 import '@m3e/web/icon-button';
 import NewtabSettingsDialog from './components/newtab/NewtabSettingsDialog.vue';
 import { useDialog } from './composables/dialog';
+import '@m3e/web/tooltip';
 
 const { showDialog } = useDialog();
 
@@ -36,9 +37,10 @@ onMounted(async () => {
 			<m3e-icon slot="prefix" name="search"></m3e-icon>
 			<label slot="hint">{{ errorMessage }}</label>
 		</m3e-form-field>
-		<m3e-icon-button class="settings-btn" @click="showDialog('ns')">
+		<m3e-icon-button id="settings-btn" class="settings-btn" @click="showDialog('ns')">
 			<m3e-icon name="settings"></m3e-icon>
 		</m3e-icon-button>
+		<m3e-tooltip for="settings-btn" position="before">Customize New Tab</m3e-tooltip>
 		<NewtabSettingsDialog></NewtabSettingsDialog>
 	</div>
 </template>

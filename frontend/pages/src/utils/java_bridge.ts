@@ -1,4 +1,5 @@
 import type { AISettings } from "@/interfaces/AISettings";
+import type { NewtabSettings } from "@/interfaces/NewtabSettings";
 import type { SearchEngine } from "@/types/SearchEngine";
 
 export async function fetchFromJava(request: string, params?: Record<string, string>): Promise<string | void> {
@@ -108,5 +109,33 @@ export async function setAISettings(settings: AISettings) {
 		await fetchFromJava('SET_AI_SETTINGS', { enabled: settings.enabled.toString(), model: settings.model });
 	} catch (error) {
 		console.error('Failed to set AI setting:', error);
+	}
+}
+
+export async function getNewtabSettings(): Promise<NewtabSettings> {
+	try {
+		const settingsString = await fetchFromJava('GET_NEWTAB_SETTINGS') as string | undefined;
+		if (!settingsString) {
+			return {
+				greetingText: '',
+			};
+		}
+
+		const settings = JSON.parse(settingsString);
+
+		return settings;
+	} catch (error) {
+		console.error('Error while getting New Tab settings:', error);
+		return {
+			greetingText: '',
+		};
+	}
+}
+
+export async function setNewtabSettings(settings: NewtabSettings) {
+	try {
+		await fetchFromJava('SET_NEWTAB_SETTINGS', { greetingText: settings.greetingText });
+	} catch (error) {
+		console.error('Failed to set New Tab setting:', error);
 	}
 }

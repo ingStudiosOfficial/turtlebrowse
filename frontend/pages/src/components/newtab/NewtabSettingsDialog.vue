@@ -27,6 +27,10 @@ function onImageUpload(el: HTMLInputElement) {
 	imageObjectUrl.value = URL.createObjectURL(file);
 }
 
+function clearImage() {
+	imageObjectUrl.value = null;
+}
+
 onMounted(async () => {
 	newtabSettingsDialog.value = dialog.value;
 });
@@ -48,7 +52,7 @@ onMounted(async () => {
 					<m3e-icon slot="icon" name="image"></m3e-icon>
 					Change
 				</m3e-button>
-				<m3e-button variant="outlined">
+				<m3e-button variant="outlined" @click="clearImage()">
 					<m3e-icon slot="icon" name="clear"></m3e-icon>
 					Clear
 				</m3e-button>
@@ -81,8 +85,9 @@ onMounted(async () => {
 
 .uploaded-wallpaper {
 	width: 100%;
-	aspect-ratio: 1 / 1;
+	aspect-ratio: 16 / 9;
 	object-fit: cover;
 	object-position: center;
+	border-radius: 20px;
 }
 </style>
