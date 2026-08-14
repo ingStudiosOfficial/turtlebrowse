@@ -10,7 +10,7 @@ public class WindowsManager {
 	private static WindowsManager instance;
 	private final List<WindowItem> windows;
 
-	public WindowsManager() {
+	private WindowsManager() {
 		windows = new ArrayList<>();
 	}
 

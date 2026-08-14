@@ -15,7 +15,7 @@ public class DiscordPresenceManager {
 	private static DiscordPresenceManager instance;
 	private IPCClient discordIpcClient;
 
-	public DiscordPresenceManager() {
+	private DiscordPresenceManager() {
 	}
 
 	public void init() {

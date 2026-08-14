@@ -1,5 +1,5 @@
 export async function getWallpaper(): Promise<File | null> {
-	const response = await fetch('turtlebrowse://api/wallpaper', {
+	const response = await fetch('turtlebrowse://api/get-wallpaper', {
 		method: 'GET',
 	});
 
@@ -9,6 +9,8 @@ export async function getWallpaper(): Promise<File | null> {
 
 	const blob = await response.blob();
 
+	console.log('Successfully fetched wallpaper.');
+
 	return new File([blob], 'wallpaper', {
 		type: blob.type,
 		lastModified: Date.now(),
@@ -16,13 +18,15 @@ export async function getWallpaper(): Promise<File | null> {
 }
 
 export async function setWallpaper(image: File) {
-	const formData = new FormData();
-	formData.append('wallpaper', image);
-
 	try {
-		const response = await fetch(`turtlebrowse://api/wallpaper`, {
+		const arrayBuffer = await image.arrayBuffer();
+
+		const response = await fetch(`turtlebrowse://api/set-wallpaper`, {
 			method: 'POST',
-			body: formData,
+			headers: {
+				'Content-Type': image.type,
+			},
+			body: arrayBuffer,
 		});
 
 		if (!response.ok) {

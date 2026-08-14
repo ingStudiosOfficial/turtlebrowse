@@ -7,28 +7,27 @@ import '@m3e/web/form-field';
 import '@m3e/web/button-group';
 import '@m3e/web/button';
 import '@m3e/web/divider';
+import { useWallpaper } from '@/composables/wallpaper';
 
 const { newtabSettingsDialog } = useDialog();
+const { wallpaperUrl, saveWallpaper } = useWallpaper();
 
 const dialog = useTemplateRef<M3eDialogElement>('dialog');
 const greetingText = ref<string>('');
-const imageObjectUrl = ref<string | null>(null);
 const imageInput = useTemplateRef<HTMLInputElement>('imageInput');
 
-function onImageUpload(el: HTMLInputElement) {
+async function onImageUpload(el: HTMLInputElement) {
 	const file = el?.files?.[0];
 	if (!file) {
 		console.error('File not uploaded.');
 		return;
 	}
 
-	if (imageObjectUrl.value) URL.revokeObjectURL(imageObjectUrl.value);
-
-	imageObjectUrl.value = URL.createObjectURL(file);
+	await saveWallpaper(file);
 }
 
 function clearImage() {
-	imageObjectUrl.value = null;
+	wallpaperUrl.value = null;
 }
 
 onMounted(async () => {
@@ -46,7 +45,7 @@ onMounted(async () => {
 			</m3e-form-field>
 			<m3e-divider></m3e-divider>
 			<span>Wallpaper</span>
-			<img v-if="imageObjectUrl" :src="imageObjectUrl" class="uploaded-wallpaper" />
+			<img v-if="wallpaperUrl" :src="wallpaperUrl" class="uploaded-wallpaper" />
 			<m3e-button-group variant="connected">
 				<m3e-button variant="filled" @click="imageInput?.click()">
 					<m3e-icon slot="icon" name="image"></m3e-icon>

@@ -15,6 +15,7 @@ import org.cef.network.CefPostDataElement;
 import org.cef.network.CefRequest;
 import org.cef.network.CefResponse;
 
+import dev.ingstudios.turtlebrowse.managers.WallpaperManager;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter {
@@ -125,7 +126,23 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 		} else if (url.startsWith("turtlebrowse://api")) {
 			final String action = url.replace("turtlebrowse://api/", "");
 
-			System.out.printf("Action: %s URL: %s", action, url);
+			System.out.printf("Action: %s\nURL: %s\n", action, url);
+
+			if (action.equals("get-wallpaper")) {
+				System.out.println("Getting wallpaper...");
+				final byte[] wallpaper = WallpaperManager.getInstance(parent).getWallpaper();
+				this.data = wallpaper;
+				this.mimeType = "image/*";
+				callback.Continue();
+				return true;
+			} else if (action.equals("set-wallpaper")) {
+				System.out.println("Setting wallpaper...");
+				WallpaperManager.getInstance(parent).setWallpaper(request);
+				final String result = "\"ok\"";
+				this.data = result.getBytes();
+				callback.Continue();
+				return true;
+			}
 
 			final CefPostData postData = request.getPostData();
 			String body = "{}";
@@ -142,7 +159,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 				}
 			}
 
-			String result = parent.handleApiFromClient(action, body);
+			final String result = parent.handleApiFromClient(action, body);
 			this.data = result.getBytes(StandardCharsets.UTF_8);
 			this.mimeType = "application/json";
 			handleRequest.set(true);
