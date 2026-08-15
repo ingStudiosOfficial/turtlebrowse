@@ -141,7 +141,6 @@ public class AddressBar extends JPanel {
 			addressField.setOnAction(event -> {
 				onAddressEnter();
 			});
-
 			addressField.setOnMousePressed(event -> {
 				if (!wasFocused) {
 					addressField.requestFocus();
@@ -324,12 +323,47 @@ public class AddressBar extends JPanel {
 				}
 			});
 
-			// Temporarily commented this out
-			/*
-			 * root.setOnMouseClicked(event -> {
-			 * addressField.requestFocus();
-			 * });
-			 */
+			addressField.setOnKeyPressed(event -> {
+				final KeyCode eventCode = event.getCode();
+
+				if (eventCode == KeyCode.ENTER) {
+					final int focusedIndex = autoSuggestList.getFocusModel().getFocusedIndex();
+					System.out.printf("Focused index: %d\n", focusedIndex);
+					if (focusedIndex < 0) {
+						onAddressEnter();
+					} else {
+						searchSuggestedResult.run();
+					}
+					event.consume();
+				} else if (eventCode == KeyCode.UP || eventCode == KeyCode.DOWN) {
+					final int focusIndex = autoSuggestList.getFocusModel().getFocusedIndex();
+					final int itemsLength = autoSuggestList.getItems().size();
+
+					int targetIndex = focusIndex;
+
+					if (eventCode == KeyCode.UP) {
+						if (focusIndex <= 0) {
+							targetIndex = itemsLength - 1;
+						} else {
+							targetIndex = focusIndex - 1;
+						}
+					} else if (eventCode == KeyCode.DOWN) {
+						if (focusIndex < 0 || focusIndex >= itemsLength - 1) {
+							targetIndex = 0;
+						} else {
+							targetIndex = focusIndex + 1;
+						}
+					}
+
+					autoSuggestList.getFocusModel().focus(targetIndex);
+					autoSuggestList.getSelectionModel().select(targetIndex);
+					autoSuggestList.scrollTo(targetIndex);
+
+					event.consume();
+				} else {
+					System.out.println("Handing event over to address field.");
+				}
+			});
 		});
 
 		this.add(addressBarPanel);
