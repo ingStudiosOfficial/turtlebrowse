@@ -55,12 +55,12 @@ public class WallpaperManager {
 		return Main.getStoragePath("profiles", parent.currentProfile.getIdAsString(), "wallpaper");
 	}
 
-	// TODO(ingStudiosOfficial): Get wallpaper
-	public byte[] getWallpaper() {
+	public WallpaperMetadata getWallpaper() {
 		final Path wallpaperPath = getWallpaperPath();
 		try {
 			final byte[] imageBytes = Files.readAllBytes(wallpaperPath);
-			return imageBytes;
+			final String mimeType = Files.probeContentType(wallpaperPath);
+			return new WallpaperMetadata(imageBytes, mimeType != null ? mimeType : "image/png");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -77,5 +77,8 @@ public class WallpaperManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public record WallpaperMetadata(byte[] imageBytes, String mimeType) {
 	}
 }

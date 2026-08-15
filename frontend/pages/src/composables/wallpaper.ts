@@ -6,16 +6,13 @@ const wallpaperUrl = ref<string | null>(null);
 
 export function useWallpaper() {
 	async function refreshWallpaper() {
-		if (wallpaperUrl.value) URL.revokeObjectURL(wallpaperUrl.value);
 		wallpaper.value = await getWallpaper();
-		if (wallpaper.value) wallpaperUrl.value = URL.createObjectURL(wallpaper.value);
+		if (wallpaper.value) wallpaperUrl.value = `turtlebrowse://api/get-wallpaper?t=${Date.now()}`
 	}
 
 	async function saveWallpaper(file: File) {
-		if (wallpaperUrl.value) URL.revokeObjectURL(wallpaperUrl.value);
-		wallpaperUrl.value = URL.createObjectURL(file);
-		wallpaper.value = file;
 		await setWallpaper(file);
+		await refreshWallpaper();
 	}
 
 	return { wallpaper, wallpaperUrl, refreshWallpaper, saveWallpaper };

@@ -16,6 +16,7 @@ import org.cef.network.CefRequest;
 import org.cef.network.CefResponse;
 
 import dev.ingstudios.turtlebrowse.managers.WallpaperManager;
+import dev.ingstudios.turtlebrowse.managers.WallpaperManager.WallpaperMetadata;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter {
@@ -128,11 +129,20 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 
 			System.out.printf("Action: %s\nURL: %s\n", action, url);
 
-			if (action.equals("get-wallpaper")) {
+			if (action.contains("get-wallpaper")) {
 				System.out.println("Getting wallpaper...");
-				final byte[] wallpaper = WallpaperManager.getInstance(parent).getWallpaper();
-				this.data = wallpaper;
-				this.mimeType = "image/*";
+				final WallpaperMetadata wallpaperMetadata = WallpaperManager.getInstance(parent).getWallpaper();
+
+				if (wallpaperMetadata == null) {
+					System.out.println("Wallpaper metadata is null.");
+					this.data = new byte[0];
+					this.mimeType = "application/json";
+				} else {
+					System.out.printf("Wallpaper metadata: %s\n", wallpaperMetadata.toString());
+					this.data = wallpaperMetadata.imageBytes();
+					this.mimeType = wallpaperMetadata.mimeType();
+				}
+
 				callback.Continue();
 				return true;
 			} else if (action.equals("set-wallpaper")) {
@@ -140,6 +150,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 				WallpaperManager.getInstance(parent).setWallpaper(request);
 				final String result = "\"ok\"";
 				this.data = result.getBytes();
+				this.mimeType = "application/json";
 				callback.Continue();
 				return true;
 			}

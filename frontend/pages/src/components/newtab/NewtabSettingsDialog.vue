@@ -56,7 +56,7 @@ onMounted(async () => {
 					Clear
 				</m3e-button>
 			</m3e-button-group>
-			<input type="file" style="display: none;" ref="imageInput" @input="onImageUpload($event.target as HTMLInputElement)" />
+			<input type="file" style="display: none;" accept="image/*" ref="imageInput" @change="onImageUpload($event.target as HTMLInputElement)" />
 		</div>
 	</m3e-dialog>
 </template>
