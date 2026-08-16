@@ -34,7 +34,7 @@ If you want to download a previous version of Turtlebrowse, it can be found in t
 
 ## Development
 
-Turtlebrowse has reached a stable stage, but we are always looking for contributors. We welcome any sort of contributions. Here's how to build Turtlebrowse.
+Turtlebrowse has reached a stable stage, but we are always looking for contributors. We welcome any sort of contributions that are **human made**. Here's how to build Turtlebrowse.
 
 ### Prerequisites
 
