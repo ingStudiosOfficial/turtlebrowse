@@ -35,6 +35,7 @@ import dev.ingstudios.turtlebrowse.components.TabBar;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase;
 import dev.ingstudios.turtlebrowse.db.MainDatabase.ProfileStructureWithId;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase.AISettings;
+import dev.ingstudios.turtlebrowse.db.ProfileDatabase.NewtabSettings;
 import dev.ingstudios.turtlebrowse.handlers.CefKeyboardHandler;
 import dev.ingstudios.turtlebrowse.handlers.SwingKeyboardHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseContextMenuHandler;
@@ -86,6 +87,7 @@ public class MainWindow extends JFrame {
 	public String defaultSearchProvider = SearchURLTemplates.searchTemplates.get("brave");
 	public boolean enableDiscordPresence = false;
 	public AISettings aiSettings = new AISettings(false, "gemma4:e2b");
+	public NewtabSettings newtabSettings = new NewtabSettings("");
 
 	public MainWindow(ProfileStructureWithId profile) {
 		super("Turtlebrowse");
@@ -99,6 +101,7 @@ public class MainWindow extends JFrame {
 		defaultSearchProvider = SearchURLTemplates.searchTemplates.get(profileDatabase.getDefaultSearchEngine());
 		enableDiscordPresence = profileDatabase.getDiscordPresenceSetting();
 		aiSettings = profileDatabase.getAISettings();
+		newtabSettings = profileDatabase.getNewtabSettings();
 
 		windowId = "%s_main_window".formatted(profile.getIdAsString());
 		WindowsManager.getInstance()
@@ -414,6 +417,19 @@ public class MainWindow extends JFrame {
 				final AISettings settings = new AISettings(enabled, model);
 				aiSettings = settings;
 				profileDatabase.setAISettings(settings);
+				return "\"ok\"";
+			}
+
+			// TODO(ingStudiosOfficial): get newtab settings
+			case "GET_NEWTAB_SETTINGS": {
+				break;
+			}
+
+			case "SET_NEWTAB_SETTINGS": {
+				final String greetingText = params.get("greetingText").getAsString();
+				final NewtabSettings settings = new NewtabSettings(greetingText);
+				newtabSettings = settings;
+				profileDatabase.setNewtabSettings(settings);
 				return "\"ok\"";
 			}
 

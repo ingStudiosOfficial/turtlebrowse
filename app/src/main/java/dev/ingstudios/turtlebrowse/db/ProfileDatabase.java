@@ -153,6 +153,44 @@ public class ProfileDatabase {
 		settingsCollection.update(aiDocument);
 	}
 
+	public NewtabSettings getNewtabSettings() {
+		final Document newtabDocument = settingsCollection.find(where("setting").eq("newtab"))
+				.firstOrNull();
+
+		if (newtabDocument == null) {
+			final Document newNewtabDocument = Document.createDocument().put("setting", "newtab")
+					.put("greetingText", "");
+			settingsCollection.insert(newNewtabDocument);
+			return new NewtabSettings("");
+		}
+
+		final String greetingText = newtabDocument.get("greetingText").toString();
+
+		return new NewtabSettings(greetingText);
+	}
+
+	public void setNewtabSettings(NewtabSettings settings) {
+		System.out.printf("Setting New Tab settings: %s\n", settings.toString());
+
+		final Document newtabDocument = settingsCollection.find(where("setting").eq("newtab"))
+				.firstOrNull();
+
+		if (newtabDocument == null) {
+			System.err.println("New Tab document is null.");
+			final Document newNewtabDocument = Document.createDocument().put("setting", "newtab")
+					.put("greetingText", settings.greetingText())
+			settingsCollection.insert(newNewtabDocument);
+			return;
+		}
+
+		newtabDocument.put("greetingText", settings.greetingText());
+
+		settingsCollection.update(newtabDocument);
+	}
+
 	public record AISettings(boolean enabled, String model) {
+	}
+
+	public record NewtabSettings(String greetingText) {
 	}
 }
