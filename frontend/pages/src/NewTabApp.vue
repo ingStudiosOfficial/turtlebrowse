@@ -7,14 +7,14 @@ import '@m3e/web/icon-button';
 import NewtabSettingsDialog from './components/newtab/NewtabSettingsDialog.vue';
 import { useDialog } from './composables/dialog';
 import '@m3e/web/tooltip';
-import { useWallpaper } from './composables/wallpaper.ts';
+import { useNewtab } from './composables/newtab.ts';
 
 const { showDialog } = useDialog();
 
 const userName = ref<string>('');
 const searchQuery = ref<string>('');
 const errorMessage = ref<string>('');
-const { wallpaperUrl, refreshWallpaper } = useWallpaper();
+const { wallpaperUrl, newtabSettings, refreshWallpaper, refreshSettings } = useNewtab();
 
 async function searchWebWrapper() {
 	try {
@@ -28,6 +28,7 @@ async function searchWebWrapper() {
 onMounted(async () => {
 	userName.value = await getUserName();
 	await refreshWallpaper();
+	await refreshSettings();
 });
 </script>
 
@@ -35,7 +36,13 @@ onMounted(async () => {
 	<div class="newtab-wrapper" :class="wallpaperUrl !== null ? 'bg-wallpaper' : ''">
 		<div class="center-wrapper">
 			<div class="wrapper-bg"></div>
-			<h1>Hello, {{ userName }}!</h1>
+			<h1>
+                {{
+                    newtabSettings?.greetingText
+                        ? newtabSettings.greetingText
+                        : `Hello, ${userName}!`
+                }}
+            </h1>
 			<m3e-form-field class="search-bar" variant="outlined" @keydown.enter.prevent="searchWebWrapper()">
 				<label slot="label">Search the web</label>
 				<input v-model="searchQuery" id="search-fld" />

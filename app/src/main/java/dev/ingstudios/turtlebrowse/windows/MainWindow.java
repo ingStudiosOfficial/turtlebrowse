@@ -420,9 +420,9 @@ public class MainWindow extends JFrame {
 				return "\"ok\"";
 			}
 
-			// TODO(ingStudiosOfficial): get newtab settings
 			case "GET_NEWTAB_SETTINGS": {
-				break;
+				final NewtabSettings settings = profileDatabase.getNewtabSettings();
+				return gson.toJson(settings);
 			}
 
 			case "SET_NEWTAB_SETTINGS": {

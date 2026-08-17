@@ -178,7 +178,7 @@ public class ProfileDatabase {
 		if (newtabDocument == null) {
 			System.err.println("New Tab document is null.");
 			final Document newNewtabDocument = Document.createDocument().put("setting", "newtab")
-					.put("greetingText", settings.greetingText())
+					.put("greetingText", settings.greetingText());
 			settingsCollection.insert(newNewtabDocument);
 			return;
 		}

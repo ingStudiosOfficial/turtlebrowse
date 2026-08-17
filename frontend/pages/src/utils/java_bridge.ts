@@ -122,6 +122,7 @@ export async function getNewtabSettings(): Promise<NewtabSettings> {
 		}
 
 		const settings = JSON.parse(settingsString);
+		console.log('Newtab settings:', settings);
 
 		return settings;
 	} catch (error) {

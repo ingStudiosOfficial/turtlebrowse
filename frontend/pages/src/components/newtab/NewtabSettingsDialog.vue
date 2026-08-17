@@ -2,18 +2,17 @@
 import { useDialog } from '@/composables/dialog';
 import '@m3e/web/dialog';
 import { M3eDialogElement } from '@m3e/web/dialog';
-import { onMounted, ref, useTemplateRef } from 'vue';
+import { onMounted, useTemplateRef } from 'vue';
 import '@m3e/web/form-field';
 import '@m3e/web/button-group';
 import '@m3e/web/button';
 import '@m3e/web/divider';
-import { useWallpaper } from '@/composables/wallpaper';
+import { useNewtab } from '@/composables/newtab';
 
 const { newtabSettingsDialog } = useDialog();
-const { wallpaperUrl, saveWallpaper } = useWallpaper();
+const { wallpaperUrl, newtabSettings, saveWallpaper, saveSettings } = useNewtab();
 
 const dialog = useTemplateRef<M3eDialogElement>('dialog');
-const greetingText = ref<string>('');
 const imageInput = useTemplateRef<HTMLInputElement>('imageInput');
 
 async function onImageUpload(el: HTMLInputElement) {
@@ -30,6 +29,10 @@ function clearImage() {
 	wallpaperUrl.value = null;
 }
 
+async function updateSettings() {
+	await saveSettings();
+}
+
 onMounted(async () => {
 	newtabSettingsDialog.value = dialog.value;
 });
@@ -38,10 +41,10 @@ onMounted(async () => {
 <template>
 	<m3e-dialog ref="dialog" dismissible>
 		<span slot="header">Customize New Tab</span>
-		<div class="ns-dialog">
+		<div class="ns-dialog" v-if="newtabSettings">
 			<m3e-form-field>
 				<label slot="label">Greeting text</label>
-				<input v-model="greetingText" />
+				<input v-model="newtabSettings.greetingText" @change="updateSettings()" />
 			</m3e-form-field>
 			<m3e-divider></m3e-divider>
 			<span>Wallpaper</span>
