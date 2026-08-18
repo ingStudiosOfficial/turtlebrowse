@@ -117,15 +117,15 @@ application {
 tasks.jpackage {
     verbose = true
 
+    runtimeImage = file(System.getProperty("java.home"))
+
     javaLauncher = javaToolchains.launcherFor {
         languageVersion = JavaLanguageVersion.of(25)
     }
-
-    runtimeImage = javaLauncher.get().metadata.installationPath.asFile
     
     appName = "Turtlebrowse"
     vendor = "(ing) Studios"
-    appVersion = "1.4.7"
+    appVersion = "1.4.8"
     copyright = "2026 (ing) Studios and Ethan Lee"
 
     input = layout.buildDirectory.dir("libs")
