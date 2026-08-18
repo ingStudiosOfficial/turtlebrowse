@@ -117,11 +117,11 @@ application {
 tasks.jpackage {
     verbose = true
 
-    runtimeImage = file(System.getProperty("java.home"))
-
-    javaLauncher = javaToolchains.launcherFor {
+    val launcher = javaToolchains.launcherFor {
         languageVersion = JavaLanguageVersion.of(25)
     }
+    javaLauncher = launcher
+    runtimeImage = launcher.get().metadata.installationPath.asFile
     
     appName = "Turtlebrowse"
     vendor = "(ing) Studios"
