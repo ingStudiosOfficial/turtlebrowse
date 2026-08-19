@@ -50,9 +50,10 @@ public class NewProfileWindow extends Stage {
 			themeColor = profileStructure.seedColor();
 			id = profileStructure.id();
 
-			final Path avatarPath = Main.getStoragePath("profiles", profileStructure.toString(), "avatar");
+			final Path avatarPath = Main.getStoragePath("profiles", profileStructure.getIdAsString(), "avatar");
 			if (Files.exists(avatarPath)) {
-				profileAvatarPath = avatarPath.toString();
+				System.out.printf("Avatar path: %s\n", avatarPath.toString());
+				profileAvatarPath = "file://%s".formatted(avatarPath);
 				uploadedAvatarFile = avatarPath.toFile();
 			}
 		}
@@ -101,8 +102,10 @@ public class NewProfileWindow extends Stage {
 
 				final File profileImageFile = fileChooser.showOpenDialog(this);
 				if (profileImageFile != null) {
+					profileAvatarPath = "file://%s".formatted(profileImageFile.getAbsolutePath().toString());
 					uploadedAvatarFile = profileImageFile;
 					final Image profileImage = new Image(profileAvatarPath);
+					System.out.println("Setting profile image...");
 					profileImageView.setImage(profileImage);
 				}
 			}

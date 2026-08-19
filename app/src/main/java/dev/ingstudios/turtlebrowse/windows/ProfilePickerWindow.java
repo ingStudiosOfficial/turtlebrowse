@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import org.controlsfx.control.PopOver;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.material2.Material2OutlinedAL;
 
@@ -25,6 +26,7 @@ import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -184,9 +186,7 @@ public class ProfilePickerWindow extends Stage {
 
 		final MenuItem deleteMenuItem = new MenuItem("Remove");
 		deleteMenuItem.setOnAction(event -> {
-			profilesBox.getChildren().remove(profileButton);
-			MainDatabase.getInstance().removeProfile(profile.id());
-			deleteProfileData(profile);
+			showConfirmDeleteProfile(profile, profileButton);
 		});
 
 		final MenuItem editMenuItem = new MenuItem("Edit");
@@ -256,6 +256,33 @@ public class ProfilePickerWindow extends Stage {
 		}
 
 		show();
+	}
+
+	private void showConfirmDeleteProfile(ProfileStructureWithId profile, Button profileButton) {
+		final PopOver popOver = new PopOver();
+		popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
+		popOver.setAutoHide(true);
+
+		final JFXButton yesButton = new JFXButton("Yes");
+		yesButton.setOnAction(event -> {
+			profilesBox.getChildren().remove(profileButton);
+			MainDatabase.getInstance().removeProfile(profile.id());
+			deleteProfileData(profile);
+			popOver.hide();
+		});
+
+		final JFXButton noButton = new JFXButton("No");
+		noButton.setOnAction(event -> {
+			popOver.hide();
+		});
+
+		final HBox buttons = new HBox(10, noButton, yesButton);
+
+		final VBox content = new VBox(10,
+				new Label("Are you sure you want to delete profile '%s'".formatted(profile.name())), buttons);
+		popOver.setContentNode(content);
+
+		popOver.show(profileButton);
 	}
 
 	public static void deleteProfileData(ProfileStructureWithId profile) {

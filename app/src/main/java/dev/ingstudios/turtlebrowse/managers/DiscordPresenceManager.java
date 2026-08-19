@@ -86,7 +86,7 @@ public class DiscordPresenceManager {
 					.setActivityType(ActivityType.Playing);
 			discordIpcClient.sendRichPresence(builder.build());
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Failed to update Discord Presence.");
 		}
 	}
 
