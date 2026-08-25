@@ -29,11 +29,15 @@ definePageMeta({
                 loc: '/ai_sidebar.png',
                 title: 'Turtlebrowse AI Sidebar',
             },
+        ],
+		videos: [
 			{
-				loc: '/agentic.mp4',
+				content_loc: '/agentic.mp4',
+				thumbnail_loc: '/agentic_thumbnail.png',
+				description: 'Turtlebrowse agent in action',
 				title: 'Turtlebrowse Agent',
 			},
-        ],
+		],
     },
 })
 </script>
