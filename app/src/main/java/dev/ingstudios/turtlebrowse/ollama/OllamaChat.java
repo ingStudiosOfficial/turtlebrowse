@@ -26,8 +26,6 @@ import io.github.ollama4j.models.chat.OllamaChatStreamObserver;
 import io.github.ollama4j.models.generate.OllamaGenerateTokenHandler;
 import io.github.ollama4j.models.response.Model;
 import io.github.ollama4j.tools.Tools;
-import io.github.ollama4j.utils.Options;
-import io.github.ollama4j.utils.OptionsBuilder;
 
 public class OllamaChat {
 	private Ollama ollama;
@@ -80,9 +78,7 @@ public class OllamaChat {
 				System.out.printf("Failed to register findElementTool: %s\n", e.getMessage());
 			}
 
-			final Options options = new OptionsBuilder().setNumPredict(-1).build();
-
-			builder = OllamaChatRequest.builder().withModel(chatModel).withOptions(options);
+			builder = OllamaChatRequest.builder().withModel(chatModel);
 		} catch (OllamaException e) {
 			System.out.printf("Error while initializing Ollama:", e.getMessage());
 			throw e;

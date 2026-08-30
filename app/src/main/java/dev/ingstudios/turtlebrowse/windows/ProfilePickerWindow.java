@@ -279,7 +279,7 @@ public class ProfilePickerWindow extends Stage {
 		final HBox buttons = new HBox(10, noButton, yesButton);
 
 		final VBox content = new VBox(10,
-				new Label("Are you sure you want to delete profile '%s'".formatted(profile.name())), buttons);
+				new Label("Are you sure you want to delete profile '%s'?".formatted(profile.name())), buttons);
 		popOver.setContentNode(content);
 
 		popOver.show(profileButton);
