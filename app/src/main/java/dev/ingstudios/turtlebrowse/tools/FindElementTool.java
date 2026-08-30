@@ -49,9 +49,22 @@ public class FindElementTool {
 		try {
 			final String snapshot = snapshotTool.takeSnapshot().get();
 
-			final OllamaGenerateRequest chatRequest = builder.withPrompt(
-					"Use the snapshot '%s' to find the backendNodeId of the elment: '%s'. Return the backendNodeId number and nothing else. Use thinking and identify what each element represents and find the most suitable one."
-							.formatted(snapshot, element))
+			final String prompt = """
+					Task: Find the backendNodeId of the element from the DOM snapshot that matches the element description best.
+
+					Description:
+					%s
+
+					DOM Snapshot:
+					%s
+
+					Instructions:
+					1. Analyze the snapshot to return the element that matches the description best.
+					2. Return only the backendNodeId and nothing else.
+					"""
+					.formatted(snapshot, element);
+
+			final OllamaGenerateRequest chatRequest = builder.withPrompt(prompt)
 					.build();
 			final OllamaResult result = ollama.generate(chatRequest, null);
 			final String response = result.getResponse();
