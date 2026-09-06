@@ -48,6 +48,7 @@ import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseLoadHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseRequestHandler;
 import dev.ingstudios.turtlebrowse.managers.CefAppManager;
 import dev.ingstudios.turtlebrowse.managers.DiscordPresenceManager;
+import dev.ingstudios.turtlebrowse.managers.WallpaperManager;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager.WindowItem;
 import dev.ingstudios.turtlebrowse.ollama.OllamaChat;
@@ -430,6 +431,11 @@ public class MainWindow extends JFrame {
 				final NewtabSettings settings = new NewtabSettings(greetingText);
 				newtabSettings = settings;
 				profileDatabase.setNewtabSettings(settings);
+				return "\"ok\"";
+			}
+
+			case "CLEAR_WALLPAPER": {
+				WallpaperManager.getInstance(this).clearWallpaper();
 				return "\"ok\"";
 			}
 

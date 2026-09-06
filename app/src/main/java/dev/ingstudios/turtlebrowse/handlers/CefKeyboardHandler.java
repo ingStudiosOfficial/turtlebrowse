@@ -76,6 +76,10 @@ public class CefKeyboardHandler extends CefKeyboardHandlerAdapter {
 					parent.showTab(parent.openedBrowserTabs.get(nextIndex));
 				}
 				return true;
+			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_Q) { // Quits the browser
+				System.out.println("Ctrl + Q pressed.");
+				parent.dispose();
+				return true;
 			}
 		}
 

@@ -77,6 +77,10 @@ public class SwingKeyboardHandler {
 								final int nextIndex = (currentIndex + 1) % size;
 								parent.showTab(parent.openedBrowserTabs.get(nextIndex));
 							}
+						} else if (keyCode == KeyEvent.VK_Q && keyEvent.isControlDown()) { // Quits the browser
+							keyEvent.consume();
+							System.out.println("Ctrl + Q pressed.");
+							parent.dispose();
 						}
 					}
 				}

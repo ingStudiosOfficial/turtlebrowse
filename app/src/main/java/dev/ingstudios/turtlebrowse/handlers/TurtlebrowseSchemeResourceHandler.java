@@ -24,6 +24,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 	private int offset = 0;
 	private String mimeType = "text/html";
 	private MainWindow parent;
+	private int statusCode = 404;
 
 	public TurtlebrowseSchemeResourceHandler(MainWindow parent) {
 		System.out.println("Setting scheme resource handler parent: " + parent);
@@ -47,8 +48,12 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 					mimeType = "image/jpeg";
 				else
 					mimeType = "text/html";
+
+				this.statusCode = 200;
 			} else {
 				this.data = "<html><body>404 Resource Not Found</body></html>".getBytes(StandardCharsets.UTF_8);
+				this.mimeType = "text/html";
+				this.statusCode = 200;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -137,10 +142,12 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 					System.out.println("Wallpaper metadata is null.");
 					this.data = new byte[0];
 					this.mimeType = "application/json";
+					this.statusCode = 404;
 				} else {
 					System.out.printf("Wallpaper metadata: %s\n", wallpaperMetadata.toString());
 					this.data = wallpaperMetadata.imageBytes();
 					this.mimeType = wallpaperMetadata.mimeType();
+					this.statusCode = 200;
 				}
 
 				callback.Continue();
@@ -151,6 +158,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 				final String result = "\"ok\"";
 				this.data = result.getBytes();
 				this.mimeType = "application/json";
+				this.statusCode = 200;
 				callback.Continue();
 				return true;
 			}
@@ -173,6 +181,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			final String result = parent.handleApiFromClient(action, body);
 			this.data = result.getBytes(StandardCharsets.UTF_8);
 			this.mimeType = "application/json";
+			this.statusCode = 200;
 			handleRequest.set(true);
 			callback.Continue();
 			return true;
@@ -188,7 +197,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			mimeType = "text/html";
 			response.setStatus(500);
 		} else {
-			response.setStatus(200);
+			response.setStatus(this.statusCode);
 		}
 		response.setMimeType(mimeType);
 		response.setHeaderByName("Access-Control-Allow-Origin", "*", true);

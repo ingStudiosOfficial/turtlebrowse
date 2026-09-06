@@ -2,6 +2,7 @@ package dev.ingstudios.turtlebrowse.managers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Vector;
@@ -76,6 +77,16 @@ public class WallpaperManager {
 			fos.write(imageBytes);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void clearWallpaper() {
+		final Path wallpaperPath = getWallpaperPath();
+
+		try {
+			Files.delete(wallpaperPath);
+		} catch (IOException e) {
+			System.err.printf("Failed to delete wallpaper: %s".formatted(e.getMessage()));
 		}
 	}
 

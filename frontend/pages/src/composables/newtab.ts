@@ -10,6 +10,7 @@ const newtabSettings = ref<NewtabSettings | null>(null);
 export function useNewtab() {
 	async function refreshWallpaper() {
 		wallpaper.value = await getWallpaper();
+		console.log('Wallpaper:', wallpaper.value);
 		if (wallpaper.value) wallpaperUrl.value = `turtlebrowse://api/get-wallpaper?t=${Date.now()}`
 	}
 

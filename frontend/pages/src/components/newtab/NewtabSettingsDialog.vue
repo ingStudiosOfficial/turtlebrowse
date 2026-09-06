@@ -8,6 +8,7 @@ import '@m3e/web/button-group';
 import '@m3e/web/button';
 import '@m3e/web/divider';
 import { useNewtab } from '@/composables/newtab';
+import { clearWallpaper } from '@/utils/wallpaper';
 
 const { newtabSettingsDialog } = useDialog();
 const { wallpaperUrl, newtabSettings, saveWallpaper, saveSettings } = useNewtab();
@@ -25,8 +26,9 @@ async function onImageUpload(el: HTMLInputElement) {
 	await saveWallpaper(file);
 }
 
-function clearImage() {
+async function clearImage() {
 	wallpaperUrl.value = null;
+	await clearWallpaper();
 }
 
 async function updateSettings() {
@@ -48,7 +50,7 @@ onMounted(async () => {
 			</m3e-form-field>
 			<m3e-divider></m3e-divider>
 			<span>Wallpaper</span>
-			<img v-if="wallpaperUrl" :src="wallpaperUrl" class="uploaded-wallpaper" />
+			<img v-if="wallpaperUrl !== null && wallpaperUrl.trim() !== ''" :src="wallpaperUrl" class="uploaded-wallpaper" />
 			<m3e-button-group variant="connected">
 				<m3e-button variant="filled" @click="imageInput?.click()">
 					<m3e-icon slot="icon" name="image"></m3e-icon>
