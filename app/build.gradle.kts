@@ -1,3 +1,6 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+
 plugins {
     application
 
@@ -114,14 +117,38 @@ application {
     applicationDefaultJvmArgs = jvmArgs
 }
 
+val launcher = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(25)
+}
+
+val prepareRuntime = tasks.register<Copy>("prepareRuntime") {
+    val jdkPath = launcher.get().metadata.installationPath.asFile
+    from(jdkPath)
+    into(layout.buildDirectory.dir("rt"))
+
+    doLast {
+        if (System.getProperty("os.name").lowercase().contains("linux")) {
+            val targetCacerts = layout.buildDirectory.file("rt/lib/security/cacerts").get().asFile
+            val sourceCacerts = File(jdkPath, "lib/security/cacerts")
+
+            if (targetCacerts.exists() || Files.isSymbolicLink(targetCacerts.toPath())) {
+                targetCacerts.delete()
+            }
+
+            val realSource = sourceCacerts.toPath().toRealPath().toFile()
+
+            realSource.copyTo(targetCacerts, overwrite = true)
+        }
+    }
+}
+
 tasks.jpackage {
+    dependsOn(prepareRuntime)
+
     verbose = true
 
-    val launcher = javaToolchains.launcherFor {
-        languageVersion = JavaLanguageVersion.of(25)
-    }
     javaLauncher = launcher
-    runtimeImage = launcher.get().metadata.installationPath.asFile
+    runtimeImage = layout.buildDirectory.dir("rt").get().asFile
     
     appName = "Turtlebrowse"
     vendor = "(ing) Studios"
