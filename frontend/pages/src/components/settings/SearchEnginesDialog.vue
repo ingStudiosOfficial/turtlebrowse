@@ -108,5 +108,7 @@ onMounted(async () => {
 	align-items: center;
 	justify-content: center;
 	gap: 8px;
+	box-sizing: border-box;
+	padding: 8px;
 }
 </style>
