@@ -116,8 +116,18 @@ jobs:
 
       - name: Run jpackage via Gradle
         shell: bash
+        if: matrix.pkg-type != 'appimage'
         run: |
           ./gradlew jpackage \
+            -PtargetOs="${{ matrix.os-name }}" \
+            -PtargetArch="${{ matrix.arch }}" \
+            -PtargetPkgType="${{ matrix.pkg-type }}" --info
+
+      - name: Run jpackage via Gradle
+        shell: bash
+        if: matrix.pkg-type == 'appimage'
+        run: |
+          ./gradlew buildAppImage \
             -PtargetOs="${{ matrix.os-name }}" \
             -PtargetArch="${{ matrix.arch }}" \
             -PtargetPkgType="${{ matrix.pkg-type }}" --info
@@ -182,30 +192,6 @@ jobs:
           cd release-artifacts/
 
           for dir in turtlebrowse_*; do
-            [ -d "$dir" ] || continue
-
-            IFS='_' read -r _ os_name arch_name <<< "$dir"
-
-            os_lower=$(echo "$os_name" | tr '[:upper:]' '[:lower:]')
-            arch_lower=$(echo "$arch_name" | tr '[:upper:]' '[:lower:]')
-
-            if [ "$os_lower" = "ubuntu" ]; then
-              os_lower="debian"
-            fi
-
-            if [ -d "$dir/dist" ]; then
-              find "$dir/dist" -type f | while read -r file; do
-                ext="${file##*.}"
-
-                new_filename="turtlebrowse_${os_lower}_${arch_lower}.${ext}"
-                echo "Moving $file to final-assets/$new_filename"
-                cp "$file" "final-assets/$new_filename"
-              done
-            fi
-          done
-
-          # IMPORTANT: APPIMAGE STARTS WITH CAPITAL
-          for dir in Turtlebrowse_*; do
             [ -d "$dir" ] || continue
 
             IFS='_' read -r _ os_name arch_name <<< "$dir"
