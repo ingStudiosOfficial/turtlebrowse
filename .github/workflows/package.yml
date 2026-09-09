@@ -121,6 +121,10 @@ jobs:
             -PtargetOs="${{ matrix.os-name }}" \
             -PtargetArch="${{ matrix.arch }}" \
             -PtargetPkgType="${{ matrix.pkg-type }}" --info
+      
+      - name: Debug - locate AppImage
+        if: matrix.pkg-type == 'appimage'
+        run: find . -name "*.AppImage" -o -name "*.AppDir"
 
       - name: Upload Native Distribution Artifacts
         uses: actions/upload-artifact@v4
