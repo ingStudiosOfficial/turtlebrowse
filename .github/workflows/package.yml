@@ -95,6 +95,7 @@ jobs:
       - name: Install AppImage Packaging Tools
         if: runner.os == 'Linux' && matrix.pkg-type == 'appimage'
         run: |
+          cd /usr/local/bin
           ARCH_NAME=$(uname -m)
           sudo curl -L -o appimagetool "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-${ARCH_NAME}.AppImage"
           sudo chmod +x appimagetool
