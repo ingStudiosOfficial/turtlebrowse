@@ -95,12 +95,12 @@ jobs:
       - name: Install AppImage Packaging Tools
         if: runner.os == 'Linux' && matrix.pkg-type == 'appimage'
         run: |
-          cd /usr/local/bin
-          sudo curl -L -o appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+          ARCH_NAME=$(uname -m)
+          sudo curl -L -o appimagetool "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-${ARCH_NAME}.AppImage"
           sudo chmod +x appimagetool
 
       - name: Set up JDK 25
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '25'
           distribution: 'temurin'
@@ -179,6 +179,7 @@ jobs:
 
           for dir in turtlebrowse_*; do
             [ -d "$dir" ] || continue
+            [ "$dir" = "final-assets" ] && continue
 
             IFS='_' read -r _ os_name arch_name <<< "$dir"
 
@@ -189,15 +190,13 @@ jobs:
               os_lower="debian"
             fi
 
-            if [ -d "$dir/dist" ]; then
-              find "$dir/dist" -type f | while read -r file; do
-                ext="${file##*.}"
+            find "$dir" -type f ! -name "app-all.jar" | while read -r file; do
+              ext="${file##*.}"
 
-                new_filename="turtlebrowse_${os_lower}_${arch_lower}.${ext}"
-                echo "Moving $file to final-assets/$new_filename"
-                cp "$file" "final-assets/$new_filename"
-              done
-            fi
+              new_filename="turtlebrowse_${os_lower}_${arch_lower}.${ext}"
+              echo "Moving $file to final-assets/$new_filename"
+              cp "$file" "final-assets/$new_filename"
+            done
           done
 
       - name: Display Collected Assets
