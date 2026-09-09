@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ import com.jagrosh.discordipc.IPCClient;
 
 import dev.ingstudios.turtlebrowse.db.MainDatabase;
 import dev.ingstudios.turtlebrowse.db.MainDatabase.ProfileStructureWithId;
+import dev.ingstudios.turtlebrowse.environment.AppImageUtils;
 import dev.ingstudios.turtlebrowse.managers.DiscordPresenceManager;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 import dev.ingstudios.turtlebrowse.windows.ProfilePickerWindow;
@@ -258,13 +260,18 @@ public class Main {
 	public static void createProfilePickerWindow() {
 		db.closeDb();
 
+		final boolean isAppImage = AppImageUtils.isAppImage();
+		final String appImagePath = AppImageUtils.getAppImagePath();
+
 		final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
 		final String classpath = System.getProperty("java.class.path");
 		final String appPath = System.getProperty("jpackage.app-path");
 
 		final List<String> command = new ArrayList<>();
 
-		if (appPath != null && !appPath.isEmpty()) {
+		if (isAppImage) {
+			command.add(appImagePath);
+		} else if (appPath != null && !appPath.isEmpty()) {
 			command.add(appPath);
 		} else {
 			command.add(javaBin);
@@ -289,6 +296,11 @@ public class Main {
 
 		final ProcessBuilder builder = new ProcessBuilder(command);
 
+		if (isAppImage) {
+			final Map<String, String> env = builder.environment();
+			env.remove("LD_LIBRARY_PATH");
+		}
+
 		try {
 			builder.start();
 		} catch (IOException e) {
@@ -304,6 +316,9 @@ public class Main {
 	public static void createMainWindow(ProfileStructureWithId profile, boolean guest) {
 		db.closeDb();
 
+		final boolean isAppImage = AppImageUtils.isAppImage();
+		final String appImagePath = AppImageUtils.getAppImagePath();
+
 		final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
 		final String classpath = System.getProperty("java.class.path");
 		final String appPath = System.getProperty("jpackage.app-path");
@@ -312,7 +327,9 @@ public class Main {
 
 		final List<String> command = new ArrayList<>();
 
-		if (appPath != null && !appPath.isEmpty()) {
+		if (isAppImage) {
+			command.add(appImagePath);
+		} else if (appPath != null && !appPath.isEmpty()) {
 			command.add(appPath);
 		} else {
 			command.add(javaBin);
@@ -327,9 +344,10 @@ public class Main {
 
 			command.add("-cp");
 			command.add(classpath);
+
+			command.add("dev.ingstudios.turtlebrowse.Main");
 		}
 
-		command.add("dev.ingstudios.turtlebrowse.Main");
 		command.add("--profile-id");
 		command.add(profileId);
 		if (guest == true) {
@@ -340,6 +358,11 @@ public class Main {
 		System.out.println("Spawning Command: " + String.join(" ", command));
 
 		final ProcessBuilder builder = new ProcessBuilder(command);
+
+		if (isAppImage) {
+			final Map<String, String> env = builder.environment();
+			env.remove("LD_LIBRARY_PATH");
+		}
 
 		try {
 			builder.start();

@@ -39,7 +39,7 @@ definePageMeta({
 			},
 		],
     },
-})
+});
 </script>
 
 <template>

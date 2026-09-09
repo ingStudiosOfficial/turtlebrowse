@@ -142,6 +142,8 @@ val prepareRuntime = tasks.register<Copy>("prepareRuntime") {
     }
 }
 
+val pkgType = project.property("targetPkgType").toString().lowercase()
+
 tasks.jpackage {
     dependsOn(prepareRuntime)
 
@@ -152,7 +154,7 @@ tasks.jpackage {
     
     appName = "Turtlebrowse"
     vendor = "(ing) Studios"
-    appVersion = "1.4.10"
+    appVersion = "1.4.11"
     copyright = "2026 (ing) Studios and Ethan Lee"
 
     input = layout.buildDirectory.dir("libs")
@@ -191,22 +193,68 @@ tasks.jpackage {
     }
 
     linux {
-        val pkgType = project.property("targetPkgType").toString().lowercase()
         if (pkgType != null) {
             type = if (pkgType == "rpm") {
                 org.panteleyev.jpackage.ImageType.RPM
+            } else if (pkgType == "appimage") {
+                org.panteleyev.jpackage.ImageType.APP_IMAGE
             } else {
                 org.panteleyev.jpackage.ImageType.DEB
             }
         } else {
             type = org.panteleyev.jpackage.ImageType.RPM
         }
-        linuxShortcut = true
-        linuxMenuGroup = "Network;WebBrowser;"
-        linuxAppCategory = "web" 
-        linuxPackageName = "turtlebrowse"
-        linuxDebMaintainer = "contact@ingstudios.dev"
+
+        if (pkgType != "appimage") {
+            linuxPackageName = "turtlebrowse"
+            linuxShortcut = true
+            linuxMenuGroup = "Network;WebBrowser;"
+            linuxAppCategory = "web"
+        }
+
+        if (pkgType == "deb") {
+            linuxDebMaintainer = "contact@ingstudios.dev"
+        }
     }
+}
+
+tasks.register<Exec>("buildAppImage") {
+    dependsOn("jpackage")
+    onlyIf { (project.findProperty("targetPkgType") ?: "appimage").toString().lowercase() == "appimage" }
+
+    workingDir = layout.buildDirectory.dir("dist").get().asFile
+
+    commandLine(
+        "bash", "-c",
+        """
+        # Clear old AppDir
+        rm -rf Turtlebrowse.AppDir
+
+        # Rename the directory to have the AppDir prefix
+        mv Turtlebrowse Turtlebrowse.AppDir
+        
+        # Create the AppRun script
+        cat << 'EOF' > Turtlebrowse.AppDir/AppRun
+#!/bin/sh
+HERE="${'$'}(dirname "${'$'}(readlink -f "${'$'}{0}")")"
+exec "${'$'}HERE/bin/Turtlebrowse" "${'$'}@"
+EOF
+        chmod +x Turtlebrowse.AppDir/AppRun
+        
+        cp ${projectDir}/src/main/resources/logo_full_trans.png Turtlebrowse.AppDir/turtlebrowse.png
+        
+        cat << 'EOF' > Turtlebrowse.AppDir/turtlebrowse.desktop
+[Desktop Entry]
+Type=Application
+Name=Turtlebrowse
+Exec=AppRun
+Icon=turtlebrowse
+Categories=Network;WebBrowser;
+EOF
+
+        appimagetool Turtlebrowse.AppDir Turtlebrowse_amd64.AppImage
+        """
+    )
 }
 
 tasks.named<Test>("test") {
