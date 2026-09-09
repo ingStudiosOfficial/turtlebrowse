@@ -179,7 +179,6 @@ jobs:
 
           for dir in turtlebrowse_*; do
             [ -d "$dir" ] || continue
-            [ "$dir" = "final-assets" ] && continue
 
             IFS='_' read -r _ os_name arch_name <<< "$dir"
 
@@ -190,13 +189,39 @@ jobs:
               os_lower="debian"
             fi
 
-            find "$dir" -type f ! -name "app-all.jar" | while read -r file; do
-              ext="${file##*.}"
+            if [ -d "$dir/dist" ]; then
+              find "$dir/dist" -type f | while read -r file; do
+                ext="${file##*.}"
 
-              new_filename="turtlebrowse_${os_lower}_${arch_lower}.${ext}"
-              echo "Moving $file to final-assets/$new_filename"
-              cp "$file" "final-assets/$new_filename"
-            done
+                new_filename="turtlebrowse_${os_lower}_${arch_lower}.${ext}"
+                echo "Moving $file to final-assets/$new_filename"
+                cp "$file" "final-assets/$new_filename"
+              done
+            fi
+          done
+
+          # IMPORTANT: APPIMAGE STARTS WITH CAPITAL
+          for dir in Turtlebrowse_*; do
+            [ -d "$dir" ] || continue
+
+            IFS='_' read -r _ os_name arch_name <<< "$dir"
+
+            os_lower=$(echo "$os_name" | tr '[:upper:]' '[:lower:]')
+            arch_lower=$(echo "$arch_name" | tr '[:upper:]' '[:lower:]')
+
+            if [ "$os_lower" = "ubuntu" ]; then
+              os_lower="debian"
+            fi
+
+            if [ -d "$dir/dist" ]; then
+              find "$dir/dist" -type f | while read -r file; do
+                ext="${file##*.}"
+
+                new_filename="turtlebrowse_${os_lower}_${arch_lower}.${ext}"
+                echo "Moving $file to final-assets/$new_filename"
+                cp "$file" "final-assets/$new_filename"
+              done
+            fi
           done
 
       - name: Display Collected Assets
