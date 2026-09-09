@@ -34,37 +34,49 @@ function download(url: string) {
 					<m3e-avatar slot="leading">
 						<Icon name="mdi:debian" />
 					</m3e-avatar>
-					Debian/Ubuntu Linux amd64</m3e-list-action
-				>
+					Debian/Ubuntu Linux amd64 (deb)
+					</m3e-list-action>
 				<m3e-list-action @click="download('debian_arm64.deb')">
 					<m3e-avatar slot="leading">
 						<Icon name="mdi:debian" />
 					</m3e-avatar>
-					Debian/Ubuntu Linux arm64
+					Debian/Ubuntu Linux arm64 (deb)
 				</m3e-list-action>
 				<m3e-list-action @click="download('fedora_amd64.rpm')">
 					<m3e-avatar slot="leading">
 						<Icon name="mdi:fedora" />
 					</m3e-avatar>
-					Fedora/openSUSE Linux amd64
+					Fedora/openSUSE Linux amd64 (rpm)
 				</m3e-list-action>
 				<m3e-list-action @click="download('fedora_arm64.rpm')">
 					<m3e-avatar slot="leading">
 						<Icon name="mdi:fedora" />
 					</m3e-avatar>
-					Fedora/openSUSE Linux arm64
+					Fedora/openSUSE Linux arm64 (rpm)
+				</m3e-list-action>
+				<m3e-list-action @click="download('linux_amd64.AppImage')">
+					<m3e-avatar slot="leading">
+						<Icon name="mdi:linux" />
+					</m3e-avatar>
+					Linux amd64 (AppImage)
+				</m3e-list-action>
+				<m3e-list-action @click="download('linux_arm64.AppImage')">
+					<m3e-avatar slot="leading">
+						<Icon name="mdi:linux" />
+					</m3e-avatar>
+					Linux arm64 (AppImage)
 				</m3e-list-action>
 				<m3e-list-action @click="download('windows_amd64.exe')">
 					<m3e-avatar slot="leading">
 						<Icon name="mdi:microsoft" />
 					</m3e-avatar>
-					Windows 10/11 amd64
+					Windows 10/11 amd64 (exe)
 				</m3e-list-action>
 				<m3e-list-action @click="download('macos_arm64.pkg')">
 					<m3e-avatar slot="leading">
 						<Icon name="mdi:apple" />
 					</m3e-avatar>
-					macOS arm64
+					macOS arm64 (pkg)
 				</m3e-list-action>
 			</m3e-action-list>
 		</m3e-card>
