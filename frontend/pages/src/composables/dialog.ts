@@ -1,5 +1,5 @@
-import { M3eDialogElement } from "@m3e/web/dialog";
-import { ref } from "vue";
+import { M3eDialogElement } from '@m3e/web/dialog';
+import { ref } from 'vue';
 
 const privacyDialog = ref<M3eDialogElement | null>(null);
 const searchEnginesDialog = ref<M3eDialogElement | null>(null);

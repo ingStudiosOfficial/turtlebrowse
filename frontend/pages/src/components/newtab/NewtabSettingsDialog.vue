@@ -50,7 +50,11 @@ onMounted(async () => {
 			</m3e-form-field>
 			<m3e-divider></m3e-divider>
 			<span>Wallpaper</span>
-			<img v-if="wallpaperUrl !== null && wallpaperUrl.trim() !== ''" :src="wallpaperUrl" class="uploaded-wallpaper" />
+			<img
+				v-if="wallpaperUrl !== null && wallpaperUrl.trim() !== ''"
+				:src="wallpaperUrl"
+				class="uploaded-wallpaper"
+			/>
 			<m3e-button-group variant="connected">
 				<m3e-button variant="filled" @click="imageInput?.click()">
 					<m3e-icon slot="icon" name="image"></m3e-icon>
@@ -61,7 +65,13 @@ onMounted(async () => {
 					Clear
 				</m3e-button>
 			</m3e-button-group>
-			<input type="file" style="display: none;" accept="image/*" ref="imageInput" @change="onImageUpload($event.target as HTMLInputElement)" />
+			<input
+				type="file"
+				style="display: none"
+				accept="image/*"
+				ref="imageInput"
+				@change="onImageUpload($event.target as HTMLInputElement)"
+			/>
 		</div>
 	</m3e-dialog>
 </template>

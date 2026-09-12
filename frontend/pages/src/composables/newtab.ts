@@ -1,7 +1,7 @@
-import type { NewtabSettings } from "@/interfaces/NewtabSettings";
-import { getNewtabSettings, setNewtabSettings } from "@/utils/java_bridge";
-import { getWallpaper, setWallpaper } from "@/utils/wallpaper";
-import { ref } from "vue";
+import type { NewtabSettings } from '@/interfaces/NewtabSettings';
+import { getNewtabSettings, setNewtabSettings } from '@/utils/java_bridge';
+import { getWallpaper, setWallpaper } from '@/utils/wallpaper';
+import { ref } from 'vue';
 
 const wallpaper = ref<File | null>(null);
 const wallpaperUrl = ref<string | null>(null);
@@ -11,7 +11,8 @@ export function useNewtab() {
 	async function refreshWallpaper() {
 		wallpaper.value = await getWallpaper();
 		console.log('Wallpaper:', wallpaper.value);
-		if (wallpaper.value) wallpaperUrl.value = `turtlebrowse://api/get-wallpaper?t=${Date.now()}`
+		if (wallpaper.value)
+			wallpaperUrl.value = `turtlebrowse://api/get-wallpaper?t=${Date.now()}`;
 	}
 
 	async function saveWallpaper(file: File) {
@@ -32,5 +33,13 @@ export function useNewtab() {
 		}
 	}
 
-	return { wallpaper, wallpaperUrl, newtabSettings, refreshWallpaper, saveWallpaper, refreshSettings, saveSettings };
+	return {
+		wallpaper,
+		wallpaperUrl,
+		newtabSettings,
+		refreshWallpaper,
+		saveWallpaper,
+		refreshSettings,
+		saveSettings,
+	};
 }

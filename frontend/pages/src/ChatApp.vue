@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ConversationComponent from './components/chat/ConversationComponent.vue';
-
 </script>
 
 <template>

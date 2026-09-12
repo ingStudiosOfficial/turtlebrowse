@@ -34,7 +34,11 @@ onMounted(async () => {
 		<div class="privacy-dialog">
 			<div class="toggle-setting">
 				<p>Enable Discord Presence</p>
-				<m3e-switch icons="both" :checked="discordPresenceEnabled" @change="toggleDiscordPresence($event.target)"></m3e-switch>
+				<m3e-switch
+					icons="both"
+					:checked="discordPresenceEnabled"
+					@change="toggleDiscordPresence($event.target)"
+				></m3e-switch>
 			</div>
 		</div>
 	</m3e-dialog>

@@ -1,8 +1,11 @@
-import type { AISettings } from "@/interfaces/AISettings";
-import type { NewtabSettings } from "@/interfaces/NewtabSettings";
-import type { SearchEngine } from "@/types/SearchEngine";
+import type { AISettings } from '@/interfaces/AISettings';
+import type { NewtabSettings } from '@/interfaces/NewtabSettings';
+import type { SearchEngine } from '@/types/SearchEngine';
 
-export async function fetchFromJava(request: string, params?: Record<string, string>): Promise<string | void> {
+async function communicateWithBackend(
+	request: string,
+	params?: Record<string, string>,
+): Promise<Response> {
 	const response = await fetch(`turtlebrowse://api/${request}`, {
 		method: 'POST',
 		headers: {
@@ -10,12 +13,28 @@ export async function fetchFromJava(request: string, params?: Record<string, str
 		},
 		body: JSON.stringify(params),
 	});
+	return response;
+}
+
+export async function fetchFromJavaText(
+	request: string,
+	params?: Record<string, string>,
+): Promise<string | void> {
+	const response = await communicateWithBackend(request, params);
 	return response.text();
+}
+
+export async function fetchFromJavaJson(
+	request: string,
+	params?: Record<string, string>,
+): Promise<unknown> {
+	const response = await communicateWithBackend(request, params);
+	return await response.json();
 }
 
 export async function getUserName(): Promise<string> {
 	try {
-		const name = await fetchFromJava('GET_NAME');
+		const name = await fetchFromJavaText('GET_NAME');
 		return name || 'Guest';
 	} catch (error) {
 		console.error('Error while fetching name:', error);
@@ -24,21 +43,23 @@ export async function getUserName(): Promise<string> {
 }
 
 export async function searchWeb(query: string) {
-	await fetchFromJava('SEARCH_WEB', { query: query });
+	await fetchFromJavaText('SEARCH_WEB', { query: query });
 }
 
 export async function getTheme(): Promise<string | undefined> {
-    try {
-        return await fetchFromJava('GET_THEME') as string | undefined;
-    } catch (error) {
-        console.error('Error while getting theme:', error);
-        return undefined;
-    }
+	try {
+		return (await fetchFromJavaText('GET_THEME')) as string | undefined;
+	} catch (error) {
+		console.error('Error while getting theme:', error);
+		return undefined;
+	}
 }
 
 export async function getDefaultSearchEngine(): Promise<SearchEngine> {
 	try {
-		const searchEngine = await fetchFromJava('GET_SEARCH_ENGINE') as SearchEngine | undefined;
+		const searchEngine = (await fetchFromJavaText('GET_SEARCH_ENGINE')) as
+			| SearchEngine
+			| undefined;
 
 		if (!searchEngine) {
 			return 'brave';
@@ -53,7 +74,7 @@ export async function getDefaultSearchEngine(): Promise<SearchEngine> {
 
 export async function setDefaultSearchEngine(engine: SearchEngine) {
 	try {
-		await fetchFromJava('SET_SEARCH_ENGINE', { engine: engine });
+		await fetchFromJavaText('SET_SEARCH_ENGINE', { engine: engine });
 	} catch (error) {
 		console.error('Failed to set search engine:', error);
 	}
@@ -61,7 +82,7 @@ export async function setDefaultSearchEngine(engine: SearchEngine) {
 
 export async function getDiscordPresenceSetting(): Promise<boolean> {
 	try {
-		const enabled = await fetchFromJava('GET_DISCORD_SETTING') as string | undefined;
+		const enabled = (await fetchFromJavaText('GET_DISCORD_SETTING')) as string | undefined;
 
 		if (enabled === undefined) {
 			return false;
@@ -76,7 +97,7 @@ export async function getDiscordPresenceSetting(): Promise<boolean> {
 
 export async function setDiscordPresenceSetting(enabled: boolean) {
 	try {
-		await fetchFromJava('SET_DISCORD_SETTING', { enabled: enabled.toString() });
+		await fetchFromJavaText('SET_DISCORD_SETTING', { enabled: enabled.toString() });
 	} catch (error) {
 		console.error('Failed to set Discord setting:', error);
 	}
@@ -84,7 +105,7 @@ export async function setDiscordPresenceSetting(enabled: boolean) {
 
 export async function getAISettings(): Promise<AISettings> {
 	try {
-		const settingsString = await fetchFromJava('GET_AI_SETTINGS') as string | undefined;
+		const settingsString = (await fetchFromJavaText('GET_AI_SETTINGS')) as string | undefined;
 		if (!settingsString) {
 			return {
 				enabled: false,
@@ -106,7 +127,10 @@ export async function getAISettings(): Promise<AISettings> {
 
 export async function setAISettings(settings: AISettings) {
 	try {
-		await fetchFromJava('SET_AI_SETTINGS', { enabled: settings.enabled.toString(), model: settings.model });
+		await fetchFromJavaText('SET_AI_SETTINGS', {
+			enabled: settings.enabled.toString(),
+			model: settings.model,
+		});
 	} catch (error) {
 		console.error('Failed to set AI setting:', error);
 	}
@@ -114,7 +138,9 @@ export async function setAISettings(settings: AISettings) {
 
 export async function getNewtabSettings(): Promise<NewtabSettings> {
 	try {
-		const settingsString = await fetchFromJava('GET_NEWTAB_SETTINGS') as string | undefined;
+		const settingsString = (await fetchFromJavaText('GET_NEWTAB_SETTINGS')) as
+			| string
+			| undefined;
 		if (!settingsString) {
 			return {
 				greetingText: '',
@@ -135,8 +161,20 @@ export async function getNewtabSettings(): Promise<NewtabSettings> {
 
 export async function setNewtabSettings(settings: NewtabSettings) {
 	try {
-		await fetchFromJava('SET_NEWTAB_SETTINGS', { greetingText: settings.greetingText });
+		await fetchFromJavaText('SET_NEWTAB_SETTINGS', { greetingText: settings.greetingText });
 	} catch (error) {
 		console.error('Failed to set New Tab setting:', error);
+	}
+}
+
+export async function getSearchSuggestions(query: string): Promise<string[]> {
+	try {
+		const suggestions: string[] = (await fetchFromJavaJson('AUTOCOMPLETER', {
+			query: query,
+		})) as string[];
+		return suggestions;
+	} catch (error) {
+		console.error(error);
+		return [];
 	}
 }

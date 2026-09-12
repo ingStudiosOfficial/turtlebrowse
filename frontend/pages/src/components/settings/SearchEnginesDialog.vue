@@ -88,7 +88,12 @@ onMounted(async () => {
 			<m3e-form-field>
 				<label slot="label">Default search engine</label>
 				<m3e-select :key="searchEngine" @change="changeSearchEngine($event.target)">
-					<m3e-option v-for="engine in defaultSearchEngines" :key="engine.value" :value="engine.value" :selected="engine.value === searchEngine">
+					<m3e-option
+						v-for="engine in defaultSearchEngines"
+						:key="engine.value"
+						:value="engine.value"
+						:selected="engine.value === searchEngine"
+					>
 						{{ engine.name }}
 					</m3e-option>
 				</m3e-select>

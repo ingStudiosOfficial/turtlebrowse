@@ -1,7 +1,7 @@
-import { promptStreaming } from "@/utils/chat";
-import { M3eSnackbar } from "@m3e/web/snackbar";
-import { ref } from "vue";
-import type { Conversation } from "@/interfaces/Conversation";
+import { promptStreaming } from '@/utils/chat';
+import { M3eSnackbar } from '@m3e/web/snackbar';
+import { ref } from 'vue';
+import type { Conversation } from '@/interfaces/Conversation';
 
 const prompt = ref<string>('');
 const prompts = ref<Conversation[]>([]);
@@ -15,16 +15,21 @@ function sendPrompt(conversation: Conversation) {
 	const currentConversation = prompts.value[prompts.value.length - 1] as Conversation;
 
 	try {
-		promptStreaming(prompt.value, (chunk) => {
-			console.log('Received chunk:', chunk);
-			currentConversation.assistant.thinking += chunk;
-		}, (chunk) => {
-			console.log('Received chunk:', chunk);
-			currentConversation.assistant.response += chunk;
-		}, (response) => {
-			currentConversation.assistant.response = response;
-			isGenerating.value = false;
-		});
+		promptStreaming(
+			prompt.value,
+			(chunk) => {
+				console.log('Received chunk:', chunk);
+				currentConversation.assistant.thinking += chunk;
+			},
+			(chunk) => {
+				console.log('Received chunk:', chunk);
+				currentConversation.assistant.response += chunk;
+			},
+			(response) => {
+				currentConversation.assistant.response = response;
+				isGenerating.value = false;
+			},
+		);
 
 		prompt.value = '';
 	} catch (error) {

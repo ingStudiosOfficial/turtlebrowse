@@ -6,7 +6,7 @@ import '@m3e/web/loading-indicator';
 
 interface ComponentProps {
 	message: string;
-    thinking?: string;
+	thinking?: string;
 	sender: 'user' | 'assistant';
 }
 
@@ -15,14 +15,22 @@ const props = defineProps<ComponentProps>();
 const messageMessage = ref<string>('');
 const thinkingMessage = ref<string | null>(null);
 
-watch(() => props.message, async (message) => {
-	messageMessage.value = await parseMessage(message, props.sender);
-}, { immediate: true });
+watch(
+	() => props.message,
+	async (message) => {
+		messageMessage.value = await parseMessage(message, props.sender);
+	},
+	{ immediate: true },
+);
 
-watch(() => props.thinking, async (thinking) => {
-	if (!thinking) return;
-	thinkingMessage.value = await parseMessage(thinking, props.sender);
-}, { immediate: true });
+watch(
+	() => props.thinking,
+	async (thinking) => {
+		if (!thinking) return;
+		thinkingMessage.value = await parseMessage(thinking, props.sender);
+	},
+	{ immediate: true },
+);
 </script>
 
 <template>
@@ -31,11 +39,16 @@ watch(() => props.thinking, async (thinking) => {
 		<p>Thinking</p>
 	</div>
 	<div v-else class="conv-bubble" :class="props.sender === 'user' ? 'user-message' : ''">
-        <m3e-expansion-panel v-if="props.thinking && props.message" class="think-expand" toggle-position="before" toggle-direction="horizontal">
-            <span slot="header">Show thinking</span>
-            <div class="conv-thinking" v-html="thinkingMessage"></div>
-        </m3e-expansion-panel>
-        <div v-else-if="props.thinking" class="conv-thinking" v-html="thinkingMessage"></div>
+		<m3e-expansion-panel
+			v-if="props.thinking && props.message"
+			class="think-expand"
+			toggle-position="before"
+			toggle-direction="horizontal"
+		>
+			<span slot="header">Show thinking</span>
+			<div class="conv-thinking" v-html="thinkingMessage"></div>
+		</m3e-expansion-panel>
+		<div v-else-if="props.thinking" class="conv-thinking" v-html="thinkingMessage"></div>
 
 		<div class="conv-message" v-html="messageMessage"></div>
 	</div>
@@ -44,18 +57,22 @@ watch(() => props.thinking, async (thinking) => {
 <style scoped>
 .conv-bubble {
 	min-width: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: v-bind("props.sender === 'user' ? 'flex-end' : 'flex-start'");
+	display: flex;
+	flex-direction: column;
+	align-items: v-bind("props.sender === 'user' ? 'flex-end' : 'flex-start'");
 	width: fit-content;
 	max-width: 50%;
 	padding: 10px;
-    gap: 10px;
+	gap: 10px;
 	box-sizing: border-box;
 	border-radius: 25px;
-	background-color: v-bind("props.sender === 'user' ? 'var(--md-sys-color-primary-container)' : 'transparent'");
+	background-color: v-bind(
+		"props.sender === 'user' ? 'var(--md-sys-color-primary-container)' : 'transparent'"
+	);
 	align-self: v-bind("props.sender === 'user' ? 'flex-end' : 'flex-start'");
-    color: v-bind("props.sender === 'user' ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)'");
+	color: v-bind(
+		"props.sender === 'user' ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)'"
+	);
 }
 
 .thinking {
@@ -76,17 +93,18 @@ watch(() => props.thinking, async (thinking) => {
 	);
 	background-size: 200% auto;
 	-webkit-background-clip: text;
-  	-webkit-text-fill-color: transparent;
+	-webkit-text-fill-color: transparent;
 	animation: color-flow 3s linear infinite;
 }
 
 @keyframes color-flow {
-  to {
-    background-position: -200% center;
-  }
+	to {
+		background-position: -200% center;
+	}
 }
 
-.conv-message, .conv-thinking {
+.conv-message,
+.conv-thinking {
 	width: 100%;
 	text-align: v-bind("props.sender === 'user' ? 'right' : 'left'");
 	display: -webkit-box;
@@ -94,7 +112,8 @@ watch(() => props.thinking, async (thinking) => {
 	overflow-wrap: normal;
 }
 
-.conv-message *, .conv-thinking * {
+.conv-message *,
+.conv-thinking * {
 	width: 100%;
 	text-align: v-bind("props.sender === 'user' ? 'right' : 'left'");
 	display: -webkit-box;
@@ -103,21 +122,21 @@ watch(() => props.thinking, async (thinking) => {
 }
 
 .conv-message {
-    font-size: 1rem;
+	font-size: 1rem;
 }
 
 .conv-thinking {
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 1rem;
+	color: var(--md-sys-color-on-surface-variant);
+	font-size: 1rem;
 }
 
 .think-expand {
-    --m3e-expansion-panel-shape: 10px;
-    --m3e-expansion-panel-open-shape: 10px;
+	--m3e-expansion-panel-shape: 10px;
+	--m3e-expansion-panel-open-shape: 10px;
 }
 
 .user-message {
-    margin: 0;
+	margin: 0;
 }
 
 :deep(.message-extract) {
@@ -130,7 +149,7 @@ watch(() => props.thinking, async (thinking) => {
 }
 
 :deep(.message-extract span) {
-    width: 100%;
+	width: 100%;
 	display: -webkit-box;
 	-webkit-line-clamp: 4;
 	-webkit-box-orient: vertical;
@@ -138,6 +157,6 @@ watch(() => props.thinking, async (thinking) => {
 	line-clamp: 4;
 	text-align: left !important;
 	-webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
-  	mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+	mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
 }
 </style>

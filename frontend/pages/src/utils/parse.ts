@@ -1,4 +1,4 @@
-import { marked } from "marked";
+import { marked } from 'marked';
 
 export async function parseMessage(message: string, sender: 'user' | 'assistant'): Promise<string> {
 	let result = '';

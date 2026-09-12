@@ -41,7 +41,7 @@ public class SearchAutosuggest {
 		}, 100, TimeUnit.MILLISECONDS);
 	}
 
-	private List<String> fetchAndProcess(String query) {
+	public List<String> fetchAndProcess(String query) {
 		try {
 			System.out.printf("Fetching for query %s\n", query);
 

@@ -40,15 +40,24 @@ onMounted(async () => {
 		<div class="ai-dialog">
 			<div class="toggle-setting">
 				<p>Enable local AI integrations</p>
-				<m3e-switch icons="both" :checked="aiEnabled" @change="toggleAIEnabled($event.target)"></m3e-switch>
+				<m3e-switch
+					icons="both"
+					:checked="aiEnabled"
+					@change="toggleAIEnabled($event.target)"
+				></m3e-switch>
 			</div>
 			<div v-if="aiEnabled" class="ai-enabled">
 				<m3e-form-field>
 					<label slot="label">Ollama AI model</label>
-					<input v-model="aiModel" @change="setAISettings({
-						enabled: aiEnabled,
-						model: aiModel,
-					})" />
+					<input
+						v-model="aiModel"
+						@change="
+							setAISettings({
+								enabled: aiEnabled,
+								model: aiModel,
+							})
+						"
+					/>
 				</m3e-form-field>
 			</div>
 		</div>

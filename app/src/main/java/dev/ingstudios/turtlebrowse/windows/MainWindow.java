@@ -11,6 +11,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,6 +53,7 @@ import dev.ingstudios.turtlebrowse.managers.WallpaperManager;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager.WindowItem;
 import dev.ingstudios.turtlebrowse.ollama.OllamaChat;
+import dev.ingstudios.turtlebrowse.search.SearchAutosuggest;
 import dev.ingstudios.turtlebrowse.search.SearchURLTemplates;
 import io.github.ollama4j.exceptions.OllamaException;
 import javafx.application.Platform;
@@ -89,6 +91,7 @@ public class MainWindow extends JFrame {
 	public boolean enableDiscordPresence = false;
 	public AISettings aiSettings = new AISettings(false, "gemma4:e2b");
 	public NewtabSettings newtabSettings = new NewtabSettings("");
+	private final SearchAutosuggest searchAutosuggest;
 
 	public MainWindow(ProfileStructureWithId profile) {
 		super("Turtlebrowse");
@@ -126,6 +129,8 @@ public class MainWindow extends JFrame {
 
 		setUserAgent();
 		setMaterialColorSchemeFromProfile();
+
+		searchAutosuggest = new SearchAutosuggest(userAgent);
 
 		browserContainer = new JPanel(new BorderLayout());
 
@@ -437,6 +442,12 @@ public class MainWindow extends JFrame {
 			case "CLEAR_WALLPAPER": {
 				WallpaperManager.getInstance(this).clearWallpaper();
 				return "\"ok\"";
+			}
+
+			case "AUTOCOMPLETER": {
+				final String query = params.get("query").getAsString();
+				final List<String> suggestions = searchAutosuggest.fetchAndProcess(query);
+				return gson.toJson(suggestions);
 			}
 
 			default:

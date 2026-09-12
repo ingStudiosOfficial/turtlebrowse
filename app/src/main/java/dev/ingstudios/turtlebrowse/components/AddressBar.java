@@ -186,7 +186,27 @@ public class AddressBar extends JPanel {
 				Main.createProfilePickerWindow();
 			});
 
-			root.getChildren().addAll(backButton, forwardButton, reloadButton, addressField, aiButton, profileButton);
+			final JFXButton settingsButton = new JFXButton("*");
+			settingsButton.setGraphic(new FontIcon(Material2OutlinedMZ.SETTINGS));
+			settingsButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+			settingsButton.setStyle("-fx-padding: 10px;");
+			settingsButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
+				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
+			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+			settingsButton.setOnMouseEntered(event -> {
+				settingsButton.setCursor(Cursor.HAND);
+			});
+			settingsButton.setOnMouseDragExited(event -> {
+				settingsButton.setCursor(Cursor.DEFAULT);
+			});
+			settingsButton.setOnAction(event -> {
+				System.out.println("Settings button clicked.");
+				parent.createTab("turtlebrowse://settings");
+			});
+
+			root.getChildren().addAll(backButton, forwardButton, reloadButton, addressField, aiButton, profileButton,
+					settingsButton);
 
 			backButton.prefWidthProperty().bind(backButton.heightProperty());
 			forwardButton.prefWidthProperty().bind(forwardButton.heightProperty());
