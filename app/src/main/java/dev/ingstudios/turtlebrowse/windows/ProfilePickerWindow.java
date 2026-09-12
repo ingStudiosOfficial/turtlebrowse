@@ -31,6 +31,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -98,8 +99,16 @@ public class ProfilePickerWindow extends Stage {
 			newProfileBox.setCursor(Cursor.DEFAULT);
 		});
 		newProfileBox.setOnMouseClicked(event -> {
-			if (event.getButton() == MouseButton.PRIMARY)
+			if (event.getButton() == MouseButton.PRIMARY) {
+				event.consume();
 				new NewProfileWindow();
+			}
+		});
+		newProfileBox.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.SPACE) {
+				event.consume();
+				new NewProfileWindow();
+			}
 		});
 
 		final Label createLabel = new Label("Add");
@@ -123,27 +132,15 @@ public class ProfilePickerWindow extends Stage {
 			guestButton.setCursor(Cursor.DEFAULT);
 		});
 		guestButton.setOnMouseClicked(event -> {
-			event.consume();
-
 			if (event.getButton() == MouseButton.PRIMARY) {
-				final ProfileStructureWithId guestProfile = new ProfileStructureWithId("Guest",
-						Platform.getPreferences().getAccentColor(), UUID.randomUUID());
-
-				final Path profileCefCachePath = Main.getStoragePath("cef-cache", guestProfile.getIdAsString());
-				final Path profileStoragePath = Main.getStoragePath("profiles", guestProfile.getIdAsString());
-
-				final File profileCefCacheDir = profileCefCachePath.toFile();
-				final File profileStorageDir = profileStoragePath.toFile();
-
-				if (!profileCefCacheDir.exists()) {
-					profileCefCacheDir.mkdirs();
-				}
-
-				if (!profileStorageDir.exists()) {
-					profileStorageDir.mkdirs();
-				}
-
-				Main.createMainWindow(guestProfile, true);
+				event.consume();
+				createGuestProfile();
+			}
+		});
+		guestButton.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.SPACE) {
+				event.consume();
+				createGuestProfile();
 			}
 		});
 
@@ -165,22 +162,20 @@ public class ProfilePickerWindow extends Stage {
 			final Paint backgroundColor = Main.mainMaterialColorScheme.getSurfaceContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
 		}, Main.mainMaterialColorScheme.getSurfaceContainer()));
+		profileButton.setOnMouseEntered(event -> {
+			profileButton.setCursor(Cursor.HAND);
+		});
+		profileButton.setOnMouseDragExited(event -> {
+			profileButton.setCursor(Cursor.DEFAULT);
+		});
+		profileButton.setOnAction(event -> {
+			event.consume();
+			Main.createMainWindow(profile);
+		});
 
 		final VBox profileBox = new VBox();
 		profileBox.setStyle("-fx-spacing: 10px;");
 		profileBox.setAlignment(Pos.CENTER);
-		profileBox.setOnMouseEntered(event -> {
-			profileBox.setCursor(Cursor.HAND);
-		});
-		profileBox.setOnMouseDragExited(event -> {
-			profileBox.setCursor(Cursor.DEFAULT);
-		});
-		profileBox.setOnMouseClicked(event -> {
-			event.consume();
-
-			if (event.getButton() == MouseButton.PRIMARY)
-				Main.createMainWindow(profile);
-		});
 
 		final ContextMenu profileButtonMenu = new ContextMenu();
 
@@ -231,6 +226,27 @@ public class ProfilePickerWindow extends Stage {
 		profileButton.setMaxHeight(Double.MAX_VALUE);
 
 		return profileButton;
+	}
+
+	private void createGuestProfile() {
+		final ProfileStructureWithId guestProfile = new ProfileStructureWithId("Guest",
+				Platform.getPreferences().getAccentColor(), UUID.randomUUID());
+
+		final Path profileCefCachePath = Main.getStoragePath("cef-cache", guestProfile.getIdAsString());
+		final Path profileStoragePath = Main.getStoragePath("profiles", guestProfile.getIdAsString());
+
+		final File profileCefCacheDir = profileCefCachePath.toFile();
+		final File profileStorageDir = profileStoragePath.toFile();
+
+		if (!profileCefCacheDir.exists()) {
+			profileCefCacheDir.mkdirs();
+		}
+
+		if (!profileStorageDir.exists()) {
+			profileStorageDir.mkdirs();
+		}
+
+		Main.createMainWindow(guestProfile, true);
 	}
 
 	private void closeWindow() {
