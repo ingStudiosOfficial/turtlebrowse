@@ -62,9 +62,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.paint.Color;
 
 public class MainWindow extends JFrame {
-	public final String START_URL = "turtlebrowse://newtab";
 	private final boolean USE_OSR = false;
 
+	public String startUrl = "turtlebrowse://newtab";
 	private CefClient cefClient;
 	public CefBrowser currentBrowser;
 	public ArrayList<CefBrowser> openedBrowserTabs = new ArrayList<>();
@@ -94,11 +94,17 @@ public class MainWindow extends JFrame {
 	private final SearchAutosuggest searchAutosuggest;
 
 	public MainWindow(ProfileStructureWithId profile) {
+		this(profile, "turtlebrowse://newtab");
+	}
+
+	public MainWindow(ProfileStructureWithId profile, String launchUrl) {
 		super("Turtlebrowse");
 
 		System.out.println("Creating main window for profile: " + profile.getIdAsString());
 
 		currentProfile = profile;
+
+		startUrl = launchUrl;
 
 		profileDatabase = ProfileDatabase.getInstance(currentProfile.getIdAsString());
 
@@ -135,7 +141,7 @@ public class MainWindow extends JFrame {
 		browserContainer = new JPanel(new BorderLayout());
 
 		// Address bar
-		addressBar = new AddressBar(cefClient, this, START_URL);
+		addressBar = new AddressBar(cefClient, this, startUrl);
 
 		cefClient = cefApp.createClient();
 
@@ -146,10 +152,10 @@ public class MainWindow extends JFrame {
 		aiSidebar = new AISidebar(cefClient, this, USE_OSR, isUiFocused);
 
 		// Keyboard handler (JCEF)
-		cefClient.addKeyboardHandler(new CefKeyboardHandler(this, START_URL));
+		cefClient.addKeyboardHandler(new CefKeyboardHandler(this, startUrl));
 
 		// Keyboard handler (Swing)
-		new SwingKeyboardHandler(this, START_URL);
+		new SwingKeyboardHandler(this, startUrl);
 
 		cefClient.addFocusHandler(new TurtlebrowseFocusHandler(this));
 
@@ -190,7 +196,7 @@ public class MainWindow extends JFrame {
 		});
 
 		SwingUtilities.invokeLater(() -> {
-			createTab(START_URL);
+			createTab(startUrl);
 			setVisible(true);
 		});
 	}

@@ -103,6 +103,15 @@ public class Main {
 			}
 		}
 
+		final String launchUrl = getLaunchUrl(args);
+		if (launchUrl != null && !launchUrl.isEmpty() && !profiles.isEmpty()) {
+			final MainWindow mainWindow = new MainWindow(profiles.get(0), launchUrl);
+			mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+			mainWindow.setUndecorated(false);
+			mainWindow.setVisible(true);
+			return;
+		}
+
 		if (profileId != null) {
 			System.out.println("Profile ID is not null.");
 			db.closeDb();
@@ -251,6 +260,18 @@ public class Main {
 			}
 		}
 		return isGuest;
+	}
+
+	private static String getLaunchUrl(String[] args) {
+		String url = "";
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equals("--url") && i + 1 < args.length) {
+				url = args[i + 1];
+				System.out.printf("Launch URL: %s\n", url);
+				break;
+			}
+		}
+		return url;
 	}
 
 	public static MainDatabase getDb() {

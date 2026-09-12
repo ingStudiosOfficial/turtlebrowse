@@ -158,6 +158,7 @@ tasks.jpackage {
     copyright = "2026 (ing) Studios and Ethan Lee"
 
     input = layout.buildDirectory.dir("libs")
+    resourceDir = layout.projectDirectory.dir("src/packaging/resources")
     
     mainJar = "app-all.jar"
     dependsOn(tasks.shadowJar)

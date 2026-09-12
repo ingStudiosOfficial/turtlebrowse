@@ -80,7 +80,7 @@ public class TabBar extends JPanel {
 				createTabButton.setCursor(Cursor.DEFAULT);
 			});
 			createTabButton.setOnAction(event -> {
-				this.parent.createTab(this.parent.START_URL);
+				this.parent.createTab(this.parent.startUrl);
 			});
 			root.getChildren().add(createTabButton);
 

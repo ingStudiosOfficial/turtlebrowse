@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Turtlebrowse
+Comment=Turtlebrowse
+Exec=/opt/turtlebrowse/bin/Turtlebrowse --url %u
+Icon=/opt/turtlebrowse/lib/Turtlebrowse.png
+Terminal=false
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;
