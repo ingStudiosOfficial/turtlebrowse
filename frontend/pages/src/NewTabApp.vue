@@ -148,7 +148,7 @@ onUnmounted(() => {
 				<m3e-icon slot="prefix" name="search"></m3e-icon>
 				<label slot="hint">{{ errorMessage }}</label>
 			</m3e-form-field>
-			<m3e-autocomplete for="search-fld" ref="autocomplete">
+			<m3e-autocomplete for="search-fld" ref="autocomplete" no-data-label="No suggestions">
 				<m3e-loading-indicator slot="loading"></m3e-loading-indicator>
 			</m3e-autocomplete>
 		</div>
