@@ -27,7 +27,7 @@ public class PersonalizationWizardPane extends WizardPane {
 		getStylesheets().add(getClass().getResource("/css/wizard.css").toExternalForm());
 
 		final VBox mainBox = new VBox();
-		mainBox.setStyle("-fx-spacing: 15px;");
+		mainBox.setStyle("-fx-spacing: 16px;");
 		mainBox.setAlignment(Pos.CENTER_LEFT);
 
 		final Label nameLabel = new Label("What should we call you?");

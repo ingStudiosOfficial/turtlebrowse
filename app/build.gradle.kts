@@ -40,7 +40,7 @@ dependencies {
     // JFoenix library
     implementation("com.jfoenix:jfoenix:9.0.10")
 
-    // HTML to Markdwon
+    // HTML to Markdown
     implementation("dev.kreuzberg:html-to-markdown:2.29.0")
 
     // jsoup
@@ -62,6 +62,9 @@ dependencies {
 
     // Discord Rich Presence
     implementation("io.github.CDAGaming:DiscordIPC:0.10.2")
+
+    // yt-dlp-java
+    implementation("io.github.bivashy:yt-dlp-java:2.0.8")
 }
 
 // Apply a specific Java toolchain. 

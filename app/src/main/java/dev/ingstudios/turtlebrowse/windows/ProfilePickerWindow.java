@@ -278,6 +278,7 @@ public class ProfilePickerWindow extends Stage {
 		final PopOver popOver = new PopOver();
 		popOver.setArrowLocation(PopOver.ArrowLocation.BOTTOM_CENTER);
 		popOver.setAutoHide(true);
+		popOver.setCornerRadius(12);
 
 		final JFXButton yesButton = new JFXButton("Yes");
 		yesButton.setOnAction(event -> {

@@ -36,6 +36,7 @@ import org.kordamp.ikonli.material2.Material2OutlinedMZ;
 import com.jfoenix.controls.JFXButton;
 
 import dev.ingstudios.turtlebrowse.Main;
+import dev.ingstudios.turtlebrowse.managers.YtdlpManager;
 import dev.ingstudios.turtlebrowse.search.SearchAutosuggest;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
@@ -45,6 +46,7 @@ public class AddressBar extends JPanel {
 	private JFXPanel addressBarPanel;
 	private boolean wasFocused = false;
 	private final SearchAutosuggest autosuggester;
+	public HBox root;
 
 	public AddressBar(CefClient client, MainWindow parent, String startUrl) {
 		this.parent = parent;
@@ -58,7 +60,7 @@ public class AddressBar extends JPanel {
 		addressBarPanel.setPreferredSize(new java.awt.Dimension(1200, 50));
 
 		Platform.runLater(() -> {
-			final HBox root = new HBox();
+			root = new HBox();
 			root.getStylesheets().add(getClass().getResource("/css/main.css").toExternalForm());
 			root.setStyle("-fx-spacing: 10px; -fx-padding: 10px;");
 			root.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
@@ -372,7 +374,21 @@ public class AddressBar extends JPanel {
 			Main.createProfilePickerWindow();
 		});
 
-		menu.getItems().addAll(settingsItem, profileItem);
+		final MenuItem ytdlpItem = new MenuItem("Download video");
+		ytdlpItem.setGraphic(new FontIcon(Material2OutlinedAL.CLOUD_DOWNLOAD));
+		ytdlpItem.setOnAction(event -> {
+			System.out.println("yt-dlp download button clicked.");
+			YtdlpManager.getInstance(parent).createDownloadPopup();
+		});
+
+		final MenuItem closeItem = new MenuItem("Close");
+		closeItem.setGraphic(new FontIcon(Material2OutlinedAL.CLOSE));
+		closeItem.setOnAction(event -> {
+			System.out.println("Close button clicked.");
+			menu.hide();
+		});
+
+		menu.getItems().addAll(settingsItem, profileItem, ytdlpItem, closeItem);
 
 		final JFXButton moreButton = new JFXButton(":");
 		moreButton.setGraphic(new FontIcon(Material2OutlinedMZ.MORE_VERT));
@@ -389,7 +405,12 @@ public class AddressBar extends JPanel {
 			moreButton.setCursor(Cursor.DEFAULT);
 		});
 		moreButton.setOnAction(event -> {
-			menu.show(moreButton, Side.BOTTOM, 0, 0);
+			System.out.println("More button clicked: " + menu.isShowing());
+			if (!menu.isShowing()) {
+				menu.show(moreButton, Side.BOTTOM, 0, 0);
+			} else {
+				menu.hide();
+			}
 		});
 
 		return moreButton;

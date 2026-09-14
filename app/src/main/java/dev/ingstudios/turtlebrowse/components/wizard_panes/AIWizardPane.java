@@ -27,7 +27,7 @@ public class AIWizardPane extends WizardPane {
 		getStylesheets().add(getClass().getResource("/css/wizard.css").toExternalForm());
 
 		final VBox mainBox = new VBox();
-		mainBox.setStyle("-fx-spacing: 15px;");
+		mainBox.setStyle("-fx-spacing: 16px;");
 		mainBox.setAlignment(Pos.CENTER_LEFT);
 
 		final JFXCheckBox enableAICheckBox = new JFXCheckBox("Enable optional AI features");
