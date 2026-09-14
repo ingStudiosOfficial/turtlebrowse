@@ -6,10 +6,13 @@ import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
@@ -167,52 +170,15 @@ public class AddressBar extends JPanel {
 				parent.aiSidebar.toggleSidebar();
 			});
 
-			final JFXButton profileButton = new JFXButton("👱");
-			profileButton.setGraphic(new FontIcon(Material2OutlinedAL.ACCOUNT_CIRCLE));
-			profileButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			profileButton.setStyle("-fx-padding: 10px;");
-			profileButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			profileButton.setOnMouseEntered(event -> {
-				profileButton.setCursor(Cursor.HAND);
-			});
-			profileButton.setOnMouseDragExited(event -> {
-				profileButton.setCursor(Cursor.DEFAULT);
-			});
-			profileButton.setOnAction(event -> {
-				System.out.println("Profile button clicked.");
-				Main.createProfilePickerWindow();
-			});
+			final JFXButton moreButton = createMoreButton();
 
-			final JFXButton settingsButton = new JFXButton("*");
-			settingsButton.setGraphic(new FontIcon(Material2OutlinedMZ.SETTINGS));
-			settingsButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			settingsButton.setStyle("-fx-padding: 10px;");
-			settingsButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			settingsButton.setOnMouseEntered(event -> {
-				settingsButton.setCursor(Cursor.HAND);
-			});
-			settingsButton.setOnMouseDragExited(event -> {
-				settingsButton.setCursor(Cursor.DEFAULT);
-			});
-			settingsButton.setOnAction(event -> {
-				System.out.println("Settings button clicked.");
-				parent.createTab("turtlebrowse://settings");
-			});
-
-			root.getChildren().addAll(backButton, forwardButton, reloadButton, addressField, aiButton, profileButton,
-					settingsButton);
+			root.getChildren().addAll(backButton, forwardButton, reloadButton, addressField, aiButton, moreButton);
 
 			backButton.prefWidthProperty().bind(backButton.heightProperty());
 			forwardButton.prefWidthProperty().bind(forwardButton.heightProperty());
 			reloadButton.prefWidthProperty().bind(reloadButton.heightProperty());
 			aiButton.prefWidthProperty().bind(aiButton.prefHeightProperty());
-			profileButton.prefWidthProperty().bind(profileButton.prefHeightProperty());
+			moreButton.prefWidthProperty().bind(moreButton.prefHeightProperty());
 
 			HBox.setHgrow(addressField, Priority.ALWAYS);
 			addressField.setMaxWidth(Double.MAX_VALUE);
@@ -387,6 +353,46 @@ public class AddressBar extends JPanel {
 		});
 
 		this.add(addressBarPanel);
+	}
+
+	private JFXButton createMoreButton() {
+		final ContextMenu menu = new ContextMenu();
+
+		final MenuItem settingsItem = new MenuItem("Settings");
+		settingsItem.setGraphic(new FontIcon(Material2OutlinedMZ.SETTINGS));
+		settingsItem.setOnAction(event -> {
+			System.out.println("Settings button clicked.");
+			parent.createTab("turtlebrowse://settings");
+		});
+
+		final MenuItem profileItem = new MenuItem("Profiles");
+		profileItem.setGraphic(new FontIcon(Material2OutlinedAL.ACCOUNT_CIRCLE));
+		profileItem.setOnAction(event -> {
+			System.out.println("Profile menu item clicked.");
+			Main.createProfilePickerWindow();
+		});
+
+		menu.getItems().addAll(settingsItem, profileItem);
+
+		final JFXButton moreButton = new JFXButton(":");
+		moreButton.setGraphic(new FontIcon(Material2OutlinedMZ.MORE_VERT));
+		moreButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+		moreButton.setStyle("-fx-padding: 10px;");
+		moreButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
+			final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
+		}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+		moreButton.setOnMouseEntered(event -> {
+			moreButton.setCursor(Cursor.HAND);
+		});
+		moreButton.setOnMouseDragExited(event -> {
+			moreButton.setCursor(Cursor.DEFAULT);
+		});
+		moreButton.setOnAction(event -> {
+			menu.show(moreButton, Side.BOTTOM, 0, 0);
+		});
+
+		return moreButton;
 	}
 
 	public void updateUrl(String newUrl) {
