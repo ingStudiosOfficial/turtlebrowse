@@ -29,6 +29,8 @@ If you want to download a previous version of Turtlebrowse, it can be found in t
 - 100% local agentic AI
 - Dynamic Material You theme
 - Multiple isolated user profiles
+- Discord Presence toggle
+- YouTube and other platforms video downloader with yt-dlp
 - Always private, no data leaves your device
 - Free and open-source (FOSS)
 

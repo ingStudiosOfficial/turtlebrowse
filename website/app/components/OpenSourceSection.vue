@@ -43,6 +43,12 @@
 				</m3e-avatar>
 				<span class="feat-label">Connects to Discord Presence</span>
 			</m3e-list-item>
+			<m3e-list-item>
+				<m3e-avatar slot="leading" class="feat-avtr">
+					<Icon name="mdi:youtube" />
+				</m3e-avatar>
+				<span class="feat-label">Built-in YouTube video downloader with yt-dlp</span>
+			</m3e-list-item>
 		</m3e-list>
 		<m3e-button variant="filled" size="medium" @click="navigateTo('/download')">
 			<Icon slot="icon" name="material-symbols:download" />
