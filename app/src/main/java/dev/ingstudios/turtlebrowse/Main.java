@@ -106,6 +106,8 @@ public class Main {
 
 		final String launchUrl = getLaunchUrl(args);
 		if (launchUrl != null && !launchUrl.isEmpty() && !profiles.isEmpty()) {
+			db.closeDb();
+
 			final ProfileStructureWithId profile = profiles.get(0);
 
 			final InstanceManager instanceManager = InstanceManager.getInstance();
