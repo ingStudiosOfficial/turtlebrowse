@@ -109,7 +109,7 @@ public class CefAppManager {
 			installPath = Paths.get(localAppData, "ingStudios", appName, installDir);
 		} else if (OS.isLinux()) {
 			String xdgDataHome = System.getenv("XDG_DATA_HOME");
-			if (xdgDataHome == null || xdgDataHome.isEmpty()) {
+			if (xdgDataHome == null || xdgDataHome.isBlank()) {
 				xdgDataHome = userHome + "/.local/share";
 			}
 			installPath = Paths.get(xdgDataHome, "ingStudios", appName, installDir);

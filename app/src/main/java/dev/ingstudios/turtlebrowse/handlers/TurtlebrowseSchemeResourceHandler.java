@@ -69,7 +69,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			final String path = url.substring("turtlebrowse://newtab".length());
 			System.out.println("Parsed path: '" + path + "'");
 
-			if (path.isEmpty() || path.equals("/")) {
+			if (path.isBlank() || path.equals("/")) {
 				loadResource("/web/newtab.html");
 			} else {
 				loadResource("/web" + path);
@@ -85,7 +85,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			final String path = url.substring("turtlebrowse://chat".length());
 			System.out.println("Parsed path: '" + path + "'");
 
-			if (path.isEmpty() || path.equals("/")) {
+			if (path.isBlank() || path.equals("/")) {
 				loadResource("/web/chat.html");
 			} else {
 				loadResource("/web" + path);
@@ -101,7 +101,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			final String path = url.substring("turtlebrowse://settings".length());
 			System.out.println("Parsed path: '" + path + "'");
 
-			if (path.isEmpty() || path.equals("/")) {
+			if (path.isBlank() || path.equals("/")) {
 				loadResource("/web/settings.html");
 			} else {
 				loadResource("/web" + path);
@@ -117,7 +117,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			final String path = url.substring("turtlebrowse://dino".length());
 			System.out.println("Parsed path: '" + path + "'");
 
-			if (path.isEmpty() || path.equals("/")) {
+			if (path.isBlank() || path.equals("/")) {
 				loadResource("/dino/dino.html");
 			} else {
 				loadResource("/dino" + path);

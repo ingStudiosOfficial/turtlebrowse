@@ -49,6 +49,7 @@ import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseLoadHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseRequestHandler;
 import dev.ingstudios.turtlebrowse.managers.CefAppManager;
 import dev.ingstudios.turtlebrowse.managers.DiscordPresenceManager;
+import dev.ingstudios.turtlebrowse.managers.InstanceManager;
 import dev.ingstudios.turtlebrowse.managers.WallpaperManager;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager.WindowItem;
@@ -120,6 +121,9 @@ public class MainWindow extends JFrame {
 		System.out.println("AWT Toolkit: " + java.awt.Toolkit.getDefaultToolkit().getClass().getName());
 		System.out.println("DISPLAY: " + System.getenv("DISPLAY"));
 		System.out.println("WAYLAND_DISPLAY: " + System.getenv("WAYLAND_DISPLAY"));
+
+		InstanceManager.getInstance().startListening(profile.getIdAsString(),
+				this);
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());

@@ -7,6 +7,6 @@ public class AppImageUtils {
 
 	public static boolean isAppImage() {
 		final String appImageEnv = getAppImagePath();
-		return appImageEnv != null && !appImageEnv.isEmpty();
+		return appImageEnv != null && !appImageEnv.isBlank();
 	}
 }

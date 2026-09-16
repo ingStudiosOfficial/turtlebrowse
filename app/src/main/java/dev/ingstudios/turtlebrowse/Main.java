@@ -26,6 +26,7 @@ import dev.ingstudios.turtlebrowse.db.MainDatabase;
 import dev.ingstudios.turtlebrowse.db.MainDatabase.ProfileStructureWithId;
 import dev.ingstudios.turtlebrowse.environment.AppImageUtils;
 import dev.ingstudios.turtlebrowse.managers.DiscordPresenceManager;
+import dev.ingstudios.turtlebrowse.managers.InstanceManager;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 import dev.ingstudios.turtlebrowse.windows.ProfilePickerWindow;
 import dev.ingstudios.turtlebrowse.windows.SetupWindow;
@@ -105,7 +106,18 @@ public class Main {
 
 		final String launchUrl = getLaunchUrl(args);
 		if (launchUrl != null && !launchUrl.isEmpty() && !profiles.isEmpty()) {
-			final MainWindow mainWindow = new MainWindow(profiles.get(0), launchUrl);
+			final ProfileStructureWithId profile = profiles.get(0);
+
+			final InstanceManager instanceManager = InstanceManager.getInstance();
+			final int port = instanceManager.getPort(profile.getIdAsString());
+			final boolean portInUse = instanceManager.isPortInUse("127.0.0.1", port);
+			System.out.println("Port in use: " + portInUse);
+			if (portInUse) {
+				instanceManager.broadcastToInstance("127.0.0.1", port, String.join("\0", args));
+				System.exit(0);
+			}
+
+			final MainWindow mainWindow = new MainWindow(profile, launchUrl);
 			mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
 			mainWindow.setUndecorated(false);
 			mainWindow.setVisible(true);
@@ -115,6 +127,16 @@ public class Main {
 		if (profileId != null) {
 			System.out.println("Profile ID is not null.");
 			db.closeDb();
+
+			final InstanceManager instanceManager = InstanceManager.getInstance();
+			final int port = instanceManager.getPort(profileId);
+			final boolean portInUse = instanceManager.isPortInUse("127.0.0.1", port);
+			System.out.println("Port in use: " + portInUse);
+			if (portInUse) {
+				instanceManager.broadcastToInstance("127.0.0.1", port, String.join("\0", args));
+				System.exit(0);
+			}
+
 			SwingUtilities.invokeLater(() -> {
 				System.out.println("Creating main window...");
 				final MainWindow mainWindow = new MainWindow(currentProfile);
@@ -262,7 +284,7 @@ public class Main {
 		return isGuest;
 	}
 
-	private static String getLaunchUrl(String[] args) {
+	public static String getLaunchUrl(String[] args) {
 		String url = "";
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("--url") && i + 1 < args.length) {

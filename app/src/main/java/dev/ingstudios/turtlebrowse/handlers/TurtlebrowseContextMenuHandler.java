@@ -42,7 +42,7 @@ public class TurtlebrowseContextMenuHandler extends CefContextMenuHandlerAdapter
 	public void onBeforeContextMenu(CefBrowser browser, CefFrame frame, CefContextMenuParams params,
 			CefMenuModel model) {
 		final String selectedText = params.getSelectionText();
-		final boolean hasText = selectedText != null && !selectedText.isEmpty();
+		final boolean hasText = selectedText != null && !selectedText.isBlank();
 		final boolean isImage = params.getMediaType() == MediaType.CM_MEDIATYPE_IMAGE;
 
 		if (isImage) {

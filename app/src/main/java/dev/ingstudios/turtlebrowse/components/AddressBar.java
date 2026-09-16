@@ -223,7 +223,7 @@ public class AddressBar extends JPanel {
 			};
 
 			addressField.textProperty().addListener((obs, oldText, newText) -> {
-				if (newText.isEmpty()) {
+				if (newText.isBlank()) {
 					autoSuggestPopup.hide();
 				} else {
 					System.out.println("Getting autosuggestions...");

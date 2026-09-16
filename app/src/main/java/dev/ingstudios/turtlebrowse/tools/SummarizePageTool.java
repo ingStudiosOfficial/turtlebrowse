@@ -77,7 +77,7 @@ public class SummarizePageTool {
 			if (selector == null)
 				continue;
 			final Element found = doc.selectFirst(selector);
-			if (found != null && !found.text().isEmpty()) {
+			if (found != null && !found.text().isBlank()) {
 				contentElement = found;
 				break;
 			}
