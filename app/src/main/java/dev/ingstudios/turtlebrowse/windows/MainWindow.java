@@ -65,7 +65,7 @@ import javafx.scene.paint.Color;
 public class MainWindow extends JFrame {
 	private final boolean USE_OSR = false;
 
-	public String startUrl = "turtlebrowse://newtab";
+	final public String startUrl = "turtlebrowse://newtab";
 	private CefClient cefClient;
 	public CefBrowser currentBrowser;
 	public ArrayList<CefBrowser> openedBrowserTabs = new ArrayList<>();
@@ -104,8 +104,6 @@ public class MainWindow extends JFrame {
 		System.out.println("Creating main window for profile: " + profile.getIdAsString());
 
 		currentProfile = profile;
-
-		startUrl = launchUrl;
 
 		profileDatabase = ProfileDatabase.getInstance(currentProfile.getIdAsString());
 
@@ -200,7 +198,7 @@ public class MainWindow extends JFrame {
 		});
 
 		SwingUtilities.invokeLater(() -> {
-			createTab(startUrl);
+			createTab(launchUrl);
 			setVisible(true);
 		});
 	}
