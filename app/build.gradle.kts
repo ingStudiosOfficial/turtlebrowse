@@ -157,7 +157,7 @@ tasks.jpackage {
     
     appName = "Turtlebrowse"
     vendor = "(ing) Studios"
-    appVersion = "1.5.2"
+    appVersion = "1.5.3"
     copyright = "2026 (ing) Studios and Ethan Lee"
 
     input = layout.buildDirectory.dir("libs")
