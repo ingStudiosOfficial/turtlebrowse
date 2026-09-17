@@ -1,6 +1,9 @@
 package dev.ingstudios.turtlebrowse.handlers;
 
 import java.awt.event.KeyEvent;
+
+import javax.swing.SwingUtilities;
+
 import org.cef.browser.CefBrowser;
 import org.cef.handler.CefKeyboardHandlerAdapter;
 import org.cef.misc.EventFlags;
@@ -32,7 +35,9 @@ public class CefKeyboardHandler extends CefKeyboardHandlerAdapter {
 				return true;
 			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_T) { // New tab (Ctrl + T)
 				System.out.println("Ctrl + T pressed.");
-				parent.createTab(startUrl, true);
+				SwingUtilities.invokeLater(() -> {
+					parent.createTab(startUrl, true);
+				});
 				return true;
 			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_W) { // Close current tab (Ctrl + W)
 				System.out.println("Ctrl + W pressed.");

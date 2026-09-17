@@ -253,10 +253,7 @@ public class MainWindow extends JFrame {
 				System.out.println(openedBrowserTabs.get(nextIndex));
 
 				showTab(nextBrowser);
-
-				SwingUtilities.invokeLater(() -> {
-					browser.close(true);
-				});
+				browser.close(true);
 			}
 		} else {
 			browser.close(true);
@@ -294,6 +291,13 @@ public class MainWindow extends JFrame {
 
 			browserContainer.removeAll();
 			browserContainer.add(ui, BorderLayout.CENTER);
+
+			// IMPORTANT: DO NOT REMOVE - IT RESETS WIDTH/HEIGHT SO THAT IT DOES NOT SHOW
+			// THE GREY THING
+			final int width = browserContainer.getWidth();
+			final int height = browserContainer.getHeight();
+			browserContainer.setSize(width - 1, height - 1);
+			browserContainer.setSize(width, height);
 
 			browserContainer.revalidate();
 			browserContainer.repaint();

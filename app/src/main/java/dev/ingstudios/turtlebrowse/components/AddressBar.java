@@ -364,7 +364,9 @@ public class AddressBar extends JPanel {
 		settingsItem.setGraphic(new FontIcon(Material2OutlinedMZ.SETTINGS));
 		settingsItem.setOnAction(event -> {
 			System.out.println("Settings button clicked.");
-			parent.createTab("turtlebrowse://settings");
+			SwingUtilities.invokeLater(() -> {
+				parent.createTab("turtlebrowse://settings");
+			});
 		});
 
 		final MenuItem profileItem = new MenuItem("Profiles");

@@ -1,5 +1,7 @@
 package dev.ingstudios.turtlebrowse.handlers;
 
+import javax.swing.SwingUtilities;
+
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefLifeSpanHandlerAdapter;
@@ -15,7 +17,9 @@ public class TurtlebrowseLifeSpanHandler extends CefLifeSpanHandlerAdapter {
 
 	@Override
 	public boolean onBeforePopup(CefBrowser browser, CefFrame frame, String targetUrl, String targetFrameName) {
-		parent.createTab(targetUrl);
+		SwingUtilities.invokeLater(() -> {
+			parent.createTab(targetUrl);
+		});
 		return true;
 	}
 

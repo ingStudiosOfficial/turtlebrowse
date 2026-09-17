@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.swing.SwingUtilities;
+
 import dev.ingstudios.turtlebrowse.Main;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
@@ -46,21 +48,23 @@ public class InstanceManager {
 								continue;
 							}
 
-							parent.toFront();
-							parent.requestFocusInWindow();
-
 							final String[] args = received.split("\0");
 
-							final String launchUrl = Main.getLaunchUrl(args);
-							if (launchUrl != null && !launchUrl.isBlank()) {
-								parent.createTab(launchUrl);
-							}
+							SwingUtilities.invokeLater(() -> {
+								parent.toFront();
+								parent.requestFocusInWindow();
+
+								final String launchUrl = Main.getLaunchUrl(args);
+								if (launchUrl != null && !launchUrl.isBlank()) {
+									parent.createTab(launchUrl);
+								}
+							});
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
-			}).setDaemon(true);
+			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -80,7 +80,9 @@ public class TabBar extends JPanel {
 				createTabButton.setCursor(Cursor.DEFAULT);
 			});
 			createTabButton.setOnAction(event -> {
-				this.parent.createTab(this.parent.startUrl);
+				SwingUtilities.invokeLater(() -> {
+					this.parent.createTab(this.parent.startUrl);
+				});
 			});
 			root.getChildren().add(createTabButton);
 
@@ -119,9 +121,9 @@ public class TabBar extends JPanel {
 		tabBox.setOnMouseClicked(event -> {
 			event.consume();
 
-			if (event.getButton() == MouseButton.PRIMARY)
+			if (event.getButton() == MouseButton.PRIMARY) {
 				this.parent.showTab(browser);
-			else if (event.getButton() == MouseButton.MIDDLE)
+			} else if (event.getButton() == MouseButton.MIDDLE)
 				Platform.runLater(() -> {
 					event.consume();
 					closeTab(tabBox, browser);

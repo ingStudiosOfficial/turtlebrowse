@@ -1,5 +1,7 @@
 package dev.ingstudios.turtlebrowse.handlers;
 
+import javax.swing.SwingUtilities;
+
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefRequestHandlerAdapter;
@@ -21,7 +23,9 @@ public class TurtlebrowseRequestHandler extends CefRequestHandlerAdapter {
 		System.out.printf("Browser identifier: %s\n", Integer.toString(browser.getIdentifier()));
 		if (browser == aiSidebarBrowser) {
 			if (!request.getURL().contains("turtlebrowse://chat")) {
-				parent.createTab(request.getURL());
+				SwingUtilities.invokeLater(() -> {
+					parent.createTab(request.getURL());
+				});
 				return true;
 			}
 		}
