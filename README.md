@@ -26,6 +26,7 @@ If you want to download a previous version of Turtlebrowse, it can be found in t
 
 - Powered by the Java Chromium Embedded Framework
 - Follows Chromium standards
+- Built-in Chrome DevTools and Chrome DevTools Protocol
 - 100% local agentic AI
 - Dynamic Material You theme
 - Multiple isolated user profiles
@@ -33,6 +34,8 @@ If you want to download a previous version of Turtlebrowse, it can be found in t
 - YouTube and other platforms video downloader with yt-dlp
 - Always private, no data leaves your device
 - Free and open-source (FOSS)
+- Guest/private mode where all data from disk is deleted when closed
+- Available for Linux, Windows, and macOS on different architectures
 
 ## Development
 
