@@ -59,6 +59,7 @@ public class NewProfileWindow extends Stage {
 		}
 
 		setTitle("Turtlebrowse");
+		getIcons().add(new Image(getClass().getResourceAsStream("/logo_full_trans.png")));
 
 		final BorderPane root = new BorderPane();
 		root.backgroundProperty().bind(Bindings.createObjectBinding(() -> {

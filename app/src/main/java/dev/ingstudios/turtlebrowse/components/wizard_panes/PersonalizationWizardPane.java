@@ -8,6 +8,8 @@ import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -19,6 +21,7 @@ import javafx.scene.text.FontWeight;
 public class PersonalizationWizardPane extends WizardPane {
 	public PersonalizationWizardPane(WizardData wizardData) {
 		setHeaderText("Browser Personalization");
+		setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/logo_full_trans.png"))));
 		backgroundProperty().bind(Bindings.createObjectBinding(() -> {
 			final Paint backgroundColor = Main.mainMaterialColorScheme.getSurface().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));

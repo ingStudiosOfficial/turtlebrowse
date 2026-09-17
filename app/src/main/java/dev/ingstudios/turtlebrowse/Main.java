@@ -174,6 +174,9 @@ public class Main {
 									String.valueOf(wizardData.enableAI));
 
 							wizardData.saveData();
+						} else if (result.get() == ButtonType.CANCEL) {
+							db.closeDb();
+							System.exit(0);
 						}
 					}
 

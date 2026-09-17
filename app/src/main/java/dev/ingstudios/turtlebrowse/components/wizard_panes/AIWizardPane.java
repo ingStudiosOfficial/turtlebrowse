@@ -8,6 +8,8 @@ import dev.ingstudios.turtlebrowse.Main;
 import dev.ingstudios.turtlebrowse.wizard.WizardData;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -19,6 +21,7 @@ import javafx.scene.text.FontWeight;
 public class AIWizardPane extends WizardPane {
 	public AIWizardPane(WizardData wizardData) {
 		setHeaderText("Optional AI Featuures");
+		setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/logo_full_trans.png"))));
 		backgroundProperty().bind(Bindings.createObjectBinding(() -> {
 			final Paint backgroundColor = Main.mainMaterialColorScheme.getSurface().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));

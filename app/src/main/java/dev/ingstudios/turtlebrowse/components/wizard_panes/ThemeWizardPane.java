@@ -8,6 +8,8 @@ import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -19,6 +21,7 @@ import javafx.scene.text.FontWeight;
 public class ThemeWizardPane extends WizardPane {
 	public ThemeWizardPane(WizardData wizardData) {
 		setHeaderText("Browser Theme");
+		setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/logo_full_trans.png"))));
 		backgroundProperty().bind(Bindings.createObjectBinding(() -> {
 			final Paint backgroundColor = Main.mainMaterialColorScheme.getSurface().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));

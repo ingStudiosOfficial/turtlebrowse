@@ -1,6 +1,7 @@
 package dev.ingstudios.turtlebrowse.managers;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -14,7 +15,11 @@ import dev.ingstudios.turtlebrowse.Main;
 import dev.ingstudios.turtlebrowse.db.MainDatabase;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseSchemeHandlerFactory;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
+import dev.ingstudios.turtlebrowse.windows.ProgressWindow;
+import javafx.application.Platform;
 import me.friwi.jcefmaven.CefAppBuilder;
+import me.friwi.jcefmaven.EnumProgress;
+import me.friwi.jcefmaven.IProgressHandler;
 import me.friwi.jcefmaven.MavenCefAppHandlerAdapter;
 
 public class CefAppManager {
@@ -44,8 +49,11 @@ public class CefAppManager {
 			builder.addJcefArgs("--single-process", "--ozone-platform=x11");
 		}
 
+		final File installDir = getInstallDir();
+		final Path installPath = installDir.toPath();
+
 		cefSettings = builder.getCefSettings();
-		builder.setInstallDir(getInstallDir());
+		builder.setInstallDir(installDir);
 		cefSettings.windowless_rendering_enabled = USE_OSR;
 		cefSettings.remote_debugging_port = 6767;
 
@@ -58,6 +66,26 @@ public class CefAppManager {
 		} catch (Exception error) {
 			System.out.print("Error while getting cache path, defaulting: ");
 			System.out.println(error);
+		}
+
+		try {
+			if (!isJcefInstalled()) {
+				Platform.runLater(() -> {
+					final ProgressWindow progressWindow = new ProgressWindow();
+					builder.setProgressHandler(new IProgressHandler() {
+						@Override
+						public void handleProgress(EnumProgress state, float percent) {
+							System.out.printf("State: %s\n", state.toString());
+							System.out.printf("Progress: %f%%\n", percent);
+							Platform.runLater(() -> {
+								progressWindow.updateProgress(percent);
+							});
+						}
+					});
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		builder.setAppHandler(new MavenCefAppHandlerAdapter() {
@@ -87,7 +115,7 @@ public class CefAppManager {
 			return cefApp;
 		} catch (Exception error) {
 			System.out.print("Error while building CEF app:");
-			System.out.println(error);
+			System.out.println(error.getMessage());
 			throw new RuntimeException("Error while building CEF app:", error);
 		}
 	}
@@ -126,5 +154,10 @@ public class CefAppManager {
 		}
 
 		return installFile;
+	}
+
+	private boolean isJcefInstalled() {
+		final Path lockPath = getInstallDir().toPath().resolve("install.lock");
+		return Files.exists(lockPath);
 	}
 }
