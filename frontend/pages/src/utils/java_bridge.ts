@@ -1,4 +1,5 @@
 import type { AISettings } from '@/interfaces/AISettings';
+import type { HistoryItem } from '@/interfaces/HistoryItem';
 import type { NewtabSettings } from '@/interfaces/NewtabSettings';
 import type { SearchEngine } from '@/types/SearchEngine';
 
@@ -176,5 +177,25 @@ export async function getSearchSuggestions(query: string): Promise<string[]> {
 	} catch (error) {
 		console.error(error);
 		return [];
+	}
+}
+
+export async function getHistory(): Promise<HistoryItem[]> {
+	try {
+		const history = (await fetchFromJavaJson('GET_HISTORY')) as HistoryItem[];
+		return history;
+	} catch (error) {
+		console.error(error);
+		return [];
+	}
+}
+
+export async function navigateToSite(url: string) {
+	try {
+		await fetchFromJavaText('NAVIGATE_TO_SITE', {
+			url: url,
+		});
+	} catch (error) {
+		console.error(error);
 	}
 }

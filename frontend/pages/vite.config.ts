@@ -31,6 +31,7 @@ export default defineConfig({
 				newtab: resolve(__dirname, 'newtab.html'),
 				chat: resolve(__dirname, 'chat.html'),
 				settings: resolve(__dirname, 'settings.html'),
+				history: resolve(__dirname, 'history.html'),
 			},
 		},
 	},

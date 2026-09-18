@@ -37,6 +37,7 @@ import dev.ingstudios.turtlebrowse.components.TabBar;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase;
 import dev.ingstudios.turtlebrowse.db.MainDatabase.ProfileStructureWithId;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase.AISettings;
+import dev.ingstudios.turtlebrowse.db.ProfileDatabase.HistoryItem;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase.NewtabSettings;
 import dev.ingstudios.turtlebrowse.handlers.CefKeyboardHandler;
 import dev.ingstudios.turtlebrowse.handlers.SwingKeyboardHandler;
@@ -89,7 +90,7 @@ public class MainWindow extends JFrame {
 	private final String windowId;
 	private final CefAppManager cefAppManager = CefAppManager.getInstance(this);
 	private final CefApp cefApp = cefAppManager.getCefApp();
-	private final ProfileDatabase profileDatabase;
+	public final ProfileDatabase profileDatabase;
 	public String defaultSearchProvider = SearchURLTemplates.searchTemplates.get("brave");
 	public boolean enableDiscordPresence = false;
 	public AISettings aiSettings = new AISettings(false, "gemma4:e2b");
@@ -469,6 +470,17 @@ public class MainWindow extends JFrame {
 				final String query = params.get("query").getAsString();
 				final List<String> suggestions = searchAutosuggest.fetchAndProcess(query);
 				return gson.toJson(suggestions);
+			}
+
+			case "GET_HISTORY": {
+				final List<HistoryItem> history = profileDatabase.getHistory(0, 100);
+				return gson.toJson(history);
+			}
+
+			case "NAVIGATE_TO_SITE": {
+				final String url = params.get("url").toString();
+				createTab(url);
+				return "\"ok\"";
 			}
 
 			default:

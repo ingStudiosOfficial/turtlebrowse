@@ -5,10 +5,15 @@ import static org.dizitart.no2.filters.FluentFilter.where;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.collection.Document;
+import org.dizitart.no2.collection.DocumentCursor;
+import org.dizitart.no2.collection.FindOptions;
 import org.dizitart.no2.collection.NitriteCollection;
+import org.dizitart.no2.common.SortOrder;
 import org.dizitart.no2.mvstore.MVStoreModule;
 
 import dev.ingstudios.turtlebrowse.Main;
@@ -18,6 +23,7 @@ public class ProfileDatabase {
 	private Nitrite db;
 
 	private NitriteCollection settingsCollection;
+	private NitriteCollection historyCollection;
 
 	private ProfileDatabase(String profileId) {
 		initDb(profileId);
@@ -39,6 +45,7 @@ public class ProfileDatabase {
 		db = Nitrite.builder().loadModule(storeModule).openOrCreate();
 
 		settingsCollection = db.getCollection("settings");
+		historyCollection = db.getCollection("history");
 	}
 
 	public static synchronized ProfileDatabase getInstance(String profileId) {
@@ -188,9 +195,32 @@ public class ProfileDatabase {
 		settingsCollection.update(newtabDocument);
 	}
 
+	public List<HistoryItem> getHistory(int index, int amount) {
+		final DocumentCursor cursor = historyCollection.find(
+				FindOptions.orderBy("timestamp", SortOrder.Descending).limit(amount));
+
+		final List<HistoryItem> history = new ArrayList<>();
+
+		for (Document document : cursor.toList()) {
+			final HistoryItem item = new HistoryItem(document.get("url").toString(), document.get("title").toString(),
+					Long.parseLong(document.get("timestamp").toString()));
+			history.add(item);
+		}
+
+		return history;
+	}
+
+	public void addHistory(HistoryItem item) {
+		historyCollection.insert(Document.createDocument().put("url", item.url()).put("title", item.title())
+				.put("timestamp", item.timestamp()));
+	}
+
 	public record AISettings(boolean enabled, String model) {
 	}
 
 	public record NewtabSettings(String greetingText) {
+	}
+
+	public record HistoryItem(String url, String title, long timestamp) {
 	}
 }

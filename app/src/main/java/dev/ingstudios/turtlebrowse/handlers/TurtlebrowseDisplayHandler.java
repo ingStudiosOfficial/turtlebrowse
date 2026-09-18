@@ -1,11 +1,14 @@
 package dev.ingstudios.turtlebrowse.handlers;
 
+import java.time.Instant;
+
 import javax.swing.SwingUtilities;
 
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefDisplayHandlerAdapter;
 
+import dev.ingstudios.turtlebrowse.db.ProfileDatabase.HistoryItem;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 import javafx.application.Platform;
 
@@ -38,6 +41,7 @@ public class TurtlebrowseDisplayHandler extends CefDisplayHandlerAdapter {
 			return;
 		System.out.print("Navigated to:");
 		System.out.println(url);
+		parent.profileDatabase.addHistory(new HistoryItem(frame.getName(), url, Instant.now().toEpochMilli()));
 		Platform.runLater(() -> parent.addressBar.updateUrl(url));
 	}
 }
