@@ -50,13 +50,11 @@ public class CefAppManager {
 		}
 
 		final File installDir = getInstallDir();
-		final Path installPath = installDir.toPath();
 
 		cefSettings = builder.getCefSettings();
 		builder.setInstallDir(installDir);
 		cefSettings.windowless_rendering_enabled = USE_OSR;
 		cefSettings.remote_debugging_port = 6767;
-
 		cefSettings.user_agent = Main.getUserAgent();
 
 		try {

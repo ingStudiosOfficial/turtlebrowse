@@ -1,6 +1,7 @@
 package dev.ingstudios.turtlebrowse.windows;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -70,7 +71,8 @@ public class MainWindow extends JFrame {
 	public CefBrowser currentBrowser;
 	public ArrayList<CefBrowser> openedBrowserTabs = new ArrayList<>();
 	private JPanel root;
-	private JPanel browserContainer;
+	private final CardLayout browserLayout = new CardLayout();
+	private final JPanel browserContainer = new JPanel(browserLayout);
 	public AddressBar addressBar;
 	public TabBar tabBar;
 	public final Map<CefBrowser, String> titleMap = new HashMap<>();
@@ -139,8 +141,6 @@ public class MainWindow extends JFrame {
 		setMaterialColorSchemeFromProfile();
 
 		searchAutosuggest = new SearchAutosuggest(userAgent);
-
-		browserContainer = new JPanel(new BorderLayout());
 
 		// Address bar
 		addressBar = new AddressBar(cefClient, this, startUrl);
@@ -222,6 +222,9 @@ public class MainWindow extends JFrame {
 
 		openedBrowserTabs.add(browser);
 
+		Component ui = browser.getUIComponent();
+		browserContainer.add(ui, String.valueOf(System.identityHashCode(browser)));
+
 		Platform.runLater(() -> {
 			tabBar.addTabToUI(browser);
 			addressBar.focusAddressField(true);
@@ -231,31 +234,32 @@ public class MainWindow extends JFrame {
 	}
 
 	public void closeTab(CefBrowser browser) {
-		int indexToClose = openedBrowserTabs.indexOf(browser);
-		if (indexToClose == -1)
+		final int indexToClose = openedBrowserTabs.indexOf(browser);
+		if (indexToClose == -1) {
 			return;
+		}
 
+		CefBrowser nextBrowserToSelect = null;
+		if (browser == currentBrowser && openedBrowserTabs.size() > 1) {
+			int nextIndex = (indexToClose > 0) ? indexToClose - 1 : 1;
+			nextBrowserToSelect = openedBrowserTabs.get(nextIndex);
+		}
+
+		browserContainer.remove(browser.getUIComponent());
 		openedBrowserTabs.remove(browser);
 		titleMap.remove(browser);
 
-		System.out.printf("Browser is current browser: %s", browser == currentBrowser);
+		browserContainer.revalidate();
+		browserContainer.repaint();
 
-		if (browser == currentBrowser) {
-			if (openedBrowserTabs.isEmpty()) {
-				System.out.println("No tabs.");
-				currentBrowser = null;
-				dispose();
-			} else {
-				System.out.println("Tabs is not empty, reverting to last tab.");
-
-				int nextIndex = openedBrowserTabs.size() - 1;
-				CefBrowser nextBrowser = openedBrowserTabs.get(nextIndex);
-				System.out.println(openedBrowserTabs.get(nextIndex));
-
-				showTab(nextBrowser);
-				browser.close(true);
-			}
+		if (openedBrowserTabs.isEmpty()) {
+			currentBrowser = null;
+			browser.close(true);
+			dispose();
 		} else {
+			if (nextBrowserToSelect != null) {
+				showTab(nextBrowserToSelect);
+			}
 			browser.close(true);
 		}
 	}
@@ -265,9 +269,21 @@ public class MainWindow extends JFrame {
 	}
 
 	public void showTab(CefBrowser browser) {
+		if (browser == null || !openedBrowserTabs.contains(browser)) {
+			return;
+		}
+
 		SwingUtilities.invokeLater(() -> {
 			currentBrowser = browser;
 			final Component ui = browser.getUIComponent();
+
+			final Color bgColor = profileMaterialColorScheme.getSurface().get();
+
+			ui.setBackground(new java.awt.Color(
+					(float) bgColor.getRed(),
+					(float) bgColor.getGreen(),
+					(float) bgColor.getBlue(),
+					(float) bgColor.getOpacity()));
 
 			if (ui.getMouseListeners().length == 0) {
 				ui.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -284,23 +300,16 @@ public class MainWindow extends JFrame {
 			final String browserTitle = titleMap.get(browser);
 			updateWindowTitle(browserTitle != null ? browserTitle : "Loading...");
 
+			final String cardKey = String.valueOf(System.identityHashCode(browser));
+			browserLayout.show(browserContainer, cardKey);
+
+			browserContainer.revalidate();
+			browserContainer.repaint();
+
 			Platform.runLater(() -> {
 				addressBar.updateUrl(browser.getURL());
 				tabBar.setCurrentTab(browser);
 			});
-
-			browserContainer.removeAll();
-			browserContainer.add(ui, BorderLayout.CENTER);
-
-			// IMPORTANT: DO NOT REMOVE - IT RESETS WIDTH/HEIGHT SO THAT IT DOES NOT SHOW
-			// THE GREY THING
-			final int width = browserContainer.getWidth();
-			final int height = browserContainer.getHeight();
-			browserContainer.setSize(width - 1, height - 1);
-			browserContainer.setSize(width, height);
-
-			browserContainer.revalidate();
-			browserContainer.repaint();
 		});
 	}
 
