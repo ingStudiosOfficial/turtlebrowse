@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.collection.Document;
@@ -196,14 +197,17 @@ public class ProfileDatabase {
 	}
 
 	public List<HistoryItem> getHistory(int index, int amount) {
+		final int skip = index * amount;
+
 		final DocumentCursor cursor = historyCollection.find(
-				FindOptions.orderBy("timestamp", SortOrder.Descending).limit(amount));
+				FindOptions.orderBy("timestamp", SortOrder.Descending).skip(skip).limit(amount));
 
 		final List<HistoryItem> history = new ArrayList<>();
 
 		for (Document document : cursor.toList()) {
 			final HistoryItem item = new HistoryItem(document.get("url").toString(), document.get("title").toString(),
-					Long.parseLong(document.get("timestamp").toString()));
+					Long.parseLong(document.get("timestamp").toString()),
+					UUID.fromString(document.get("id").toString()));
 			history.add(item);
 		}
 
@@ -212,7 +216,11 @@ public class ProfileDatabase {
 
 	public void addHistory(HistoryItem item) {
 		historyCollection.insert(Document.createDocument().put("url", item.url()).put("title", item.title())
-				.put("timestamp", item.timestamp()));
+				.put("timestamp", item.timestamp()).put("id", item.id()));
+	}
+
+	public void deleteFromHistory(UUID id) {
+		historyCollection.remove(where("id").eq(id));
 	}
 
 	public record AISettings(boolean enabled, String model) {
@@ -221,6 +229,6 @@ public class ProfileDatabase {
 	public record NewtabSettings(String greetingText) {
 	}
 
-	public record HistoryItem(String url, String title, long timestamp) {
+	public record HistoryItem(String url, String title, long timestamp, UUID id) {
 	}
 }

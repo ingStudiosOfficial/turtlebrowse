@@ -1,6 +1,7 @@
 package dev.ingstudios.turtlebrowse.handlers;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import javax.swing.SwingUtilities;
 
@@ -39,9 +40,15 @@ public class TurtlebrowseDisplayHandler extends CefDisplayHandlerAdapter {
 	public void onAddressChange(CefBrowser cefBrowser, CefFrame frame, String url) {
 		if (cefBrowser != parent.currentBrowser)
 			return;
-		System.out.print("Navigated to:");
+		System.out.print("Navigated to: ");
 		System.out.println(url);
-		parent.profileDatabase.addHistory(new HistoryItem(frame.getName(), url, Instant.now().toEpochMilli()));
+
+		if (!cefBrowser.getURL().startsWith("turtlebrowse://")) {
+			parent.profileDatabase.addHistory(new HistoryItem(url,
+					parent.titleMap.getOrDefault(cefBrowser, cefBrowser.getURL()), Instant.now().toEpochMilli(),
+					UUID.randomUUID()));
+		}
+
 		Platform.runLater(() -> parent.addressBar.updateUrl(url));
 	}
 }

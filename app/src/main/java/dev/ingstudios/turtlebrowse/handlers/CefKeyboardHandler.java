@@ -85,6 +85,10 @@ public class CefKeyboardHandler extends CefKeyboardHandlerAdapter {
 				System.out.println("Ctrl + Q pressed.");
 				parent.dispose();
 				return true;
+			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_H) { // Opens history
+				System.out.println("Ctrl + H pressed.");
+				parent.openHistory();
+				return true;
 			}
 		}
 

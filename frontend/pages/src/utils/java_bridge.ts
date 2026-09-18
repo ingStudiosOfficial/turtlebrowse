@@ -180,9 +180,11 @@ export async function getSearchSuggestions(query: string): Promise<string[]> {
 	}
 }
 
-export async function getHistory(): Promise<HistoryItem[]> {
+export async function getHistory(index = 0): Promise<HistoryItem[]> {
 	try {
-		const history = (await fetchFromJavaJson('GET_HISTORY')) as HistoryItem[];
+		const history = (await fetchFromJavaJson('GET_HISTORY', {
+			index: index.toString(),
+		})) as HistoryItem[];
 		return history;
 	} catch (error) {
 		console.error(error);
@@ -191,9 +193,21 @@ export async function getHistory(): Promise<HistoryItem[]> {
 }
 
 export async function navigateToSite(url: string) {
+	console.log('URL:', url);
+
 	try {
 		await fetchFromJavaText('NAVIGATE_TO_SITE', {
 			url: url,
+		});
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export async function deleteSiteFromHistory(id: string) {
+	try {
+		await fetchFromJavaText('DELETE_HISTORY_ITEM', {
+			id: id,
 		});
 	} catch (error) {
 		console.error(error);

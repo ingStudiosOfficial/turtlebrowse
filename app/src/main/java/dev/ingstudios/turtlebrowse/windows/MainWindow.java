@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -219,6 +220,8 @@ public class MainWindow extends JFrame {
 	}
 
 	public void createTab(String url, boolean selectAllField) {
+		System.out.printf("Creating tab for URL: %s\n", url);
+
 		CefBrowser browser = cefClient.createBrowser(url, USE_OSR, false);
 
 		openedBrowserTabs.add(browser);
@@ -228,7 +231,7 @@ public class MainWindow extends JFrame {
 
 		Platform.runLater(() -> {
 			tabBar.addTabToUI(browser);
-			addressBar.focusAddressField(true);
+			addressBar.focusAddressField(selectAllField);
 		});
 
 		showTab(browser);
@@ -473,14 +476,21 @@ public class MainWindow extends JFrame {
 			}
 
 			case "GET_HISTORY": {
-				final List<HistoryItem> history = profileDatabase.getHistory(0, 100);
+				final int index = params.get("index").getAsInt();
+				final List<HistoryItem> history = profileDatabase.getHistory(index, 50);
 				return gson.toJson(history);
 			}
 
 			case "NAVIGATE_TO_SITE": {
-				final String url = params.get("url").toString();
+				final String url = params.get("url").getAsString();
+				System.out.println("Site URL: " + url);
 				createTab(url);
 				return "\"ok\"";
+			}
+
+			case "DELETE_HISTORY_ITEM": {
+				final UUID id = UUID.fromString(params.get("id").getAsString());
+				profileDatabase.deleteFromHistory(id);
 			}
 
 			default:
@@ -504,5 +514,9 @@ public class MainWindow extends JFrame {
 
 	private void setUserAgent() {
 		userAgent = Main.getUserAgent();
+	}
+
+	public void openHistory() {
+		createTab("turtlebrowse://history");
 	}
 }

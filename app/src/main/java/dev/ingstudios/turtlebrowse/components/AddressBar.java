@@ -47,6 +47,7 @@ public class AddressBar extends JPanel {
 	private boolean wasFocused = false;
 	private final SearchAutosuggest autosuggester;
 	public HBox root;
+	private boolean isProgrammaticChange = false;
 
 	public AddressBar(CefClient client, MainWindow parent, String startUrl) {
 		this.parent = parent;
@@ -223,6 +224,9 @@ public class AddressBar extends JPanel {
 			};
 
 			addressField.textProperty().addListener((obs, oldText, newText) -> {
+				if (isProgrammaticChange)
+					return;
+
 				if (newText.isBlank()) {
 					autoSuggestPopup.hide();
 				} else {
@@ -383,6 +387,13 @@ public class AddressBar extends JPanel {
 			YtdlpManager.getInstance(parent).createDownloadPopup();
 		});
 
+		final MenuItem historyItem = new MenuItem("History");
+		historyItem.setGraphic(new FontIcon(Material2OutlinedAL.HISTORY));
+		historyItem.setOnAction(event -> {
+			System.out.println("History button clicked.");
+			parent.openHistory();
+		});
+
 		final MenuItem closeItem = new MenuItem("Close");
 		closeItem.setGraphic(new FontIcon(Material2OutlinedAL.CLOSE));
 		closeItem.setOnAction(event -> {
@@ -390,7 +401,7 @@ public class AddressBar extends JPanel {
 			menu.hide();
 		});
 
-		menu.getItems().addAll(settingsItem, profileItem, ytdlpItem, closeItem);
+		menu.getItems().addAll(settingsItem, profileItem, ytdlpItem, historyItem, closeItem);
 
 		final JFXButton moreButton = new JFXButton(":");
 		moreButton.setGraphic(new FontIcon(Material2OutlinedMZ.MORE_VERT));
@@ -419,7 +430,9 @@ public class AddressBar extends JPanel {
 	}
 
 	public void updateUrl(String newUrl) {
+		isProgrammaticChange = true;
 		addressField.setText(this.parent.formatURL(newUrl, false));
+		isProgrammaticChange = false;
 	}
 
 	public void focusAddressField() {
