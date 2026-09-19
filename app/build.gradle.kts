@@ -83,7 +83,7 @@ javafx {
     modules("javafx.controls", "javafx.graphics", "javafx.base", "javafx.swing")
 }
 
-version = "1.7.1"
+version = "1.7.2"
 
 tasks.processResources {
     inputs.property("version", project.version)
