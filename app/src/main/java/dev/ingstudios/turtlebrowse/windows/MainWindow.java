@@ -36,6 +36,8 @@ import dev.ingstudios.turtlebrowse.components.AISidebar;
 import dev.ingstudios.turtlebrowse.components.AddressBar;
 import dev.ingstudios.turtlebrowse.components.MoreSidebar;
 import dev.ingstudios.turtlebrowse.components.TabBar;
+import dev.ingstudios.turtlebrowse.components.ToolSidebar;
+import dev.ingstudios.turtlebrowse.components.YtdlpSidebar;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase;
 import dev.ingstudios.turtlebrowse.db.MainDatabase.ProfileStructureWithId;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase.AISettings;
@@ -50,6 +52,7 @@ import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseDownloadHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseFocusHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseLifeSpanHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseLoadHandler;
+import dev.ingstudios.turtlebrowse.handlers.TurtlebrowsePrintHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseRequestHandler;
 import dev.ingstudios.turtlebrowse.managers.CefAppManager;
 import dev.ingstudios.turtlebrowse.managers.DiscordPresenceManager;
@@ -81,8 +84,11 @@ public class MainWindow extends JFrame {
 	public final Map<CefBrowser, String> titleMap = new HashMap<>();
 	public final BooleanProperty isUiFocused = new SimpleBooleanProperty(false);
 	public OllamaChat ollamaSession;
+	private ToolSidebar toolSidebar;
 	public final AISidebar aiSidebar;
+	public final YtdlpSidebar ytdlpSidebar;
 	public final MoreSidebar moreSidebar;
+	private final JPanel sidePanel;
 	private final Gson gson = new Gson();
 	public final TurtlebrowseLoadHandler loadHandler = new TurtlebrowseLoadHandler();
 	public final TurtlebrowseRequestHandler requestHandler = new TurtlebrowseRequestHandler(this);
@@ -157,6 +163,9 @@ public class MainWindow extends JFrame {
 		// AI sidebar
 		aiSidebar = new AISidebar(cefClient, this, USE_OSR, isUiFocused);
 
+		// yt-dlp sidebar
+		ytdlpSidebar = new YtdlpSidebar(this);
+
 		// More sidebar
 		moreSidebar = new MoreSidebar(this);
 
@@ -173,9 +182,11 @@ public class MainWindow extends JFrame {
 		topPanel.add(tabBar, BorderLayout.NORTH);
 		topPanel.add(addressBar, BorderLayout.SOUTH);
 
-		final JPanel sidePanel = new JPanel(new BorderLayout());
+		sidePanel = new JPanel(new BorderLayout());
 		sidePanel.add(aiSidebar, BorderLayout.CENTER);
 		sidePanel.add(moreSidebar, BorderLayout.EAST);
+
+		setSidebar(aiSidebar);
 
 		// Bottom panel (main browser + AI sidebar)
 		final JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -190,6 +201,7 @@ public class MainWindow extends JFrame {
 		cefClient.addDialogHandler(new TurtlebrowseDialogHandler());
 		cefClient.addDownloadHandler(new TurtlebrowseDownloadHandler());
 		cefClient.addContextMenuHandler(new TurtlebrowseContextMenuHandler(this));
+		cefClient.addPrintHandler(new TurtlebrowsePrintHandler());
 		cefClient.addLoadHandler(loadHandler);
 		cefClient.addRequestHandler(requestHandler);
 
@@ -527,5 +539,27 @@ public class MainWindow extends JFrame {
 
 	public void openHistory() {
 		createTab("turtlebrowse://history");
+	}
+
+	public void setSidebar(ToolSidebar sidebar) {
+		if (sidebar == toolSidebar)
+			return;
+
+		if (toolSidebar != null) {
+			toolSidebar.closeSidebar();
+			sidePanel.remove(toolSidebar);
+		}
+
+		toolSidebar = sidebar;
+		if (toolSidebar != null) {
+			sidePanel.add(toolSidebar, BorderLayout.CENTER);
+		}
+
+		sidePanel.revalidate();
+		sidePanel.repaint();
+	}
+
+	public ToolSidebar getSidebar() {
+		return toolSidebar;
 	}
 }

@@ -65,6 +65,9 @@ dependencies {
 
     // yt-dlp-java
     implementation("io.github.bivashy:yt-dlp-java:2.0.8")
+
+    // Apache PDFBox
+    implementation("org.apache.pdfbox:pdfbox:3.0.8")
 }
 
 // Apply a specific Java toolchain. 

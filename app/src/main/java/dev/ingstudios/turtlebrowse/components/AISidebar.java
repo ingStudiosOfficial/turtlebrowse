@@ -6,7 +6,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.cef.CefClient;
@@ -34,7 +33,7 @@ import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseLoadHandler.JSQueueItem;
 import dev.ingstudios.turtlebrowse.tools.SummarizePageTool;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
-public class AISidebar extends JPanel {
+public class AISidebar extends ToolSidebar {
 	private final Component ui;
 	private final java.awt.Dimension preferredDim = new java.awt.Dimension(0, 800);
 	public boolean isOpen = false;
@@ -44,14 +43,18 @@ public class AISidebar extends JPanel {
 	private final ScheduledExecutorService summarizePageScheduler = Executors.newSingleThreadScheduledExecutor();
 	private final Gson gson = new Gson();
 	private final SummarizePageTool summarizePageTool;
+	private final JFXPanel actionsBarJfxPanel;
+	private final MainWindow parent;
 
 	public AISidebar(CefClient client, MainWindow parent, boolean useOsr, BooleanProperty isUiFocused) {
+		this.parent = parent;
+
 		this.setLayout(new java.awt.BorderLayout());
 		this.setPreferredSize(preferredDim);
 
 		summarizePageTool = new SummarizePageTool(parent);
 
-		final JFXPanel actionsBarJfxPanel = new JFXPanel();
+		actionsBarJfxPanel = new JFXPanel();
 		actionsBarJfxPanel.setFocusable(true);
 		actionsBarJfxPanel.setPreferredSize(new java.awt.Dimension(preferredDim.width, 50));
 
@@ -113,6 +116,7 @@ public class AISidebar extends JPanel {
 		this.add(browserComponent, BorderLayout.CENTER);
 	}
 
+	@Override
 	public void toggleSidebar() {
 		if (isOpen) {
 			closeSidebar();
@@ -121,19 +125,26 @@ public class AISidebar extends JPanel {
 		}
 	}
 
+	@Override
 	public void openSidebar() {
-		System.out.println("Opening sidebar...");
-		ui.setVisible(true);
+		System.out.println("Opening AI sidebar.");
 		preferredDim.width = 500;
+		ui.setVisible(true);
 		isOpen = true;
 		this.revalidate();
+		parent.revalidate();
+		parent.repaint();
 	}
 
+	@Override
 	public void closeSidebar() {
+		System.out.println("Closing AI sidebar.");
 		preferredDim.width = 0;
 		ui.setVisible(false);
 		isOpen = false;
 		this.revalidate();
+		parent.revalidate();
+		parent.repaint();
 	}
 
 	public void summarize(String text) {

@@ -165,7 +165,12 @@ public class AddressBar extends JPanel {
 			});
 			aiButton.setOnAction(event -> {
 				System.out.println("AI button clicked.");
-				parent.aiSidebar.toggleSidebar();
+				if (parent.getSidebar() != parent.aiSidebar) {
+					parent.setSidebar(parent.aiSidebar);
+					parent.aiSidebar.openSidebar();
+				} else {
+					parent.aiSidebar.toggleSidebar();
+				}
 			});
 
 			final JFXButton moreButton = new JFXButton(":");

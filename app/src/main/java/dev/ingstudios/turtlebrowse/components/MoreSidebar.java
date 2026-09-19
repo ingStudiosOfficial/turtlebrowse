@@ -24,7 +24,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import dev.ingstudios.turtlebrowse.Main;
-import dev.ingstudios.turtlebrowse.managers.YtdlpManager;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class MoreSidebar extends JPanel {
@@ -74,7 +73,12 @@ public class MoreSidebar extends JPanel {
 			final JFXButton ytdlpButton = createMenuItem(new FontIcon(Material2OutlinedAL.CLOUD_DOWNLOAD));
 			ytdlpButton.setOnAction(event -> {
 				System.out.println("yt-dlp download button clicked.");
-				YtdlpManager.getInstance(parent).createDownloadPopup();
+				if (parent.getSidebar() != parent.ytdlpSidebar) {
+					parent.setSidebar(parent.ytdlpSidebar);
+					parent.ytdlpSidebar.openSidebar();
+				} else {
+					parent.ytdlpSidebar.toggleSidebar();
+				}
 			});
 
 			final JFXButton historyButton = createMenuItem(new FontIcon(Material2OutlinedAL.HISTORY));
