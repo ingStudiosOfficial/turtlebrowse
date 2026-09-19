@@ -34,6 +34,7 @@ import com.google.gson.JsonObject;
 import dev.ingstudios.turtlebrowse.Main;
 import dev.ingstudios.turtlebrowse.components.AISidebar;
 import dev.ingstudios.turtlebrowse.components.AddressBar;
+import dev.ingstudios.turtlebrowse.components.FindSidebar;
 import dev.ingstudios.turtlebrowse.components.MoreSidebar;
 import dev.ingstudios.turtlebrowse.components.TabBar;
 import dev.ingstudios.turtlebrowse.components.ToolSidebar;
@@ -87,6 +88,7 @@ public class MainWindow extends JFrame {
 	private ToolSidebar toolSidebar;
 	public final AISidebar aiSidebar;
 	public final YtdlpSidebar ytdlpSidebar;
+	public final FindSidebar findSidebar;
 	public final MoreSidebar moreSidebar;
 	private final JPanel sidePanel;
 	private final Gson gson = new Gson();
@@ -165,6 +167,9 @@ public class MainWindow extends JFrame {
 
 		// yt-dlp sidebar
 		ytdlpSidebar = new YtdlpSidebar(this);
+
+		// Find sidebar
+		findSidebar = new FindSidebar(this);
 
 		// More sidebar
 		moreSidebar = new MoreSidebar(this);
