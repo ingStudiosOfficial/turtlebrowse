@@ -1,3 +1,3 @@
 module turtlebrowseupdates
 
-go 1.26.8
+go 1.26.0
