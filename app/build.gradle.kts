@@ -159,6 +159,10 @@ val prepareRuntime = tasks.register<Copy>("prepareRuntime") {
 
 val pkgType = project.property("targetPkgType").toString().lowercase()
 
+tasks.shadowJar {
+    archiveFileName.set("app-all.jar")
+}
+
 tasks.jpackage {
     dependsOn(prepareRuntime)
 
