@@ -7,9 +7,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Properties;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class UpdateManager {
@@ -18,8 +15,7 @@ public class UpdateManager {
 	public String latestVersion = "1.0.0";
 	private final MainWindow parent;
 	private final HttpClient httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
-	private final String releaseEndpoint = "https://api.github.com/repos/ingStudiosOfficial/turtlebrowse/releases/latest";
-	private final Gson gson = new Gson();
+	private final String releaseEndpoint = "https://turtlebrowseupdates.ingstudios.dev";
 
 	private UpdateManager(MainWindow parent) {
 		this.parent = parent;
@@ -60,9 +56,7 @@ public class UpdateManager {
 			final int statusCode = response.statusCode();
 
 			if (statusCode == 200) {
-				final String json = response.body();
-				final JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
-				final String version = jsonObject.get("tag_name").getAsString();
+				final String version = response.body();
 				return version.replaceAll("^v", "").split("-")[0];
 			} else {
 				System.out.printf("Failed to fetch version: %d\n", statusCode);
