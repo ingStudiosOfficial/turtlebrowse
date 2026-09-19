@@ -1,6 +1,7 @@
 import type { AISettings } from '@/interfaces/AISettings';
 import type { HistoryItem } from '@/interfaces/HistoryItem';
 import type { NewtabSettings } from '@/interfaces/NewtabSettings';
+import type { UpdateInfo } from '@/interfaces/UpdateInfo';
 import type { SearchEngine } from '@/types/SearchEngine';
 
 async function communicateWithBackend(
@@ -211,5 +212,17 @@ export async function deleteSiteFromHistory(id: string) {
 		});
 	} catch (error) {
 		console.error(error);
+	}
+}
+
+export async function getUpdateInfo(refresh: boolean = false): Promise<UpdateInfo | null> {
+	try {
+		const info = (await fetchFromJavaJson('GET_UPDATE_INFO', {
+			refresh: refresh.toString(),
+		})) as UpdateInfo;
+		return info;
+	} catch (error) {
+		console.error(error);
+		return null;
 	}
 }

@@ -30,9 +30,7 @@ onMounted(async () => {
 						<m3e-icon name="delete"></m3e-icon>
 					</m3e-icon-button>
 				</m3e-list-action>
-				<m3e-list-action @click="fetchMore()">
-					Fetch more
-				</m3e-list-action>
+				<m3e-list-action @click="fetchMore()"> Fetch more </m3e-list-action>
 			</m3e-action-list>
 		</m3e-card>
 	</div>
@@ -64,7 +62,7 @@ onMounted(async () => {
 .item-text {
 	width: 60ch;
 	white-space: nowrap;
-  	overflow: hidden;
+	overflow: hidden;
 	text-overflow: ellipsis;
 }
 </style>

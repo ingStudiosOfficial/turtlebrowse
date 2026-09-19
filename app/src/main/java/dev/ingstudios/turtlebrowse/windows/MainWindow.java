@@ -38,7 +38,6 @@ import dev.ingstudios.turtlebrowse.components.FindSidebar;
 import dev.ingstudios.turtlebrowse.components.MoreSidebar;
 import dev.ingstudios.turtlebrowse.components.TabBar;
 import dev.ingstudios.turtlebrowse.components.ToolSidebar;
-import dev.ingstudios.turtlebrowse.components.UpdateSidebar;
 import dev.ingstudios.turtlebrowse.components.YtdlpSidebar;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase;
 import dev.ingstudios.turtlebrowse.db.MainDatabase.ProfileStructureWithId;
@@ -59,6 +58,7 @@ import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseRequestHandler;
 import dev.ingstudios.turtlebrowse.managers.CefAppManager;
 import dev.ingstudios.turtlebrowse.managers.DiscordPresenceManager;
 import dev.ingstudios.turtlebrowse.managers.InstanceManager;
+import dev.ingstudios.turtlebrowse.managers.UpdateManager;
 import dev.ingstudios.turtlebrowse.managers.WallpaperManager;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager.WindowItem;
@@ -90,7 +90,6 @@ public class MainWindow extends JFrame {
 	public final AISidebar aiSidebar;
 	public final YtdlpSidebar ytdlpSidebar;
 	public final FindSidebar findSidebar;
-	public final UpdateSidebar updateSidebar;
 	public final MoreSidebar moreSidebar;
 	private final JPanel sidePanel;
 	private final Gson gson = new Gson();
@@ -172,9 +171,6 @@ public class MainWindow extends JFrame {
 
 		// Find sidebar
 		findSidebar = new FindSidebar(this);
-
-		// Update sidebar
-		updateSidebar = new UpdateSidebar(this);
 
 		// More sidebar
 		moreSidebar = new MoreSidebar(this);
@@ -522,6 +518,31 @@ public class MainWindow extends JFrame {
 			case "DELETE_HISTORY_ITEM": {
 				final UUID id = UUID.fromString(params.get("id").getAsString());
 				profileDatabase.deleteFromHistory(id);
+				return "\"ok\"";
+			}
+
+			case "GET_UPDATE_INFO": {
+				final boolean refresh = params.get("refresh").getAsBoolean();
+
+				final UpdateManager updateManager = UpdateManager.getInstance(this);
+
+				boolean shouldUpdate;
+
+				if (refresh) {
+					shouldUpdate = updateManager.refreshShouldUpdate();
+				} else {
+					shouldUpdate = updateManager.shouldUpdate();
+				}
+
+				final String currentVersion = updateManager.currentVersion;
+				final String latestVersion = updateManager.latestVersion;
+
+				final Map<String, Object> updateInfoMap = new HashMap<>();
+				updateInfoMap.put("currentVersion", currentVersion);
+				updateInfoMap.put("latestVersion", latestVersion);
+				updateInfoMap.put("needsUpdate", shouldUpdate);
+
+				return gson.toJson(updateInfoMap);
 			}
 
 			default:

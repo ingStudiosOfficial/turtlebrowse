@@ -5,9 +5,10 @@ const privacyDialog = ref<M3eDialogElement | null>(null);
 const searchEnginesDialog = ref<M3eDialogElement | null>(null);
 const aiDialog = ref<M3eDialogElement | null>(null);
 const newtabSettingsDialog = ref<M3eDialogElement | null>(null);
+const updatesDialog = ref<M3eDialogElement | null>(null);
 
 export function useDialog() {
-	function showDialog(dialog: 'privacy' | 'search' | 'ai' | 'ns') {
+	function showDialog(dialog: 'privacy' | 'search' | 'ai' | 'ns' | 'updates') {
 		console.log('Showing dialog:', dialog);
 
 		switch (dialog) {
@@ -27,8 +28,19 @@ export function useDialog() {
 				newtabSettingsDialog.value?.show();
 				break;
 			}
+			case 'updates': {
+				updatesDialog.value?.show();
+				break;
+			}
 		}
 	}
 
-	return { privacyDialog, searchEnginesDialog, aiDialog, newtabSettingsDialog, showDialog };
+	return {
+		privacyDialog,
+		searchEnginesDialog,
+		aiDialog,
+		newtabSettingsDialog,
+		updatesDialog,
+		showDialog,
+	};
 }
