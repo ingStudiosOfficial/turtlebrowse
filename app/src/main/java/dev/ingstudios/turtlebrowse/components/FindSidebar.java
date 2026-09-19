@@ -100,8 +100,8 @@ public class FindSidebar extends ToolSidebar {
 
 			final JFXCheckBox matchCaseCheckBox = new JFXCheckBox("Match case");
 			matchCaseCheckBox.setCheckedColor(parent.profileMaterialColorScheme.getPrimary().get());
-			matchCaseCheckBox.setOnAction(event -> {
-				matchCase = matchCaseCheckBox.isSelected();
+			matchCaseCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
+				matchCase = newVal;
 				findText();
 			});
 

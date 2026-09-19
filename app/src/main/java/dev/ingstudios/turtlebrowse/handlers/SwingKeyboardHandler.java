@@ -87,6 +87,28 @@ public class SwingKeyboardHandler {
 							keyEvent.consume();
 							System.out.println("Ctrl + H pressed.");
 							parent.openHistory();
+						} else if (keyCode == KeyEvent.VK_F && ctrlPressed) { // Toggles find
+							keyEvent.consume();
+							System.out.println("Ctrl + F pressed.");
+							if (parent.getSidebar() != parent.findSidebar) {
+								parent.setSidebar(parent.findSidebar);
+								parent.findSidebar.openSidebar();
+							} else {
+								parent.findSidebar.toggleSidebar();
+							}
+						} else if (keyCode == KeyEvent.VK_B && ctrlPressed) { // Toggles AI chat
+							keyEvent.consume();
+							System.out.println("Ctrl + B pressed.");
+							if (parent.getSidebar() != parent.aiSidebar) {
+								parent.setSidebar(parent.aiSidebar);
+								parent.aiSidebar.openSidebar();
+							} else {
+								parent.aiSidebar.toggleSidebar();
+							}
+						} else if (keyCode == KeyEvent.VK_M && ctrlPressed) { // Toggles more sidebar
+							keyEvent.consume();
+							System.out.println("Ctrl + M pressed.");
+							parent.moreSidebar.toggleSidebar();
 						}
 					}
 				}
