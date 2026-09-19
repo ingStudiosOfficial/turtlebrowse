@@ -130,6 +130,20 @@ npm run dev
 npm run build
 ```
 
+### Updates proxy
+
+1. **Run the Go project**
+```bash
+# Relative to the root of the project
+cd updates
+go run .
+```
+
+2. **Build the binary**
+```bash
+go build -o ./build/turtlebrowseupdates .
+```
+
 ## Credits
 
 Huge thank you to the [Java Chromium Embedded Framework](https://github.com/chromiumembedded/java-cef) project for providing Java bindings to CEF and [jcefmaven](https://github.com/jcefmaven/jcefmaven) for providing pre-built binaries for Gradle. This project would not have been possible without them.
