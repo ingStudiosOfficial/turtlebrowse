@@ -34,6 +34,7 @@ import com.google.gson.JsonObject;
 import dev.ingstudios.turtlebrowse.Main;
 import dev.ingstudios.turtlebrowse.components.AISidebar;
 import dev.ingstudios.turtlebrowse.components.AddressBar;
+import dev.ingstudios.turtlebrowse.components.MoreSidebar;
 import dev.ingstudios.turtlebrowse.components.TabBar;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase;
 import dev.ingstudios.turtlebrowse.db.MainDatabase.ProfileStructureWithId;
@@ -80,7 +81,8 @@ public class MainWindow extends JFrame {
 	public final Map<CefBrowser, String> titleMap = new HashMap<>();
 	public final BooleanProperty isUiFocused = new SimpleBooleanProperty(false);
 	public OllamaChat ollamaSession;
-	public AISidebar aiSidebar;
+	public final AISidebar aiSidebar;
+	public final MoreSidebar moreSidebar;
 	private final Gson gson = new Gson();
 	public final TurtlebrowseLoadHandler loadHandler = new TurtlebrowseLoadHandler();
 	public final TurtlebrowseRequestHandler requestHandler = new TurtlebrowseRequestHandler(this);
@@ -152,8 +154,11 @@ public class MainWindow extends JFrame {
 		// Tab bar
 		tabBar = new TabBar(cefClient, openedBrowserTabs, this);
 
-		// AI Sidebar
+		// AI sidebar
 		aiSidebar = new AISidebar(cefClient, this, USE_OSR, isUiFocused);
+
+		// More sidebar
+		moreSidebar = new MoreSidebar(this);
 
 		// Keyboard handler (JCEF)
 		cefClient.addKeyboardHandler(new CefKeyboardHandler(this, startUrl));
@@ -168,10 +173,14 @@ public class MainWindow extends JFrame {
 		topPanel.add(tabBar, BorderLayout.NORTH);
 		topPanel.add(addressBar, BorderLayout.SOUTH);
 
+		final JPanel sidePanel = new JPanel(new BorderLayout());
+		sidePanel.add(aiSidebar, BorderLayout.CENTER);
+		sidePanel.add(moreSidebar, BorderLayout.EAST);
+
 		// Bottom panel (main browser + AI sidebar)
 		final JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.add(browserContainer, BorderLayout.CENTER);
-		bottomPanel.add(aiSidebar, BorderLayout.EAST);
+		bottomPanel.add(sidePanel, BorderLayout.EAST);
 
 		root.add(topPanel, BorderLayout.NORTH);
 		root.add(bottomPanel, BorderLayout.CENTER);

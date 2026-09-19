@@ -97,7 +97,7 @@ public class ProfilePickerWindow extends Stage {
 		newProfileBox.setOnMouseEntered(event -> {
 			newProfileBox.setCursor(Cursor.HAND);
 		});
-		newProfileBox.setOnMouseDragExited(event -> {
+		newProfileBox.setOnMouseExited(event -> {
 			newProfileBox.setCursor(Cursor.DEFAULT);
 		});
 		newProfileBox.setOnMouseClicked(event -> {
@@ -130,7 +130,7 @@ public class ProfilePickerWindow extends Stage {
 		guestButton.setOnMouseEntered(event -> {
 			guestButton.setCursor(Cursor.HAND);
 		});
-		guestButton.setOnMouseDragExited(event -> {
+		guestButton.setOnMouseExited(event -> {
 			guestButton.setCursor(Cursor.DEFAULT);
 		});
 		guestButton.setOnMouseClicked(event -> {
@@ -167,7 +167,7 @@ public class ProfilePickerWindow extends Stage {
 		profileButton.setOnMouseEntered(event -> {
 			profileButton.setCursor(Cursor.HAND);
 		});
-		profileButton.setOnMouseDragExited(event -> {
+		profileButton.setOnMouseExited(event -> {
 			profileButton.setCursor(Cursor.DEFAULT);
 		});
 		profileButton.setOnAction(event -> {

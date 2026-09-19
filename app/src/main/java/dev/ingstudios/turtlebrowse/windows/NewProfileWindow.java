@@ -91,7 +91,7 @@ public class NewProfileWindow extends Stage {
 		profileImageView.setOnMouseEntered(event -> {
 			profileImageView.setCursor(Cursor.HAND);
 		});
-		profileImageView.setOnMouseDragExited(event -> {
+		profileImageView.setOnMouseExited(event -> {
 			profileImageView.setCursor(Cursor.DEFAULT);
 		});
 		profileImageView.setOnMouseClicked(event -> {

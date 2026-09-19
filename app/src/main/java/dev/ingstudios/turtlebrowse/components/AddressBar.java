@@ -6,13 +6,10 @@ import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
@@ -35,8 +32,6 @@ import org.kordamp.ikonli.material2.Material2OutlinedMZ;
 
 import com.jfoenix.controls.JFXButton;
 
-import dev.ingstudios.turtlebrowse.Main;
-import dev.ingstudios.turtlebrowse.managers.YtdlpManager;
 import dev.ingstudios.turtlebrowse.search.SearchAutosuggest;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
@@ -87,7 +82,7 @@ public class AddressBar extends JPanel {
 			backButton.setOnMouseEntered(event -> {
 				backButton.setCursor(Cursor.HAND);
 			});
-			backButton.setOnMouseDragExited(event -> {
+			backButton.setOnMouseExited(event -> {
 				backButton.setCursor(Cursor.DEFAULT);
 			});
 			backButton.setOnAction(event -> {
@@ -108,7 +103,7 @@ public class AddressBar extends JPanel {
 			forwardButton.setOnMouseEntered(event -> {
 				forwardButton.setCursor(Cursor.HAND);
 			});
-			forwardButton.setOnMouseDragExited(event -> {
+			forwardButton.setOnMouseExited(event -> {
 				forwardButton.setCursor(Cursor.DEFAULT);
 			});
 			forwardButton.setOnAction(event -> {
@@ -129,7 +124,7 @@ public class AddressBar extends JPanel {
 			reloadButton.setOnMouseEntered(event -> {
 				reloadButton.setCursor(Cursor.HAND);
 			});
-			reloadButton.setOnMouseDragExited(event -> {
+			reloadButton.setOnMouseExited(event -> {
 				reloadButton.setCursor(Cursor.DEFAULT);
 			});
 			reloadButton.setOnAction(event -> {
@@ -165,7 +160,7 @@ public class AddressBar extends JPanel {
 			aiButton.setOnMouseEntered(event -> {
 				aiButton.setCursor(Cursor.HAND);
 			});
-			aiButton.setOnMouseDragExited(event -> {
+			aiButton.setOnMouseExited(event -> {
 				aiButton.setCursor(Cursor.DEFAULT);
 			});
 			aiButton.setOnAction(event -> {
@@ -173,7 +168,24 @@ public class AddressBar extends JPanel {
 				parent.aiSidebar.toggleSidebar();
 			});
 
-			final JFXButton moreButton = createMoreButton();
+			final JFXButton moreButton = new JFXButton(":");
+			moreButton.setGraphic(new FontIcon(Material2OutlinedMZ.MORE_VERT));
+			moreButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+			moreButton.setStyle("-fx-padding: 10px;");
+			moreButton.getStyleClass().add("animated-option-button");
+			moreButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
+				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
+			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+			moreButton.setOnMouseEntered(event -> {
+				moreButton.setCursor(Cursor.HAND);
+			});
+			moreButton.setOnMouseExited(event -> {
+				moreButton.setCursor(Cursor.DEFAULT);
+			});
+			moreButton.setOnAction(event -> {
+				parent.moreSidebar.toggleSidebar();
+			});
 
 			root.getChildren().addAll(backButton, forwardButton, reloadButton, addressField, aiButton, moreButton);
 
@@ -181,7 +193,6 @@ public class AddressBar extends JPanel {
 			forwardButton.prefWidthProperty().bind(forwardButton.heightProperty());
 			reloadButton.prefWidthProperty().bind(reloadButton.heightProperty());
 			aiButton.prefWidthProperty().bind(aiButton.prefHeightProperty());
-			moreButton.prefWidthProperty().bind(moreButton.prefHeightProperty());
 
 			HBox.setHgrow(addressField, Priority.ALWAYS);
 			addressField.setMaxWidth(Double.MAX_VALUE);
@@ -359,74 +370,6 @@ public class AddressBar extends JPanel {
 		});
 
 		this.add(addressBarPanel);
-	}
-
-	private JFXButton createMoreButton() {
-		final ContextMenu menu = new ContextMenu();
-
-		final MenuItem settingsItem = new MenuItem("Settings");
-		settingsItem.setGraphic(new FontIcon(Material2OutlinedMZ.SETTINGS));
-		settingsItem.setOnAction(event -> {
-			System.out.println("Settings button clicked.");
-			SwingUtilities.invokeLater(() -> {
-				parent.createTab("turtlebrowse://settings");
-			});
-		});
-
-		final MenuItem profileItem = new MenuItem("Profiles");
-		profileItem.setGraphic(new FontIcon(Material2OutlinedAL.ACCOUNT_CIRCLE));
-		profileItem.setOnAction(event -> {
-			System.out.println("Profile menu item clicked.");
-			Main.createProfilePickerWindow();
-		});
-
-		final MenuItem ytdlpItem = new MenuItem("Download video");
-		ytdlpItem.setGraphic(new FontIcon(Material2OutlinedAL.CLOUD_DOWNLOAD));
-		ytdlpItem.setOnAction(event -> {
-			System.out.println("yt-dlp download button clicked.");
-			YtdlpManager.getInstance(parent).createDownloadPopup();
-		});
-
-		final MenuItem historyItem = new MenuItem("History");
-		historyItem.setGraphic(new FontIcon(Material2OutlinedAL.HISTORY));
-		historyItem.setOnAction(event -> {
-			System.out.println("History button clicked.");
-			parent.openHistory();
-		});
-
-		final MenuItem closeItem = new MenuItem("Close");
-		closeItem.setGraphic(new FontIcon(Material2OutlinedAL.CLOSE));
-		closeItem.setOnAction(event -> {
-			System.out.println("Close button clicked.");
-			menu.hide();
-		});
-
-		menu.getItems().addAll(settingsItem, profileItem, ytdlpItem, historyItem, closeItem);
-
-		final JFXButton moreButton = new JFXButton(":");
-		moreButton.setGraphic(new FontIcon(Material2OutlinedMZ.MORE_VERT));
-		moreButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-		moreButton.setStyle("-fx-padding: 10px;");
-		moreButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-		}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-		moreButton.setOnMouseEntered(event -> {
-			moreButton.setCursor(Cursor.HAND);
-		});
-		moreButton.setOnMouseDragExited(event -> {
-			moreButton.setCursor(Cursor.DEFAULT);
-		});
-		moreButton.setOnAction(event -> {
-			System.out.println("More button clicked: " + menu.isShowing());
-			if (!menu.isShowing()) {
-				menu.show(moreButton, Side.BOTTOM, 0, 0);
-			} else {
-				menu.hide();
-			}
-		});
-
-		return moreButton;
 	}
 
 	public void updateUrl(String newUrl) {

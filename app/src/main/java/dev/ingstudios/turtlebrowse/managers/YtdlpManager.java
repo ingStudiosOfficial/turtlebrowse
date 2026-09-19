@@ -72,7 +72,7 @@ public class YtdlpManager {
 		closeButton.setOnMouseEntered(event -> {
 			closeButton.setCursor(Cursor.HAND);
 		});
-		closeButton.setOnMouseDragExited(event -> {
+		closeButton.setOnMouseExited(event -> {
 			closeButton.setCursor(Cursor.DEFAULT);
 		});
 		closeButton.setOnAction(event -> {

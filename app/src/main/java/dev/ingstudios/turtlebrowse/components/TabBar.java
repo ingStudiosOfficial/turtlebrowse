@@ -76,7 +76,7 @@ public class TabBar extends JPanel {
 			createTabButton.setOnMouseEntered(event -> {
 				createTabButton.setCursor(Cursor.HAND);
 			});
-			createTabButton.setOnMouseDragExited(event -> {
+			createTabButton.setOnMouseExited(event -> {
 				createTabButton.setCursor(Cursor.DEFAULT);
 			});
 			createTabButton.setOnAction(event -> {
@@ -115,7 +115,7 @@ public class TabBar extends JPanel {
 		tabBox.setOnMouseEntered(event -> {
 			tabBox.setCursor(Cursor.HAND);
 		});
-		tabBox.setOnMouseDragExited(event -> {
+		tabBox.setOnMouseExited(event -> {
 			tabBox.setCursor(Cursor.DEFAULT);
 		});
 		tabBox.setOnMouseClicked(event -> {
@@ -139,7 +139,7 @@ public class TabBar extends JPanel {
 		closeButton.setOnMouseEntered(event -> {
 			closeButton.setCursor(Cursor.HAND);
 		});
-		closeButton.setOnMouseDragExited(event -> {
+		closeButton.setOnMouseExited(event -> {
 			closeButton.setCursor(Cursor.DEFAULT);
 		});
 		closeButton.setOnAction(event -> {
