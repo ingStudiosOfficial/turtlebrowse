@@ -83,6 +83,15 @@ javafx {
     modules("javafx.controls", "javafx.graphics", "javafx.base", "javafx.swing")
 }
 
+version = "1.7.1"
+
+tasks.processResources {
+    inputs.property("version", project.version)
+    filesMatching("version.properties") {
+        expand("version" to project.version)
+    }
+}
+
 val osName = System.getProperty("os.name").lowercase()
 val isLinux = osName.contains("linux")
 val isMac = osName.contains("darwin") || osName.contains("mac") || osName.contains("osx")   
@@ -160,7 +169,7 @@ tasks.jpackage {
     
     appName = "Turtlebrowse"
     vendor = "(ing) Studios"
-    appVersion = "1.7.0"
+    appVersion = version.toString()
     copyright = "2026 (ing) Studios and Ethan Lee"
 
     input = layout.buildDirectory.dir("libs")

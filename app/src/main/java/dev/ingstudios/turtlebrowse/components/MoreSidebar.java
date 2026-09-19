@@ -98,12 +98,29 @@ public class MoreSidebar extends JPanel {
 				}
 			});
 
+			final JFXButton updateButton = createMenuItem(new FontIcon(Material2OutlinedMZ.SYNC));
+			updateButton.setOnAction(event -> {
+				System.out.println("Update button clicked.");
+				if (parent.getSidebar() != parent.updateSidebar) {
+					parent.setSidebar(parent.updateSidebar);
+					parent.updateSidebar.openSidebar();
+				} else {
+					parent.updateSidebar.toggleSidebar();
+				}
+			});
+
 			final JFXButton closeButton = createMenuItem(new FontIcon(Material2OutlinedAL.CLOSE));
 			closeButton.setOnAction(event -> {
 				closeSidebar();
 			});
 
-			actionsBar.getChildren().addAll(settingsButton, profileButton, ytdlpButton, historyButton, findButton,
+			actionsBar.getChildren().addAll(
+					settingsButton,
+					profileButton,
+					ytdlpButton,
+					historyButton,
+					findButton,
+					updateButton,
 					closeButton);
 		});
 

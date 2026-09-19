@@ -38,6 +38,7 @@ import dev.ingstudios.turtlebrowse.components.FindSidebar;
 import dev.ingstudios.turtlebrowse.components.MoreSidebar;
 import dev.ingstudios.turtlebrowse.components.TabBar;
 import dev.ingstudios.turtlebrowse.components.ToolSidebar;
+import dev.ingstudios.turtlebrowse.components.UpdateSidebar;
 import dev.ingstudios.turtlebrowse.components.YtdlpSidebar;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase;
 import dev.ingstudios.turtlebrowse.db.MainDatabase.ProfileStructureWithId;
@@ -89,6 +90,7 @@ public class MainWindow extends JFrame {
 	public final AISidebar aiSidebar;
 	public final YtdlpSidebar ytdlpSidebar;
 	public final FindSidebar findSidebar;
+	public final UpdateSidebar updateSidebar;
 	public final MoreSidebar moreSidebar;
 	private final JPanel sidePanel;
 	private final Gson gson = new Gson();
@@ -170,6 +172,9 @@ public class MainWindow extends JFrame {
 
 		// Find sidebar
 		findSidebar = new FindSidebar(this);
+
+		// Update sidebar
+		updateSidebar = new UpdateSidebar(this);
 
 		// More sidebar
 		moreSidebar = new MoreSidebar(this);
