@@ -6,7 +6,7 @@
 <p align="center">
 A <b>Material You</b> themed JVM based <b>agentic</b> browser made in JCEF (Java Chromium Embedded Framework), Swing, and JavaFX.
 </p>
-<p><a href="https://www.youtube.com/watch?v=WzU8Cnl3kE0">YouTube Video</a> • <a href="https://turtlebrowse.ingstudios.dev">Download</a> • <a href="/LICENSE">License</a></p>
+<p><a href="https://www.youtube.com/watch?v=WzU8Cnl3kE0">YouTube Video</a> • <a href="https://turtlebrowse.ingstudios.dev">Download</a> • <a href="/CHANGELOG.md">Changelog</a> • <a href="/LICENSE">License</a></p>
 <hr />
 </div>
 
