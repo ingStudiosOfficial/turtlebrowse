@@ -43,7 +43,6 @@ public class UpdateManager {
 		return "1.0.0";
 	}
 
-	@SuppressWarnings("null")
 	private String getLatestVersion() {
 		try {
 			final HttpRequest request = HttpRequest.newBuilder()

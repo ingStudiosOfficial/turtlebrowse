@@ -87,6 +87,8 @@ public class Main {
 		isGuest = checkIsGuest(args);
 
 		if (isGuest) {
+			// The guest will always launch with a random UUID from the previous application
+			// launch
 			currentProfile = new ProfileStructureWithId("Guest", Platform.getPreferences().getAccentColor(),
 					UUID.fromString(profileId));
 		} else {
@@ -106,12 +108,19 @@ public class Main {
 
 		final String launchUrl = getLaunchUrl(args);
 		if (launchUrl != null && !launchUrl.isEmpty() && !profiles.isEmpty()) {
+			// Current profile may or may not be null at this point depending on whether a
+			// profile ID was provided
+
 			db.closeDb();
 
-			final ProfileStructureWithId profile = profiles.get(0);
+			if (currentProfile == null) {
+				// IMPORTANT: Assign current profile as CefAppManager looks up from
+				// Main.currentProfile
+				currentProfile = profiles.get(0);
+			}
 
 			final InstanceManager instanceManager = InstanceManager.getInstance();
-			final int port = instanceManager.getPort(profile.getIdAsString());
+			final int port = instanceManager.getPort(currentProfile.getIdAsString());
 			final boolean portInUse = instanceManager.isPortInUse("127.0.0.1", port);
 			System.out.println("Port in use: " + portInUse);
 			if (portInUse) {
@@ -119,7 +128,7 @@ public class Main {
 				System.exit(0);
 			}
 
-			final MainWindow mainWindow = new MainWindow(profile, launchUrl);
+			final MainWindow mainWindow = new MainWindow(currentProfile, launchUrl);
 			mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
 			mainWindow.setUndecorated(false);
 			mainWindow.setVisible(true);

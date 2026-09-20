@@ -42,7 +42,7 @@ public class CefAppManager {
 	}
 
 	private CefApp createCefApp(MainWindow parent) {
-		CefAppBuilder builder = new CefAppBuilder();
+		final CefAppBuilder builder = new CefAppBuilder();
 		builder.addJcefArgs("--enable-media-stream");
 
 		if (OS.isLinux()) {
