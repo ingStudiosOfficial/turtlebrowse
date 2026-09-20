@@ -47,7 +47,7 @@ public class AddressBar extends JPanel {
 	public AddressBar(CefClient client, MainWindow parent, String startUrl) {
 		this.parent = parent;
 
-		autosuggester = new SearchAutosuggest(this.parent.userAgent);
+		autosuggester = parent.searchAutosuggest;
 
 		this.setLayout(new java.awt.BorderLayout());
 

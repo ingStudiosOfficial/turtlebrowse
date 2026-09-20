@@ -107,7 +107,7 @@ public class MainWindow extends JFrame {
 	public boolean enableDiscordPresence = false;
 	public AISettings aiSettings = new AISettings(false, "gemma4:e2b");
 	public NewtabSettings newtabSettings = new NewtabSettings("");
-	private final SearchAutosuggest searchAutosuggest;
+	public final SearchAutosuggest searchAutosuggest;
 
 	public MainWindow(ProfileStructureWithId profile) {
 		this(profile, "turtlebrowse://newtab");
@@ -153,7 +153,7 @@ public class MainWindow extends JFrame {
 		setUserAgent();
 		setMaterialColorSchemeFromProfile();
 
-		searchAutosuggest = new SearchAutosuggest(userAgent);
+		searchAutosuggest = new SearchAutosuggest(userAgent, this);
 
 		// Address bar
 		addressBar = new AddressBar(cefClient, this, startUrl);

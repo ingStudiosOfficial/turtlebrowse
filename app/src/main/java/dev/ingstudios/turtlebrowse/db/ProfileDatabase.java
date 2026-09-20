@@ -15,6 +15,8 @@ import org.dizitart.no2.collection.DocumentCursor;
 import org.dizitart.no2.collection.FindOptions;
 import org.dizitart.no2.collection.NitriteCollection;
 import org.dizitart.no2.common.SortOrder;
+import org.dizitart.no2.index.IndexType;
+import static org.dizitart.no2.index.IndexOptions.indexOptions;
 import org.dizitart.no2.mvstore.MVStoreModule;
 
 import dev.ingstudios.turtlebrowse.Main;
@@ -47,6 +49,9 @@ public class ProfileDatabase {
 
 		settingsCollection = db.getCollection("settings");
 		historyCollection = db.getCollection("history");
+
+		historyCollection.createIndex(indexOptions(IndexType.FULL_TEXT), "url");
+		historyCollection.createIndex(indexOptions(IndexType.FULL_TEXT), "title");
 	}
 
 	public static synchronized ProfileDatabase getInstance(String profileId) {
@@ -221,6 +226,23 @@ public class ProfileDatabase {
 
 	public void deleteFromHistory(UUID id) {
 		historyCollection.remove(where("id").eq(id));
+	}
+
+	public List<HistoryItem> getHistorySuggestions(String query, int amount) {
+		final DocumentCursor cursor = historyCollection.find(
+				where("url").text(query).or(where("title").text(query)),
+				FindOptions.orderBy("timestamp", SortOrder.Descending).limit(amount));
+
+		final List<HistoryItem> history = new ArrayList<>();
+
+		for (Document document : cursor.toList()) {
+			final HistoryItem item = new HistoryItem(document.get("url").toString(), document.get("title").toString(),
+					Long.parseLong(document.get("timestamp").toString()),
+					UUID.fromString(document.get("id").toString()));
+			history.add(item);
+		}
+
+		return history;
 	}
 
 	public record AISettings(boolean enabled, String model) {

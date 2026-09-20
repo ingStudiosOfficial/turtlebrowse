@@ -14,9 +14,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+
+import dev.ingstudios.turtlebrowse.db.ProfileDatabase.HistoryItem;
+import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class SearchAutosuggest {
 	private final HttpClient httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
@@ -24,8 +29,10 @@ public class SearchAutosuggest {
 	private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 	private ScheduledFuture<?> pendingTask;
 	private final String userAgent;
+	private final MainWindow parent;
 
-	public SearchAutosuggest(String userAgent) {
+	public SearchAutosuggest(String userAgent, MainWindow parent) {
+		this.parent = parent;
 		this.userAgent = userAgent;
 	}
 
@@ -42,6 +49,15 @@ public class SearchAutosuggest {
 	}
 
 	public List<String> fetchAndProcess(String query) {
+		final List<String> historySuggestions = fetchHistorySuggestions(query);
+		final List<String> remoteSuggestions = fetchRemoteSuggestions(query);
+		final List<String> combinedSuggestions = Stream.of(historySuggestions, remoteSuggestions)
+				.flatMap(c -> c.stream()).distinct().collect(Collectors.toList());
+		System.out.println("Combined suggestions: " + combinedSuggestions);
+		return combinedSuggestions;
+	}
+
+	private List<String> fetchRemoteSuggestions(String query) {
 		try {
 			System.out.printf("Fetching for query %s\n", query);
 
@@ -71,13 +87,23 @@ public class SearchAutosuggest {
 				});
 				return itemStringList;
 			} else {
-				// System.out.printf("Failed to fetch autosuggestions: %s\n", response.body());
 				return new ArrayList<>();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ArrayList<>();
 		}
+	}
+
+	private List<String> fetchHistorySuggestions(String query) {
+		final List<HistoryItem> items = parent.profileDatabase.getHistorySuggestions(query, 5);
+
+		final List<String> historySuggestions = new ArrayList<>();
+		for (HistoryItem item : items) {
+			historySuggestions.add(item.url());
+		}
+
+		return historySuggestions;
 	}
 
 	public void shutdown() {
