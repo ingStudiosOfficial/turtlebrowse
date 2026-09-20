@@ -149,7 +149,14 @@ public class AISidebar extends ToolSidebar {
 
 	public void summarize(String text) {
 		if (!isOpen)
-			SwingUtilities.invokeLater(this::openSidebar);
+			SwingUtilities.invokeLater(() -> {
+				if (parent.getSidebar() != parent.aiSidebar) {
+					parent.setSidebar(parent.aiSidebar);
+					openSidebar();
+				} else {
+					toggleSidebar();
+				}
+			});
 
 		summarizeScheduler.schedule(() -> {
 			final String jsonText = gson.toJson("Summarize this:\n:::extract\n" + text + "\n:::");
@@ -162,7 +169,14 @@ public class AISidebar extends ToolSidebar {
 
 	public void rewrite(String text) {
 		if (!isOpen)
-			SwingUtilities.invokeLater(this::openSidebar);
+			SwingUtilities.invokeLater(() -> {
+				if (parent.getSidebar() != parent.aiSidebar) {
+					parent.setSidebar(parent.aiSidebar);
+					openSidebar();
+				} else {
+					toggleSidebar();
+				}
+			});
 
 		rewriteScheduler.schedule(() -> {
 			final String jsonText = gson.toJson("Rewrite\n:::extract" + text + "\n:::\nto be");
@@ -177,7 +191,14 @@ public class AISidebar extends ToolSidebar {
 		System.out.printf("Summarizing page...\n");
 
 		if (!isOpen)
-			SwingUtilities.invokeLater(this::openSidebar);
+			SwingUtilities.invokeLater(() -> {
+				if (parent.getSidebar() != parent.aiSidebar) {
+					parent.setSidebar(parent.aiSidebar);
+					openSidebar();
+				} else {
+					toggleSidebar();
+				}
+			});
 
 		summarizePageScheduler.schedule(() -> {
 			if (html == null) {
