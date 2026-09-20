@@ -21,11 +21,7 @@ public class SwingKeyboardHandler {
 						final boolean shiftPressed = keyEvent.isShiftDown();
 						final boolean altPressed = keyEvent.isAltDown();
 
-						if (keyCode == KeyEvent.VK_I && ctrlPressed && shiftPressed) { // DevTools
-																						// (Ctrl
-																						// +
-																						// Shift
-																						// + I)
+						if (keyCode == KeyEvent.VK_I && ctrlPressed && shiftPressed) { // DevTools (Ctrl + Shift + I)
 							keyEvent.consume();
 							parent.createDevTools();
 						} else if (keyCode == KeyEvent.VK_T && ctrlPressed) { // New tab (Ctrl + T)
@@ -51,15 +47,15 @@ public class SwingKeyboardHandler {
 							keyEvent.consume();
 							if (parent.currentBrowser.canGoForward())
 								parent.currentBrowser.goForward();
-						} else if (keyCode == KeyEvent.VK_R && ctrlPressed) { // Reloads the page (Ctrl +
-							// R)
+						} else if (keyCode == KeyEvent.VK_R && ctrlPressed && shiftPressed) { // Hard reloads the page
+																								// (Ctrl + Shift + R)
+							keyEvent.consume();
+							parent.currentBrowser.reloadIgnoreCache();
+						} else if (keyCode == KeyEvent.VK_R && ctrlPressed) { // Reloads the page (Ctrl + R)
 							keyEvent.consume();
 							parent.currentBrowser.reload();
-						} else if (keyCode == KeyEvent.VK_TAB && ctrlPressed && shiftPressed) { // Switches
-																								// to
-																								// the
-																								// previous
-																								// tab
+						} else if (keyCode == KeyEvent.VK_TAB && ctrlPressed && shiftPressed) { // Switches to the
+																								// previous tab
 							// (Ctrl + Shift + Tab)
 							keyEvent.consume();
 							System.out.println("Ctrl + Shift + Tab pressed.");

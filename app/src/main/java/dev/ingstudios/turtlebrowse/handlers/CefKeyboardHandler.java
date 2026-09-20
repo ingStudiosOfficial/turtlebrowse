@@ -55,6 +55,11 @@ public class CefKeyboardHandler extends CefKeyboardHandlerAdapter {
 				if (parent.currentBrowser.canGoForward())
 					parent.currentBrowser.goForward();
 				return true;
+			} else if (ctrlPressed && shiftPressed && event.windows_key_code == KeyEvent.VK_R) { // Hard reloads the
+																									// page (Ctrl +
+																									// Shift + R)
+				parent.currentBrowser.reloadIgnoreCache();
+				return true;
 			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_R) { // Reloads the page (Ctrl + R)
 				parent.currentBrowser.reload();
 				return true;
