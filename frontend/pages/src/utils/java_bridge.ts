@@ -2,6 +2,7 @@ import type { AISettings } from '@/interfaces/AISettings';
 import type { HistoryItem } from '@/interfaces/HistoryItem';
 import type { NewtabSettings } from '@/interfaces/NewtabSettings';
 import type { UpdateInfo } from '@/interfaces/UpdateInfo';
+import type { Appearance } from '@/types/Appearance';
 import type { SearchEngine } from '@/types/SearchEngine';
 
 async function communicateWithBackend(
@@ -102,6 +103,29 @@ export async function setDiscordPresenceSetting(enabled: boolean) {
 		await fetchFromJavaText('SET_DISCORD_SETTING', { enabled: enabled.toString() });
 	} catch (error) {
 		console.error('Failed to set Discord setting:', error);
+	}
+}
+
+export async function getAppearance(): Promise<Appearance> {
+	try {
+		const appearance = (await fetchFromJavaText('GET_APPEARANCE')) as Appearance | undefined;
+
+		if (appearance === undefined) {
+			return 'system';
+		}
+
+		return appearance;
+	} catch (error) {
+		console.error('Error while getting dark mode setting:', error);
+		return 'system';
+	}
+}
+
+export async function setAppearance(appearance: Appearance) {
+	try {
+		await fetchFromJavaText('SET_APPEARANCE', { theme: appearance });
+	} catch (error) {
+		console.error('Failed to set dark mode setting:', error);
 	}
 }
 

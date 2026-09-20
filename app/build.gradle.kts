@@ -14,6 +14,9 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    maven {
+        url = uri("https://jitpack.io")
+    }
 }
 
 dependencies {
@@ -68,6 +71,9 @@ dependencies {
 
     // Apache PDFBox
     implementation("org.apache.pdfbox:pdfbox:3.0.8")
+
+    // jSystemThemeDetector
+    implementation("com.github.Dansoftowner:jSystemThemeDetector:3.9.1")
 }
 
 // Apply a specific Java toolchain. 
@@ -83,7 +89,7 @@ javafx {
     modules("javafx.controls", "javafx.graphics", "javafx.base", "javafx.swing")
 }
 
-version = "1.7.2"
+version = "1.7.3"
 
 tasks.processResources {
     inputs.property("version", project.version)

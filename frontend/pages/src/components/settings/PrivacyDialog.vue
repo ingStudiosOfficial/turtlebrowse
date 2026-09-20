@@ -48,7 +48,7 @@ onMounted(async () => {
 .privacy-dialog {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: left;
 	justify-content: center;
 	gap: 8px;
 	box-sizing: border-box;

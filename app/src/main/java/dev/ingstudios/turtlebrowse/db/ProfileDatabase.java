@@ -102,7 +102,7 @@ public class ProfileDatabase {
 			final Document newDiscordDocument = Document.createDocument().put("setting", "discordPresence")
 					.put("enabled", false);
 			settingsCollection.insert(newDiscordDocument);
-			return true;
+			return false;
 		}
 
 		return Boolean.valueOf(discordDocument.get("enabled").toString());
@@ -125,6 +125,36 @@ public class ProfileDatabase {
 		discordDocument.put("enabled", enabled);
 
 		settingsCollection.update(discordDocument);
+	}
+
+	public String getAppearance() {
+		final Document themeDocument = settingsCollection.find(where("setting").eq("appearance"))
+				.firstOrNull();
+
+		if (themeDocument == null) {
+			final Document newThemeDocument = Document.createDocument().put("setting", "appearance")
+					.put("theme", "system");
+			settingsCollection.insert(newThemeDocument);
+			return "system";
+		}
+
+		return themeDocument.get("theme").toString();
+	}
+
+	public void setAppearance(String appearance) {
+		final Document themeDocument = settingsCollection.find(where("setting").eq("appearance"))
+				.firstOrNull();
+
+		if (themeDocument == null) {
+			final Document newThemeDocument = Document.createDocument().put("setting", "appearance")
+					.put("theme", "system");
+			settingsCollection.insert(newThemeDocument);
+			return;
+		}
+
+		themeDocument.put("theme", appearance);
+
+		settingsCollection.update(themeDocument);
 	}
 
 	public AISettings getAISettings() {

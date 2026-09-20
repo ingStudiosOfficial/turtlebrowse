@@ -137,7 +137,10 @@ public class NewProfileWindow extends Stage {
 
 		final JFXButton createButton = new JFXButton(isEditing ? "Save" : "Create");
 		createButton.setFont(Font.font("Google Sans Flex", FontWeight.NORMAL, 25));
-		createButton.setTextFill(Main.mainMaterialColorScheme.getOnPrimaryContainer().get());
+		createButton.textFillProperty().bind(Bindings.createObjectBinding(() -> {
+			final Paint fillColor = Main.mainMaterialColorScheme.getOnSurface().get();
+			return fillColor;
+		}, Main.mainMaterialColorScheme.getOnSurface()));
 		createButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
 			final Paint backgroundColor = Main.mainMaterialColorScheme.getPrimaryContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));

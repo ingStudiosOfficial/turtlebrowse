@@ -24,12 +24,15 @@ import javax.swing.SwingUtilities;
 import org.cef.CefApp;
 import org.cef.CefClient;
 import org.cef.browser.CefBrowser;
+import org.glavo.monetfx.Brightness;
 import org.glavo.monetfx.ColorScheme;
+import org.glavo.monetfx.Contrast;
 import org.glavo.monetfx.beans.property.ColorSchemeProperty;
 import org.glavo.monetfx.beans.property.SimpleColorSchemeProperty;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.jthemedetecor.OsThemeDetector;
 
 import dev.ingstudios.turtlebrowse.Main;
 import dev.ingstudios.turtlebrowse.components.AISidebar;
@@ -105,9 +108,11 @@ public class MainWindow extends JFrame {
 	public final ProfileDatabase profileDatabase;
 	public String defaultSearchProvider = SearchURLTemplates.searchTemplates.get("brave");
 	public boolean enableDiscordPresence = false;
+	private String browserAppearance = "system";
 	public AISettings aiSettings = new AISettings(false, "gemma4:e2b");
 	public NewtabSettings newtabSettings = new NewtabSettings("");
 	public final SearchAutosuggest searchAutosuggest;
+	private final OsThemeDetector themeDetector = OsThemeDetector.getDetector();
 
 	public MainWindow(ProfileStructureWithId profile) {
 		this(profile, "turtlebrowse://newtab");
@@ -124,6 +129,7 @@ public class MainWindow extends JFrame {
 
 		defaultSearchProvider = SearchURLTemplates.searchTemplates.get(profileDatabase.getDefaultSearchEngine());
 		enableDiscordPresence = profileDatabase.getDiscordPresenceSetting();
+		browserAppearance = profileDatabase.getAppearance();
 		aiSettings = profileDatabase.getAISettings();
 		newtabSettings = profileDatabase.getNewtabSettings();
 
@@ -217,6 +223,15 @@ public class MainWindow extends JFrame {
 		} catch (OllamaException e) {
 			e.printStackTrace();
 		}
+
+		themeDetector.registerListener(isDark -> {
+			System.out.println("Browser appearance: " + browserAppearance);
+			System.out.println("Browser appearance equals system: " + browserAppearance.equals("system"));
+			if (browserAppearance.equals("system")) {
+				System.out.println("System is dark: " + isDark);
+				setMaterialColorSchemeFromProfile();
+			}
+		});
 
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -428,10 +443,7 @@ public class MainWindow extends JFrame {
 			case "GET_THEME": {
 				final Color profileColor = currentProfile.seedColor();
 				System.out.printf("Profile color: %s", profileColor);
-				final String hex = String.format("#%02x%02x%02x",
-						(int) (profileColor.getRed() * 255),
-						(int) (profileColor.getGreen() * 255),
-						(int) (profileColor.getBlue() * 255));
+				final String hex = colorToHex(profileColor);
 				return hex;
 			}
 
@@ -461,6 +473,19 @@ public class MainWindow extends JFrame {
 					DiscordPresenceManager.getInstance().disableDiscordPresence();
 				}
 				profileDatabase.setDiscordPresenceSetting(discordSettingToSet);
+				return "\"ok\"";
+			}
+
+			case "GET_APPEARANCE": {
+				final String appearance = profileDatabase.getAppearance();
+				return appearance;
+			}
+
+			case "SET_APPEARANCE": {
+				final String appearance = params.get("theme").getAsString();
+				browserAppearance = appearance;
+				setMaterialColorSchemeFromProfile();
+				profileDatabase.setAppearance(appearance);
 				return "\"ok\"";
 			}
 
@@ -556,11 +581,36 @@ public class MainWindow extends JFrame {
 
 	private void setMaterialColorSchemeFromProfile() {
 		final Color accentColor = currentProfile.seedColor();
+
+		System.out.println("Browser appearance: " + browserAppearance);
+
+		boolean isDark = false;
+		if (browserAppearance.equals("system")) {
+			if (OsThemeDetector.isSupported()) {
+				System.out.println("Theme detector is supported.");
+				isDark = themeDetector.isDark();
+				System.out.println("Theme detector is dark: " + themeDetector.isDark());
+			} else {
+				System.out.println("Theme detector is not supported.");
+				isDark = false;
+			}
+		} else {
+			isDark = browserAppearance.equals("dark");
+		}
+
+		System.out.println("Is dark: " + isDark);
+
+		final Brightness brightness = isDark ? Brightness.DARK : Brightness.LIGHT;
+		final Contrast contrast = isDark ? Contrast.HIGH : Contrast.DEFAULT;
+
 		if (accentColor == null) {
-			profileMaterialColorScheme.set(ColorScheme.fromSeed(Color.web("#BDCF47")));
+			profileMaterialColorScheme
+					.set(ColorScheme.newBuilder().setBrightness(brightness).setContrast(contrast)
+							.setPrimaryColorSeed(Color.web("#BDCF47")).build());
 		} else {
 			profileMaterialColorScheme
-					.set(ColorScheme.fromSeed(accentColor));
+					.set(ColorScheme.newBuilder().setBrightness(brightness).setContrast(contrast)
+							.setPrimaryColorSeed(accentColor).build());
 		}
 	}
 
@@ -592,5 +642,13 @@ public class MainWindow extends JFrame {
 
 	public ToolSidebar getSidebar() {
 		return toolSidebar;
+	}
+
+	public String colorToHex(Color color) {
+		final String hex = String.format("#%02x%02x%02x",
+				(int) (color.getRed() * 255),
+				(int) (color.getGreen() * 255),
+				(int) (color.getBlue() * 255));
+		return hex;
 	}
 }

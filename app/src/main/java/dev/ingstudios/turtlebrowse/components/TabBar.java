@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 
 import org.cef.CefClient;
 import org.cef.browser.CefBrowser;
+import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.material2.Material2OutlinedAL;
 
@@ -64,21 +65,8 @@ public class TabBar extends JPanel {
 			root.prefWidthProperty().bind(tabBarScene.widthProperty());
 			root.prefHeightProperty().bind(tabBarScene.heightProperty());
 
-			final JFXButton createTabButton = new JFXButton("+");
-			createTabButton.setGraphic(new FontIcon(Material2OutlinedAL.ADD));
-			createTabButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			createTabButton.setStyle("-fx-padding: 10px;");
-			createTabButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+			final JFXButton createTabButton = buildButton(Material2OutlinedAL.ADD);
 			createTabButton.setMaxHeight(Double.MAX_VALUE);
-			createTabButton.setOnMouseEntered(event -> {
-				createTabButton.setCursor(Cursor.HAND);
-			});
-			createTabButton.setOnMouseExited(event -> {
-				createTabButton.setCursor(Cursor.DEFAULT);
-			});
 			createTabButton.setOnAction(event -> {
 				SwingUtilities.invokeLater(() -> {
 					this.parent.createTab(this.parent.startUrl);
@@ -96,11 +84,26 @@ public class TabBar extends JPanel {
 
 	public void addTabToUI(CefBrowser browser) {
 		final Label tabTitle = new Label("Loading...");
+		tabTitle.textFillProperty().bind(Bindings.createObjectBinding(() -> {
+			final Paint fillColor = parent.profileMaterialColorScheme.getOnSurface().get();
+			return fillColor;
+		}, parent.profileMaterialColorScheme.getOnSurface()));
 
-		final JFXButton closeButton = new JFXButton("X");
-		closeButton.setGraphic(new FontIcon(Material2OutlinedAL.CLOSE));
+		final JFXButton closeButton = new JFXButton("");
+		final FontIcon closeIcon = new FontIcon(Material2OutlinedAL.CLOSE);
+		closeIcon.setIconColor(parent.profileMaterialColorScheme.getOnSurface().get());
+		parent.profileMaterialColorScheme.getOnSurface().addListener((observable, oldPaint, newPaint) -> {
+			closeIcon.setIconColor(newPaint);
+		});
+		closeButton.setGraphic(closeIcon);
 		closeButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		closeButton.setStyle("-fx-background-color: transparent;");
+		closeButton.setOnMouseEntered(event -> {
+			closeButton.setCursor(Cursor.HAND);
+		});
+		closeButton.setOnMouseExited(event -> {
+			closeButton.setCursor(Cursor.DEFAULT);
+		});
 
 		final HBox tabBox = new HBox(10);
 		tabBox.setStyle("-fx-padding: 10px; -fx-pref-width: 150px;");
@@ -136,12 +139,6 @@ public class TabBar extends JPanel {
 		boxTransition.setToY(0);
 
 		closeButton.prefHeightProperty().bind(tabBox.heightProperty().multiply(0.8));
-		closeButton.setOnMouseEntered(event -> {
-			closeButton.setCursor(Cursor.HAND);
-		});
-		closeButton.setOnMouseExited(event -> {
-			closeButton.setCursor(Cursor.DEFAULT);
-		});
 		closeButton.setOnAction(event -> {
 			Platform.runLater(() -> {
 				event.consume();
@@ -156,6 +153,29 @@ public class TabBar extends JPanel {
 		root.getChildren().add(Math.max(0, root.getChildren().size() - 1), tabBox);
 
 		boxTransition.play();
+	}
+
+	private JFXButton buildButton(Ikon iconName) {
+		final JFXButton button = new JFXButton("");
+		final FontIcon icon = new FontIcon(iconName);
+		icon.setIconColor(parent.profileMaterialColorScheme.getOnSurface().get());
+		parent.profileMaterialColorScheme.getOnSurface().addListener((observable, oldPaint, newPaint) -> {
+			icon.setIconColor(newPaint);
+		});
+		button.setGraphic(icon);
+		button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+		button.setStyle("-fx-padding: 10px;");
+		button.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
+			final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
+		}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+		button.setOnMouseEntered(event -> {
+			button.setCursor(Cursor.HAND);
+		});
+		button.setOnMouseExited(event -> {
+			button.setCursor(Cursor.DEFAULT);
+		});
+		return button;
 	}
 
 	private void closeTab(HBox tabBox, CefBrowser browser) {

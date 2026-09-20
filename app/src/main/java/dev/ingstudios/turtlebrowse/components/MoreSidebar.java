@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.material2.Material2OutlinedAL;
 import org.kordamp.ikonli.material2.Material2OutlinedMZ;
@@ -56,7 +57,7 @@ public class MoreSidebar extends JPanel {
 			actionsBar.prefWidthProperty().bind(actionsBarScene.widthProperty());
 			actionsBar.prefHeightProperty().bind(actionsBarScene.heightProperty());
 
-			final JFXButton settingsButton = createMenuItem(new FontIcon(Material2OutlinedMZ.SETTINGS));
+			final JFXButton settingsButton = createMenuItem(Material2OutlinedMZ.SETTINGS);
 			settingsButton.setOnAction(event -> {
 				System.out.println("Settings button clicked.");
 				SwingUtilities.invokeLater(() -> {
@@ -64,13 +65,13 @@ public class MoreSidebar extends JPanel {
 				});
 			});
 
-			final JFXButton profileButton = createMenuItem(new FontIcon(Material2OutlinedAL.ACCOUNT_CIRCLE));
+			final JFXButton profileButton = createMenuItem(Material2OutlinedAL.ACCOUNT_CIRCLE);
 			profileButton.setOnAction(event -> {
 				System.out.println("Profile menu item clicked.");
 				Main.createProfilePickerWindow();
 			});
 
-			final JFXButton ytdlpButton = createMenuItem(new FontIcon(Material2OutlinedAL.CLOUD_DOWNLOAD));
+			final JFXButton ytdlpButton = createMenuItem(Material2OutlinedAL.CLOUD_DOWNLOAD);
 			ytdlpButton.setOnAction(event -> {
 				System.out.println("yt-dlp download button clicked.");
 				if (parent.getSidebar() != parent.ytdlpSidebar) {
@@ -81,13 +82,13 @@ public class MoreSidebar extends JPanel {
 				}
 			});
 
-			final JFXButton historyButton = createMenuItem(new FontIcon(Material2OutlinedAL.HISTORY));
+			final JFXButton historyButton = createMenuItem(Material2OutlinedAL.HISTORY);
 			historyButton.setOnAction(event -> {
 				System.out.println("History button clicked.");
 				parent.openHistory();
 			});
 
-			final JFXButton findButton = createMenuItem(new FontIcon(Material2OutlinedAL.FIND_IN_PAGE));
+			final JFXButton findButton = createMenuItem(Material2OutlinedAL.FIND_IN_PAGE);
 			findButton.setOnAction(event -> {
 				System.out.println("Find button clicked.");
 				if (parent.getSidebar() != parent.findSidebar) {
@@ -98,7 +99,7 @@ public class MoreSidebar extends JPanel {
 				}
 			});
 
-			final JFXButton closeButton = createMenuItem(new FontIcon(Material2OutlinedAL.CLOSE));
+			final JFXButton closeButton = createMenuItem(Material2OutlinedAL.CLOSE);
 			closeButton.setOnAction(event -> {
 				closeSidebar();
 			});
@@ -136,8 +137,13 @@ public class MoreSidebar extends JPanel {
 		this.revalidate();
 	}
 
-	private JFXButton createMenuItem(FontIcon icon) {
+	private JFXButton createMenuItem(Ikon iconName) {
 		final JFXButton item = new JFXButton("");
+		final FontIcon icon = new FontIcon(iconName);
+		icon.setIconColor(parent.profileMaterialColorScheme.getOnSurface().get());
+		parent.profileMaterialColorScheme.getOnSurface().addListener((observable, oldPaint, newPaint) -> {
+			icon.setIconColor(newPaint);
+		});
 		item.setGraphic(icon);
 		item.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		item.setStyle("-fx-padding: 10px;");

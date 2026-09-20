@@ -17,6 +17,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Popup;
 
@@ -25,7 +26,7 @@ import javax.swing.SwingUtilities;
 
 import org.cef.CefClient;
 import org.cef.browser.*;
-
+import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.material2.Material2OutlinedAL;
 import org.kordamp.ikonli.material2.Material2OutlinedMZ;
@@ -71,20 +72,7 @@ public class AddressBar extends JPanel {
 			root.prefWidthProperty().bind(addressBarScene.widthProperty());
 			root.prefHeightProperty().bind(addressBarScene.heightProperty());
 
-			final JFXButton backButton = new JFXButton("<");
-			backButton.setGraphic(new FontIcon(Material2OutlinedAL.ARROW_BACK));
-			backButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			backButton.setStyle("-fx-padding: 10px;");
-			backButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			backButton.setOnMouseEntered(event -> {
-				backButton.setCursor(Cursor.HAND);
-			});
-			backButton.setOnMouseExited(event -> {
-				backButton.setCursor(Cursor.DEFAULT);
-			});
+			final JFXButton backButton = buildButton(Material2OutlinedAL.ARROW_BACK);
 			backButton.setOnAction(event -> {
 				System.out.println("Back button clicked.");
 				CefBrowser browser = this.parent.currentBrowser;
@@ -92,20 +80,7 @@ public class AddressBar extends JPanel {
 					browser.goBack();
 			});
 
-			final JFXButton forwardButton = new JFXButton(">");
-			forwardButton.setGraphic(new FontIcon(Material2OutlinedAL.ARROW_FORWARD));
-			forwardButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			forwardButton.setStyle("-fx-padding: 10px;");
-			forwardButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			forwardButton.setOnMouseEntered(event -> {
-				forwardButton.setCursor(Cursor.HAND);
-			});
-			forwardButton.setOnMouseExited(event -> {
-				forwardButton.setCursor(Cursor.DEFAULT);
-			});
+			final JFXButton forwardButton = buildButton(Material2OutlinedAL.ARROW_FORWARD);
 			forwardButton.setOnAction(event -> {
 				System.out.println("Forward button clicked.");
 				CefBrowser browser = this.parent.currentBrowser;
@@ -113,20 +88,7 @@ public class AddressBar extends JPanel {
 					browser.goForward();
 			});
 
-			final JFXButton reloadButton = new JFXButton("↻");
-			reloadButton.setGraphic(new FontIcon(Material2OutlinedMZ.REFRESH));
-			reloadButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			reloadButton.setStyle("-fx-padding: 10px;");
-			reloadButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			reloadButton.setOnMouseEntered(event -> {
-				reloadButton.setCursor(Cursor.HAND);
-			});
-			reloadButton.setOnMouseExited(event -> {
-				reloadButton.setCursor(Cursor.DEFAULT);
-			});
+			final JFXButton reloadButton = buildButton(Material2OutlinedMZ.REFRESH);
 			reloadButton.setOnAction(event -> {
 				System.out.println("Reload button clicked.");
 				CefBrowser browser = this.parent.currentBrowser;
@@ -134,11 +96,17 @@ public class AddressBar extends JPanel {
 			});
 
 			addressField = new TextField(startUrl);
-			addressField.setStyle("-fx-padding: 10px;");
 			addressField.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
 				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
 				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
 			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+			addressField.styleProperty().bind(Bindings.createStringBinding(() -> {
+				final Paint color = parent.profileMaterialColorScheme.getOnSurface().get();
+				if (color instanceof Color c) {
+					return "-fx-text-inner-color: %s; -fx-padding: 10px;".formatted(parent.colorToHex(c));
+				}
+				return "";
+			}, parent.profileMaterialColorScheme.getOnSurface()));
 			addressField.setOnAction(event -> {
 				onAddressEnter();
 			});
@@ -149,20 +117,7 @@ public class AddressBar extends JPanel {
 				}
 			});
 
-			final JFXButton aiButton = new JFXButton("✨");
-			aiButton.setGraphic(new FontIcon(Material2OutlinedAL.ASSISTANT));
-			aiButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			aiButton.setStyle("-fx-padding: 10px;");
-			aiButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			aiButton.setOnMouseEntered(event -> {
-				aiButton.setCursor(Cursor.HAND);
-			});
-			aiButton.setOnMouseExited(event -> {
-				aiButton.setCursor(Cursor.DEFAULT);
-			});
+			final JFXButton aiButton = buildButton(Material2OutlinedAL.ASSISTANT);
 			aiButton.setOnAction(event -> {
 				System.out.println("AI button clicked.");
 				if (parent.getSidebar() != parent.aiSidebar) {
@@ -173,21 +128,7 @@ public class AddressBar extends JPanel {
 				}
 			});
 
-			final JFXButton moreButton = new JFXButton(":");
-			moreButton.setGraphic(new FontIcon(Material2OutlinedMZ.MORE_VERT));
-			moreButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			moreButton.setStyle("-fx-padding: 10px;");
-			moreButton.getStyleClass().add("animated-option-button");
-			moreButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			moreButton.setOnMouseEntered(event -> {
-				moreButton.setCursor(Cursor.HAND);
-			});
-			moreButton.setOnMouseExited(event -> {
-				moreButton.setCursor(Cursor.DEFAULT);
-			});
+			final JFXButton moreButton = buildButton(Material2OutlinedMZ.MORE_VERT);
 			moreButton.setOnAction(event -> {
 				parent.moreSidebar.toggleSidebar();
 			});
@@ -375,6 +316,29 @@ public class AddressBar extends JPanel {
 		});
 
 		this.add(addressBarPanel);
+	}
+
+	private JFXButton buildButton(Ikon iconName) {
+		final JFXButton button = new JFXButton("");
+		final FontIcon icon = new FontIcon(iconName);
+		icon.setIconColor(parent.profileMaterialColorScheme.getOnSurface().get());
+		parent.profileMaterialColorScheme.getOnSurface().addListener((observable, oldPaint, newPaint) -> {
+			icon.setIconColor(newPaint);
+		});
+		button.setGraphic(icon);
+		button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+		button.setStyle("-fx-padding: 10px;");
+		button.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
+			final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
+		}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+		button.setOnMouseEntered(event -> {
+			button.setCursor(Cursor.HAND);
+		});
+		button.setOnMouseExited(event -> {
+			button.setCursor(Cursor.DEFAULT);
+		});
+		return button;
 	}
 
 	public void updateUrl(String newUrl) {

@@ -8,6 +8,7 @@ import PrivacyDialog from './components/settings/PrivacyDialog.vue';
 import SearchEnginesDialog from './components/settings/SearchEnginesDialog.vue';
 import AIDialog from './components/settings/AIDialog.vue';
 import UpdatesDialog from './components/settings/UpdatesDialog.vue';
+import AppearanceDialog from './components/settings/AppearanceDialog.vue';
 
 const { showDialog } = useDialog();
 </script>
@@ -22,6 +23,12 @@ const { showDialog } = useDialog();
 						<m3e-icon optical-size="30" weight="600" name="shield"></m3e-icon>
 					</m3e-avatar>
 					<span class="settings-text">Privacy & security</span>
+				</m3e-list-action>
+				<m3e-list-action @click="showDialog('appearance')">
+					<m3e-avatar slot="leading">
+						<m3e-icon optical-size="30" weight="600" name="palette"></m3e-icon>
+					</m3e-avatar>
+					<span class="settings-text">Appearance</span>
 				</m3e-list-action>
 				<m3e-list-action @click="showDialog('search')">
 					<m3e-avatar slot="leading">
@@ -45,6 +52,7 @@ const { showDialog } = useDialog();
 		</m3e-card>
 
 		<PrivacyDialog></PrivacyDialog>
+		<AppearanceDialog></AppearanceDialog>
 		<SearchEnginesDialog></SearchEnginesDialog>
 		<AIDialog></AIDialog>
 		<UpdatesDialog></UpdatesDialog>
