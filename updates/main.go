@@ -22,16 +22,24 @@ func main() {
 	port := flag.Int("port", 8080, "port to listen on")
 	flag.Parse()
 
+	http.HandleFunc("/", getVersionHandler)
+
 	go func() {
-		http.HandleFunc("/", getVersionHandler)
 		log.Printf("Server starting on port %d", *port)
 		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
 	}()
 
-	// Schedule fetch from GitHub every hour
-	ticker := time.NewTicker(1 * time.Hour)
-	defer ticker.Stop()
-	go fetchReleaseInfo()
+	go func() {
+        fetchReleaseInfo()
+
+        ticker := time.NewTicker(1 * time.Hour)
+        defer ticker.Stop()
+
+        for range ticker.C {
+            fetchReleaseInfo()
+        }
+    }()
+
 	select {}
 }
 
