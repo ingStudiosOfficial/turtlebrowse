@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.io.File;
 import java.nio.file.Files;
 
+import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.material2.Material2OutlinedAL;
 import org.kordamp.ikonli.material2.Material2OutlinedMZ;
@@ -70,38 +71,12 @@ public class YtdlpSidebar extends ToolSidebar {
 			actionsBar.setStyle("-fx-spacing: 10px; -fx-padding: 10px;");
 			actionsBar.setAlignment(Pos.CENTER_RIGHT);
 
-			final JFXButton refreshButton = new JFXButton("↻");
-			refreshButton.setGraphic(new FontIcon(Material2OutlinedMZ.REFRESH));
-			refreshButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			refreshButton.setStyle("-fx-padding: 10px;");
-			refreshButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			refreshButton.setOnMouseEntered(event -> {
-				refreshButton.setCursor(Cursor.HAND);
-			});
-			refreshButton.setOnMouseExited(event -> {
-				refreshButton.setCursor(Cursor.DEFAULT);
-			});
+			final JFXButton refreshButton = buildButton(Material2OutlinedMZ.REFRESH);
 			refreshButton.setOnAction(event -> {
 				refresh();
 			});
 
-			final JFXButton closeButton = new JFXButton("X");
-			closeButton.setGraphic(new FontIcon(Material2OutlinedAL.CLOSE));
-			closeButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			closeButton.setStyle("-fx-padding: 10px;");
-			closeButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			closeButton.setOnMouseEntered(event -> {
-				closeButton.setCursor(Cursor.HAND);
-			});
-			closeButton.setOnMouseExited(event -> {
-				closeButton.setCursor(Cursor.DEFAULT);
-			});
+			final JFXButton closeButton = buildButton(Material2OutlinedAL.CLOSE);
 			closeButton.setOnAction(event -> {
 				closeSidebar();
 			});
@@ -112,9 +87,17 @@ public class YtdlpSidebar extends ToolSidebar {
 			contentBox.setStyle("-fx-spacing: 10px; -fx-padding: 10px;");
 
 			titleLabel = new Label("Downloading video");
+			titleLabel.textFillProperty().bind(Bindings.createObjectBinding(() -> {
+				final Paint fillColor = parent.profileMaterialColorScheme.getOnSurface().get();
+				return fillColor;
+			}, parent.profileMaterialColorScheme.getOnSurface()));
 			titleLabel.setStyle("-fx-font-weight: bold;");
 
 			downloadLabel = new Label("Downloading video via yt-dlp...");
+			downloadLabel.textFillProperty().bind(Bindings.createObjectBinding(() -> {
+				final Paint fillColor = parent.profileMaterialColorScheme.getOnSurface().get();
+				return fillColor;
+			}, parent.profileMaterialColorScheme.getOnSurface()));
 
 			contentBox.getChildren().addAll(titleLabel, downloadLabel);
 
@@ -138,6 +121,29 @@ public class YtdlpSidebar extends ToolSidebar {
 		});
 
 		this.add(sidebarPanel, BorderLayout.CENTER);
+	}
+
+	private JFXButton buildButton(Ikon iconName) {
+		final JFXButton button = new JFXButton("");
+		final FontIcon icon = new FontIcon(iconName);
+		icon.setIconColor(parent.profileMaterialColorScheme.getOnSurface().get());
+		parent.profileMaterialColorScheme.getOnSurface().addListener((observable, oldPaint, newPaint) -> {
+			icon.setIconColor(newPaint);
+		});
+		button.setGraphic(icon);
+		button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+		button.setStyle("-fx-padding: 10px;");
+		button.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
+			final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
+		}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+		button.setOnMouseEntered(event -> {
+			button.setCursor(Cursor.HAND);
+		});
+		button.setOnMouseExited(event -> {
+			button.setCursor(Cursor.DEFAULT);
+		});
+		return button;
 	}
 
 	@Override

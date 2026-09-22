@@ -2,6 +2,7 @@ package dev.ingstudios.turtlebrowse.components;
 
 import java.awt.BorderLayout;
 
+import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.material2.Material2OutlinedAL;
 
@@ -22,6 +23,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
@@ -59,20 +61,7 @@ public class FindSidebar extends ToolSidebar {
 			actionsBar.setStyle("-fx-spacing: 10px; -fx-padding: 10px;");
 			actionsBar.setAlignment(Pos.CENTER_RIGHT);
 
-			final JFXButton closeButton = new JFXButton("X");
-			closeButton.setGraphic(new FontIcon(Material2OutlinedAL.CLOSE));
-			closeButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			closeButton.setStyle("-fx-padding: 10px;");
-			closeButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			closeButton.setOnMouseEntered(event -> {
-				closeButton.setCursor(Cursor.HAND);
-			});
-			closeButton.setOnMouseExited(event -> {
-				closeButton.setCursor(Cursor.DEFAULT);
-			});
+			final JFXButton closeButton = buildButton(Material2OutlinedAL.CLOSE);
 			closeButton.setOnAction(event -> {
 				closeSidebar();
 			});
@@ -83,12 +72,26 @@ public class FindSidebar extends ToolSidebar {
 			contentBox.setStyle("-fx-spacing: 10px; -fx-padding: 10px;");
 
 			final Label titleLabel = new Label("Find text");
+			titleLabel.textFillProperty().bind(Bindings.createObjectBinding(() -> {
+				final Paint fillColor = parent.profileMaterialColorScheme.getOnSurface().get();
+				return fillColor;
+			}, parent.profileMaterialColorScheme.getOnSurface()));
 			titleLabel.setStyle("-fx-font-weight: bold;");
 
 			final Label findLabel = new Label("Find");
+			findLabel.textFillProperty().bind(Bindings.createObjectBinding(() -> {
+				final Paint fillColor = parent.profileMaterialColorScheme.getOnSurface().get();
+				return fillColor;
+			}, parent.profileMaterialColorScheme.getOnSurface()));
 
 			final TextField findField = new TextField();
-			findField.setStyle("-fx-padding: 10px;");
+			findField.styleProperty().bind(Bindings.createStringBinding(() -> {
+				final Paint color = parent.profileMaterialColorScheme.getOnSurface().get();
+				if (color instanceof Color c) {
+					return "-fx-text-inner-color: %s; -fx-padding: 10px;".formatted(parent.colorToHex(c));
+				}
+				return "";
+			}, parent.profileMaterialColorScheme.getOnSurface()));
 			findField.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
 				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
 				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
@@ -99,6 +102,10 @@ public class FindSidebar extends ToolSidebar {
 			});
 
 			final JFXCheckBox matchCaseCheckBox = new JFXCheckBox("Match case");
+			matchCaseCheckBox.textFillProperty().bind(Bindings.createObjectBinding(() -> {
+				final Paint fillColor = parent.profileMaterialColorScheme.getOnSurface().get();
+				return fillColor;
+			}, parent.profileMaterialColorScheme.getOnSurface()));
 			matchCaseCheckBox.setCheckedColor(parent.profileMaterialColorScheme.getPrimary().get());
 			matchCaseCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
 				matchCase = newVal;
@@ -108,38 +115,12 @@ public class FindSidebar extends ToolSidebar {
 			final HBox nextPreviousBox = new HBox();
 			nextPreviousBox.setStyle("-fx-spacing: 10px;");
 
-			final JFXButton previousButton = new JFXButton("Previous");
-			previousButton.setGraphic(new FontIcon(Material2OutlinedAL.ARROW_BACK));
-			previousButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			previousButton.setStyle("-fx-padding: 10px;");
-			previousButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			previousButton.setOnMouseEntered(event -> {
-				previousButton.setCursor(Cursor.HAND);
-			});
-			previousButton.setOnMouseExited(event -> {
-				previousButton.setCursor(Cursor.DEFAULT);
-			});
+			final JFXButton previousButton = buildButton(Material2OutlinedAL.ARROW_BACK);
 			previousButton.setOnAction(event -> {
 				findPrevious();
 			});
 
-			final JFXButton nextButton = new JFXButton("Next");
-			nextButton.setGraphic(new FontIcon(Material2OutlinedAL.ARROW_FORWARD));
-			nextButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			nextButton.setStyle("-fx-padding: 10px;");
-			nextButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			nextButton.setOnMouseEntered(event -> {
-				nextButton.setCursor(Cursor.HAND);
-			});
-			nextButton.setOnMouseExited(event -> {
-				nextButton.setCursor(Cursor.DEFAULT);
-			});
+			final JFXButton nextButton = buildButton(Material2OutlinedAL.ARROW_FORWARD);
 			nextButton.setOnAction(event -> {
 				findNext();
 			});
@@ -152,6 +133,29 @@ public class FindSidebar extends ToolSidebar {
 		});
 
 		this.add(sidebarPanel, BorderLayout.CENTER);
+	}
+
+	private JFXButton buildButton(Ikon iconName) {
+		final JFXButton button = new JFXButton("");
+		final FontIcon icon = new FontIcon(iconName);
+		icon.setIconColor(parent.profileMaterialColorScheme.getOnSurface().get());
+		parent.profileMaterialColorScheme.getOnSurface().addListener((observable, oldPaint, newPaint) -> {
+			icon.setIconColor(newPaint);
+		});
+		button.setGraphic(icon);
+		button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+		button.setStyle("-fx-padding: 10px;");
+		button.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
+			final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
+		}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+		button.setOnMouseEntered(event -> {
+			button.setCursor(Cursor.HAND);
+		});
+		button.setOnMouseExited(event -> {
+			button.setCursor(Cursor.DEFAULT);
+		});
+		return button;
 	}
 
 	@Override
