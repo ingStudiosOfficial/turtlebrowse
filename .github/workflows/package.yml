@@ -261,17 +261,15 @@ jobs:
 
             ### Fedora/openSUSE
 
-            Download the ```.rpm``` file.
-
             #### Fedora
 
-            Run ```sudo dnf install ./turtlebrowse_fedora_[arch].rpm```.
+            Run ```sudo dnf install https://github.com/ingStudiosOfficial/turtlebrowse/releases/latest/download/turtlebrowse_fedora_amd64.rpm```.
 
             Run the program.
 
             #### openSUSE
 
-            Run ```sudo zypper install ./turtlebrowse_fedora_[arch].rpm```.
+            Run ```sudo zypper install https://github.com/ingStudiosOfficial/turtlebrowse/releases/latest/download/turtlebrowse_fedora_amd64.rpm```.
             
             Run the program.
 
