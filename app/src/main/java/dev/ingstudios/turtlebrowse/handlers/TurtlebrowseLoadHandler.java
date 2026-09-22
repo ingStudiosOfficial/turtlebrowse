@@ -12,6 +12,11 @@ public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 	private final List<Integer> readyBrowsers = new ArrayList<>();
 
 	@Override
+	public void onLoadingStateChange(CefBrowser browser, boolean isLoading, boolean canGoBack, boolean canGoForward) {
+
+	}
+
+	@Override
 	public void onLoadEnd(CefBrowser browser, CefFrame frame, int statusCode) {
 		readyBrowsers.add(browser.getIdentifier());
 		final List<JSQueueItem> toRemove = new ArrayList<>();
