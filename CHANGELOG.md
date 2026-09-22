@@ -2,6 +2,22 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.8.2
+
+**22/9/2026**
+
+- Added fullscreen mode
+- Added keybindings for fullscreen mode
+- Added additional keybindings for toggling DevTools
+
+## v1.8.1
+
+**22/9/2026**
+
+- Fixed tool sidebars not adapting to theme
+- Fixed AI sidebar not opening via context menu for summarization and rewrite
+- Added empty cache and hard reload keybind
+
 ## v1.8.0
 
 **20/9/2026**
