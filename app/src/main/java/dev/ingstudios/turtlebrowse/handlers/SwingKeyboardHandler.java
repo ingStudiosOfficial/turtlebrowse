@@ -21,7 +21,8 @@ public class SwingKeyboardHandler {
 						final boolean shiftPressed = keyEvent.isShiftDown();
 						final boolean altPressed = keyEvent.isAltDown();
 
-						if (keyCode == KeyEvent.VK_I && ctrlPressed && shiftPressed) { // DevTools (Ctrl + Shift + I)
+						if ((keyCode == KeyEvent.VK_I && ctrlPressed && shiftPressed)
+								|| keyCode == KeyEvent.VK_F12) { // DevTools (Ctrl + Shift + I)
 							keyEvent.consume();
 							parent.createDevTools();
 						} else if (keyCode == KeyEvent.VK_T && ctrlPressed) { // New tab (Ctrl + T)
@@ -105,6 +106,9 @@ public class SwingKeyboardHandler {
 							keyEvent.consume();
 							System.out.println("Ctrl + M pressed.");
 							parent.moreSidebar.toggleSidebar();
+						} else if (keyCode == KeyEvent.VK_F11 && ctrlPressed) { // Toggles fullscreen
+							keyEvent.consume();
+							parent.toggleFullscreen();
 						}
 					}
 				}

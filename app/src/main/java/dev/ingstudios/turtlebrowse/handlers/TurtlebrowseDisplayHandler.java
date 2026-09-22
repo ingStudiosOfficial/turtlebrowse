@@ -51,4 +51,9 @@ public class TurtlebrowseDisplayHandler extends CefDisplayHandlerAdapter {
 
 		Platform.runLater(() -> parent.addressBar.updateUrl(url));
 	}
+
+	@Override
+	public void onFullscreenModeChange(CefBrowser browser, boolean fullscreen) {
+		parent.toggleFullscreen(fullscreen);
+	}
 }

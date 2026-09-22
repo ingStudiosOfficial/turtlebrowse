@@ -113,6 +113,7 @@ public class MainWindow extends JFrame {
 	public NewtabSettings newtabSettings = new NewtabSettings("");
 	public final SearchAutosuggest searchAutosuggest;
 	private final OsThemeDetector themeDetector = OsThemeDetector.getDetector();
+	private boolean isFullscreen = false;
 
 	public MainWindow(ProfileStructureWithId profile) {
 		this(profile, "turtlebrowse://newtab");
@@ -653,5 +654,21 @@ public class MainWindow extends JFrame {
 				(int) (color.getGreen() * 255),
 				(int) (color.getBlue() * 255));
 		return hex;
+	}
+
+	public void toggleFullscreen() {
+		toggleFullscreen(!isFullscreen);
+	}
+
+	public void toggleFullscreen(boolean fullscreen) {
+		if (fullscreen) {
+			isFullscreen = true;
+			addressBar.setVisible(false);
+			tabBar.setVisible(false);
+		} else {
+			isFullscreen = false;
+			addressBar.setVisible(true);
+			tabBar.setVisible(true);
+		}
 	}
 }

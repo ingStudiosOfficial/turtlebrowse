@@ -25,12 +25,12 @@ public class CefKeyboardHandler extends CefKeyboardHandlerAdapter {
 		System.out.println("Key pressed.");
 
 		if (event.type == CefKeyEvent.EventType.KEYEVENT_RAWKEYDOWN) {
-			boolean ctrlPressed = (event.modifiers & EventFlags.EVENTFLAG_CONTROL_DOWN) != 0;
-			boolean shiftPressed = (event.modifiers & EventFlags.EVENTFLAG_SHIFT_DOWN) != 0;
-			boolean altPressed = (event.modifiers & EventFlags.EVENTFLAG_ALT_DOWN) != 0;
-			System.out.printf("Ctrl pressed: %s\n", ctrlPressed);
+			final boolean ctrlPressed = (event.modifiers & EventFlags.EVENTFLAG_CONTROL_DOWN) != 0;
+			final boolean shiftPressed = (event.modifiers & EventFlags.EVENTFLAG_SHIFT_DOWN) != 0;
+			final boolean altPressed = (event.modifiers & EventFlags.EVENTFLAG_ALT_DOWN) != 0;
 
-			if (ctrlPressed && shiftPressed && event.windows_key_code == KeyEvent.VK_I) { // DevTools (Ctrl + Shift + I)
+			if ((ctrlPressed && shiftPressed && event.windows_key_code == KeyEvent.VK_I)
+					|| event.windows_key_code == KeyEvent.VK_F12) { // DevTools (Ctrl + Shift + I or F12)
 				parent.createDevTools();
 				return true;
 			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_T) { // New tab (Ctrl + T)
@@ -115,6 +115,9 @@ public class CefKeyboardHandler extends CefKeyboardHandlerAdapter {
 			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_M) { // Toggles more sidebar
 				System.out.println("Ctrl + M pressed.");
 				parent.moreSidebar.toggleSidebar();
+				return true;
+			} else if (event.windows_key_code == KeyEvent.VK_F11) { // Toggles fullscreen
+				parent.toggleFullscreen();
 				return true;
 			}
 		}
