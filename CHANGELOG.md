@@ -4,7 +4,7 @@ All major and minor changes, alongside with bug fixes go here. More details avai
 
 ## v1.9.0
 
-**22/9/2026**
+**23/9/2026**
 
 - Added an integrated terminal in the sidebar using pty4j and JediTerm
 
