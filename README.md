@@ -152,6 +152,11 @@ Huge thank you to the [Java Chromium Embedded Framework](https://github.com/chro
 **Notable mentions**
 
 - [wayou/t-rex-runner](https://github.com/wayou/t-rex-runner) for decompiling the Chromium Dino game from the [Chromium](https://github.com/chromium/chromium) source code (I tried doing it myself but it was a pain, huge thanks!)
+- [JetBrains/jediterm](https://github.com/JetBrains/jediterm) for providing integrated terminal support
+- [sshahine/JFoenix](https://github.com/sshahine/JFoenix) for beautiful Material 3 JavaFX components
+- [ollama4j/ollama4j](https://github.com/ollama4j/ollama4j) for the Java API wrapper for Ollama
+
+The other dependencies that can be found in [build.gradle.kts](app/build.gradle.kts) are also very much appredicated!
 
 ## License
 
