@@ -2,6 +2,12 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.9.0
+
+**22/9/2026**
+
+- Added an integrated terminal in the sidebar using pty4j and JediTerm
+
 ## v1.8.2
 
 **22/9/2026**
