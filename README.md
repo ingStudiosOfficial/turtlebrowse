@@ -35,6 +35,7 @@ If you want to download a previous version of Turtlebrowse, it can be found in t
 - Always private, no data leaves your device
 - Free and open-source (FOSS)
 - Guest/private mode where all data from disk is deleted when closed
+- An integrated terminal in the sidebar
 - Available for Linux, Windows, and macOS on different architectures
 
 ## Development
