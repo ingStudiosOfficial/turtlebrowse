@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
 import org.kordamp.ikonli.material2.Material2OutlinedAL;
 import org.kordamp.ikonli.material2.Material2OutlinedMZ;
 
@@ -99,6 +100,17 @@ public class MoreSidebar extends JPanel {
 				}
 			});
 
+			final JFXButton terminalButton = createMenuItem(MaterialDesignC.CONSOLE);
+			terminalButton.setOnAction(event -> {
+				System.out.println("Terminal button clicked.");
+				if (parent.getSidebar() != parent.terminalSidebar) {
+					parent.setSidebar(parent.terminalSidebar);
+					parent.terminalSidebar.openSidebar();
+				} else {
+					parent.terminalSidebar.toggleSidebar();
+				}
+			});
+
 			final JFXButton closeButton = createMenuItem(Material2OutlinedAL.CLOSE);
 			closeButton.setOnAction(event -> {
 				closeSidebar();
@@ -110,6 +122,7 @@ public class MoreSidebar extends JPanel {
 					ytdlpButton,
 					historyButton,
 					findButton,
+					terminalButton,
 					closeButton);
 		});
 

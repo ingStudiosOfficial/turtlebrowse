@@ -17,6 +17,9 @@ repositories {
     maven {
         url = uri("https://jitpack.io")
     }
+    maven {
+        url = uri("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies/")
+    }
 }
 
 dependencies {
@@ -33,6 +36,7 @@ dependencies {
     // Material icons from Ikonli
     implementation("org.kordamp.ikonli:ikonli-javafx:12.4.0")
     implementation("org.kordamp.ikonli:ikonli-material2-pack:12.4.0")
+    implementation("org.kordamp.ikonli:ikonli-materialdesign2-pack:12.4.0")
 
     // Monet theme builder for JavaFX
     implementation("org.glavo:MonetFX:0.4.0")
@@ -74,6 +78,16 @@ dependencies {
 
     // jSystemThemeDetector
     implementation("com.github.Dansoftowner:jSystemThemeDetector:3.9.1")
+
+    // JediTerm
+    implementation("org.jetbrains.jediterm:jediterm-core:3.76")
+    implementation("org.jetbrains.jediterm:jediterm-ui:3.76")
+    
+    // pty4j
+    implementation("org.jetbrains.pty4j:pty4j:0.13.13") {
+        exclude(group = "net.java.dev.jna", module = "jna")
+        exclude(group = "net.java.dev.jna", module = "jna-platform")
+    }
 }
 
 // Apply a specific Java toolchain. 

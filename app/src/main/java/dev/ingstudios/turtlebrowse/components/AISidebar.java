@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 
 import org.cef.CefClient;
 import org.cef.browser.CefBrowser;
+import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.material2.Material2OutlinedAL;
 
@@ -73,20 +74,7 @@ public class AISidebar extends ToolSidebar {
 			actionsBar.prefWidthProperty().bind(actionsBarScene.widthProperty());
 			actionsBar.prefHeightProperty().bind(actionsBarScene.heightProperty());
 
-			final JFXButton closeButton = new JFXButton("X");
-			closeButton.setGraphic(new FontIcon(Material2OutlinedAL.CLOSE));
-			closeButton.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-			closeButton.setStyle("-fx-padding: 10px;");
-			closeButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
-				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
-			closeButton.setOnMouseEntered(event -> {
-				closeButton.setCursor(Cursor.HAND);
-			});
-			closeButton.setOnMouseExited(event -> {
-				closeButton.setCursor(Cursor.DEFAULT);
-			});
+			final JFXButton closeButton = buildButton(Material2OutlinedAL.CLOSE);
 			closeButton.setOnAction(event -> {
 				closeSidebar();
 			});
@@ -114,6 +102,29 @@ public class AISidebar extends ToolSidebar {
 
 		this.add(actionsBarJfxPanel, BorderLayout.NORTH);
 		this.add(browserComponent, BorderLayout.CENTER);
+	}
+
+	private JFXButton buildButton(Ikon iconName) {
+		final JFXButton button = new JFXButton("");
+		final FontIcon icon = new FontIcon(iconName);
+		icon.setIconColor(parent.profileMaterialColorScheme.getOnSurface().get());
+		parent.profileMaterialColorScheme.getOnSurface().addListener((observable, oldPaint, newPaint) -> {
+			icon.setIconColor(newPaint);
+		});
+		button.setGraphic(icon);
+		button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+		button.setStyle("-fx-padding: 10px;");
+		button.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
+			final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
+		}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+		button.setOnMouseEntered(event -> {
+			button.setCursor(Cursor.HAND);
+		});
+		button.setOnMouseExited(event -> {
+			button.setCursor(Cursor.DEFAULT);
+		});
+		return button;
 	}
 
 	@Override

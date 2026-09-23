@@ -13,6 +13,9 @@ public class SwingKeyboardHandler {
 		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
 			@Override
 			public void eventDispatched(AWTEvent event) {
+				if (parent.terminalSidebar.isFocused())
+					return;
+
 				if (event instanceof KeyEvent) {
 					KeyEvent keyEvent = (KeyEvent) event;
 					if (keyEvent.getID() == KeyEvent.KEY_PRESSED) {
