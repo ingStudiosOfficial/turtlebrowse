@@ -3,6 +3,7 @@ package dev.ingstudios.turtlebrowse.handlers;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
@@ -21,11 +22,12 @@ import org.cef.handler.CefContextMenuHandlerAdapter;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class TurtlebrowseContextMenuHandler extends CefContextMenuHandlerAdapter {
-	private static final int ID_COPY_IMAGE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 1;
-	private static final int ID_SUMMARIZE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 2;
-	private static final int ID_REWRITE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 3;
-	private static final int ID_SUMMARIZE_PAGE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 4;
-	private static final int ID_DEVTOOLS = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 5;
+	private static final int ID_COPY_URL = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 1;
+	private static final int ID_COPY_IMAGE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 2;
+	private static final int ID_SUMMARIZE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 3;
+	private static final int ID_REWRITE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 4;
+	private static final int ID_SUMMARIZE_PAGE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 5;
+	private static final int ID_DEVTOOLS = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 6;
 	private final MainWindow parent;
 	private final CefStringVisitor stringVisitor = new CefStringVisitor() {
 		@Override
@@ -44,6 +46,11 @@ public class TurtlebrowseContextMenuHandler extends CefContextMenuHandlerAdapter
 		final String selectedText = params.getSelectionText();
 		final boolean hasText = selectedText != null && !selectedText.isBlank();
 		final boolean isImage = params.getMediaType() == MediaType.CM_MEDIATYPE_IMAGE;
+		final boolean isLink = !params.getLinkUrl().isBlank();
+
+		if (isLink) {
+			model.addItem(ID_COPY_URL, "Copy link address");
+		}
 
 		if (isImage) {
 			model.addItem(ID_COPY_IMAGE, "Copy image");
@@ -66,7 +73,10 @@ public class TurtlebrowseContextMenuHandler extends CefContextMenuHandlerAdapter
 			int eventFlags) {
 		final String selectedText = params.getSelectionText();
 
-		if (commandId == ID_COPY_IMAGE) {
+		if (commandId == ID_COPY_URL) {
+			final String url = params.getLinkUrl();
+			copyUrl(url);
+		} else if (commandId == ID_COPY_IMAGE) {
 			final String imageUrl = params.getSourceUrl();
 			Thread.ofVirtual().start(() -> {
 				copyImage(imageUrl);
@@ -107,6 +117,14 @@ public class TurtlebrowseContextMenuHandler extends CefContextMenuHandlerAdapter
 				final Transferable transferable = new ImageTransferable(image);
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(transferable, null);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void copyUrl(String address) {
+		try {
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(address), null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
