@@ -43,6 +43,7 @@ import dev.ingstudios.turtlebrowse.components.TabBar;
 import dev.ingstudios.turtlebrowse.components.TerminalSidebar;
 import dev.ingstudios.turtlebrowse.components.ToolSidebar;
 import dev.ingstudios.turtlebrowse.components.YtdlpSidebar;
+import dev.ingstudios.turtlebrowse.components.ZoomSidebar;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase;
 import dev.ingstudios.turtlebrowse.db.MainDatabase.ProfileStructureWithId;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase.AISettings;
@@ -93,6 +94,7 @@ public class MainWindow extends JFrame {
 	private ToolSidebar toolSidebar;
 	public final AISidebar aiSidebar;
 	public final YtdlpSidebar ytdlpSidebar;
+	public final ZoomSidebar zoomSidebar;
 	public final FindSidebar findSidebar;
 	public final TerminalSidebar terminalSidebar;
 	public final MoreSidebar moreSidebar;
@@ -180,6 +182,9 @@ public class MainWindow extends JFrame {
 
 		// yt-dlp sidebar
 		ytdlpSidebar = new YtdlpSidebar(this);
+
+		// Zoom sidebar
+		zoomSidebar = new ZoomSidebar(this);
 
 		// Find sidebar
 		findSidebar = new FindSidebar(this);
@@ -273,7 +278,7 @@ public class MainWindow extends JFrame {
 	public void createTab(String url, boolean selectAllField) {
 		System.out.printf("Creating tab for URL: %s\n", url);
 
-		CefBrowser browser = cefClient.createBrowser(url, USE_OSR, false);
+		final CefBrowser browser = cefClient.createBrowser(url, USE_OSR, false);
 
 		openedBrowserTabs.add(browser);
 

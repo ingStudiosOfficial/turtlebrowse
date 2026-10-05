@@ -89,6 +89,16 @@ public class MoreSidebar extends JPanel {
 				parent.openHistory();
 			});
 
+			final JFXButton zoomButton = createMenuItem(Material2OutlinedMZ.ZOOM_IN);
+			zoomButton.setOnAction(event -> {
+				if (parent.getSidebar() != parent.zoomSidebar) {
+					parent.setSidebar(parent.zoomSidebar);
+					parent.zoomSidebar.openSidebar();
+				} else {
+					parent.zoomSidebar.toggleSidebar();
+				}
+			});
+
 			final JFXButton findButton = createMenuItem(Material2OutlinedAL.FIND_IN_PAGE);
 			findButton.setOnAction(event -> {
 				System.out.println("Find button clicked.");
@@ -121,6 +131,7 @@ public class MoreSidebar extends JPanel {
 					profileButton,
 					ytdlpButton,
 					historyButton,
+					zoomButton,
 					findButton,
 					terminalButton,
 					closeButton);
