@@ -22,11 +22,13 @@ function download(url: string) {
 		'_self',
 	);
 }
+
+const { data: version } = await useFetch('https://turtlebrowseupdates.ingstudios.dev');
 </script>
 
 <template>
 	<div class="download-wrapper">
-		<h1 class="download-title">Download Turtlebrowse (Latest)</h1>
+		<h1 class="download-title">Download Turtlebrowse {{ version }} (Latest)</h1>
 		<p>Download Turtlebrowse for your respective operating system and CPU architecture.</p>
 		<m3e-card>
 			<m3e-action-list slot="content" variant="segmented">
