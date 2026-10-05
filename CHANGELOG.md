@@ -2,6 +2,12 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.10.1
+
+- Added copy address link to clipboard in context menu
+- Added open link in new tab in context menu
+- Added page zoom controls
+
 ## v1.10.0
 
 - Bumped JCEF from 146.0.10 to 152.0.6
