@@ -22,12 +22,13 @@ import org.cef.handler.CefContextMenuHandlerAdapter;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class TurtlebrowseContextMenuHandler extends CefContextMenuHandlerAdapter {
-	private static final int ID_COPY_URL = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 1;
-	private static final int ID_COPY_IMAGE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 2;
-	private static final int ID_SUMMARIZE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 3;
-	private static final int ID_REWRITE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 4;
-	private static final int ID_SUMMARIZE_PAGE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 5;
-	private static final int ID_DEVTOOLS = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 6;
+	private static final int ID_OPEN_URL = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 1;
+	private static final int ID_COPY_URL = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 2;
+	private static final int ID_COPY_IMAGE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 3;
+	private static final int ID_SUMMARIZE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 4;
+	private static final int ID_REWRITE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 5;
+	private static final int ID_SUMMARIZE_PAGE = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 6;
+	private static final int ID_DEVTOOLS = CefMenuModel.MenuId.MENU_ID_USER_FIRST + 7;
 	private final MainWindow parent;
 	private final CefStringVisitor stringVisitor = new CefStringVisitor() {
 		@Override
@@ -49,6 +50,7 @@ public class TurtlebrowseContextMenuHandler extends CefContextMenuHandlerAdapter
 		final boolean isLink = !params.getLinkUrl().isBlank();
 
 		if (isLink) {
+			model.addItem(ID_OPEN_URL, "Open link in new tab");
 			model.addItem(ID_COPY_URL, "Copy link address");
 		}
 
@@ -73,7 +75,10 @@ public class TurtlebrowseContextMenuHandler extends CefContextMenuHandlerAdapter
 			int eventFlags) {
 		final String selectedText = params.getSelectionText();
 
-		if (commandId == ID_COPY_URL) {
+		if (commandId == ID_OPEN_URL) {
+			final String url = params.getLinkUrl();
+			parent.createTab(url);
+		} else if (commandId == ID_COPY_URL) {
 			final String url = params.getLinkUrl();
 			copyUrl(url);
 		} else if (commandId == ID_COPY_IMAGE) {
