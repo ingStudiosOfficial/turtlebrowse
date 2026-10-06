@@ -5,6 +5,8 @@ import javax.swing.SwingUtilities;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefRequestHandlerAdapter;
+import org.cef.handler.CefResourceRequestHandler;
+import org.cef.misc.BoolRef;
 import org.cef.network.CefRequest;
 
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
@@ -12,9 +14,11 @@ import dev.ingstudios.turtlebrowse.windows.MainWindow;
 public class TurtlebrowseRequestHandler extends CefRequestHandlerAdapter {
 	private CefBrowser aiSidebarBrowser;
 	private final MainWindow parent;
+	private final TurtlebrowseResourceRequestHandler resourceRequestHandler;
 
 	public TurtlebrowseRequestHandler(MainWindow parent) {
 		this.parent = parent;
+		resourceRequestHandler = new TurtlebrowseResourceRequestHandler(parent.userAgent);
 	}
 
 	@Override
@@ -35,5 +39,11 @@ public class TurtlebrowseRequestHandler extends CefRequestHandlerAdapter {
 
 	public void setAiBrowser(CefBrowser browser) {
 		aiSidebarBrowser = browser;
+	}
+
+	@Override
+	public CefResourceRequestHandler getResourceRequestHandler(CefBrowser browser, CefFrame frame, CefRequest request,
+			boolean isNavigation, boolean isDownload, String requestInitiator, BoolRef disableDefaultHandling) {
+		return resourceRequestHandler;
 	}
 }

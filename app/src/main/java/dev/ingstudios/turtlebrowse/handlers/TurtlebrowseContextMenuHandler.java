@@ -115,7 +115,7 @@ public class TurtlebrowseContextMenuHandler extends CefContextMenuHandlerAdapter
 
 	private void copyImage(String src) {
 		try {
-			final URI url = new URI(src);
+			final URI url = URI.create(src);
 			final Image image = ImageIO.read(url.toURL());
 
 			if (image != null) {

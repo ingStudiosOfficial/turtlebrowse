@@ -88,6 +88,9 @@ dependencies {
         exclude(group = "net.java.dev.jna", module = "jna")
         exclude(group = "net.java.dev.jna", module = "jna-platform")
     }
+
+    // adblock-coffee
+    implementation(files("libs/adblock-coffee-1.1.7.jar"))
 }
 
 // Apply a specific Java toolchain. 
@@ -132,7 +135,8 @@ val baseJvmArgs = listOf(
     "--add-exports=java.desktop/sun.lwawt=ALL-UNNAMED",
     "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
     "--add-exports=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
-    "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED"
+    "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
+    "-Djava.library.path=./libs"
 )
 
 val jvmArgs = baseJvmArgs + 

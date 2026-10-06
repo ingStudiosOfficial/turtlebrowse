@@ -101,7 +101,7 @@ public class MainWindow extends JFrame {
 	private final JPanel sidePanel;
 	private final Gson gson = new Gson();
 	public final TurtlebrowseLoadHandler loadHandler = new TurtlebrowseLoadHandler();
-	public final TurtlebrowseRequestHandler requestHandler = new TurtlebrowseRequestHandler(this);
+	public final TurtlebrowseRequestHandler requestHandler;
 	public final ProfileStructureWithId currentProfile;
 	public ColorSchemeProperty profileMaterialColorScheme = new SimpleColorSchemeProperty(
 			ColorScheme.fromSeed(Color.web("#BDCF47")));
@@ -166,6 +166,10 @@ public class MainWindow extends JFrame {
 
 		setUserAgent();
 		setMaterialColorSchemeFromProfile();
+
+		// Request handler - keep here after user agent initializes but before address
+		// bar
+		requestHandler = new TurtlebrowseRequestHandler(this);
 
 		searchAutosuggest = new SearchAutosuggest(userAgent, this);
 
@@ -414,7 +418,7 @@ public class MainWindow extends JFrame {
 			return trimmedUrl;
 
 		try {
-			URI uri = new URI(trimmedUrl);
+			URI uri = URI.create(trimmedUrl);
 			String scheme = uri.getScheme();
 
 			if (scheme != null) {
@@ -628,6 +632,7 @@ public class MainWindow extends JFrame {
 
 	private void setUserAgent() {
 		userAgent = Main.getUserAgent();
+		System.out.println("User agent: " + userAgent);
 	}
 
 	public void openHistory() {
