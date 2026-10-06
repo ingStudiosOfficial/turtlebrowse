@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/rs/cors"
 )
 
 type GitHubRelease struct {
@@ -22,7 +24,10 @@ func main() {
 	port := flag.Int("port", 8080, "port to listen on")
 	flag.Parse()
 
-	http.HandleFunc("/", getVersionHandler)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", getVersionHandler)
+
+	cors.Default().Handler(mux)
 
 	go func() {
 		log.Printf("Server starting on port %d", *port)
