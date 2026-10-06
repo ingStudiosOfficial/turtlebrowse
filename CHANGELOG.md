@@ -2,6 +2,12 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.11.0
+
+- Added ad-blocking with EasyList rules via CEF resource request handler
+- Added `adblock-coffee` into `app/libs/` containing the jar and shared libraries
+- Fixed version in downloads page
+
 ## v1.10.1
 
 - Added copy address link to clipboard in context menu
