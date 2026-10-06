@@ -23,7 +23,13 @@ function download(url: string) {
 	);
 }
 
-const { data: version } = await useFetch('https://turtlebrowseupdates.ingstudios.dev');
+onMounted(() => {
+
+})
+const { data: version } = await useFetch('https://turtlebrowseupdates.ingstudios.dev', {
+	server: false,
+	cache: 'no-store'
+});
 </script>
 
 <template>
