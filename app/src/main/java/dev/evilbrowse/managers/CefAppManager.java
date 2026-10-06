@@ -1,0 +1,188 @@
+package dev.evilbrowse.managers;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.cef.CefApp;
+import org.cef.CefSettings;
+import org.cef.OS;
+import org.cef.CefApp.CefAppState;
+import org.cef.callback.CefSchemeRegistrar;
+
+import dev.evilbrowse.Main;
+import dev.evilbrowse.db.MainDatabase;
+import dev.evilbrowse.handlers.EvilBrowseSchemeHandlerFactory;
+import dev.evilbrowse.windows.MainWindow;
+import dev.evilbrowse.windows.ProgressWindow;
+import javafx.application.Platform;
+import me.friwi.jcefmaven.CefAppBuilder;
+import me.friwi.jcefmaven.EnumProgress;
+import me.friwi.jcefmaven.IProgressHandler;
+import me.friwi.jcefmaven.MavenCefAppHandlerAdapter;
+
+public class CefAppManager {
+	private final boolean USE_OSR = false;
+
+	private static CefAppManager instance;
+	private CefSettings cefSettings;
+	private final CefApp cefApp;
+	private EvilBrowseSchemeHandlerFactory evilbrowseSchemeHandlerFactory;
+
+	private CefAppManager(MainWindow parent) {
+		cefApp = createCefApp(parent);
+	}
+
+	public static synchronized CefAppManager getInstance(MainWindow parent) {
+		if (instance == null) {
+			instance = new CefAppManager(parent);
+		}
+		return instance;
+	}
+
+	private CefApp createCefApp(MainWindow parent) {
+		final CefAppBuilder builder = new CefAppBuilder();
+		builder.addJcefArgs("--enable-media-stream");
+
+		if (OS.isLinux()) {
+			// Keep single-process: it is the only mode verified to load pages in
+			// this environment (multi-process renderers hang on load here).
+			builder.addJcefArgs("--single-process", "--ozone-platform=x11");
+		}
+
+		final File installDir = getInstallDir();
+
+		cefSettings = builder.getCefSettings();
+		builder.setInstallDir(installDir);
+		cefSettings.windowless_rendering_enabled = USE_OSR;
+		cefSettings.remote_debugging_port = 6767;
+		cefSettings.user_agent = Main.getUserAgent();
+
+		try {
+			final String cachePath = Main.getStoragePath("cef-cache", Main.currentProfile.getIdAsString()).toString();
+			System.out.printf("Cache path: %s\n", cachePath);
+			cefSettings.cache_path = cachePath;
+		} catch (Exception error) {
+			System.out.print("Error while getting cache path, defaulting: ");
+			System.out.println(error);
+		}
+
+		try {
+			if (!isJcefInstalled()) {
+				Platform.runLater(() -> {
+					final ProgressWindow progressWindow = new ProgressWindow();
+					builder.setProgressHandler(new IProgressHandler() {
+						@Override
+						public void handleProgress(EnumProgress state, float percent) {
+							System.out.printf("State: %s\n", state.toString());
+							System.out.printf("Progress: %f%%\n", percent);
+							Platform.runLater(() -> {
+								progressWindow.updateProgress(percent);
+							});
+						}
+					});
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		builder.setAppHandler(new MavenCefAppHandlerAdapter() {
+			@Override
+			public void stateHasChanged(CefAppState state) {
+				if (state == CefAppState.TERMINATED) {
+					MainDatabase.getInstance().closeDb();
+					System.exit(0);
+				}
+			}
+
+			@Override
+			public void onRegisterCustomSchemes(CefSchemeRegistrar registrar) {
+				registrar.addCustomScheme("evilbrowse", true, true, false, true, true, true, true);
+				// Legacy Turtlebrowse URLs (history/bookmarks): keep working.
+				try {
+					registrar.addCustomScheme("turtlebrowse", true, true, false, true, true, true, true);
+				} catch (Exception ignored) {
+				}
+			}
+
+			@Override
+			public void onContextInitialized() {
+				evilbrowseSchemeHandlerFactory = new EvilBrowseSchemeHandlerFactory(parent);
+				cefApp.registerSchemeHandlerFactory("evilbrowse", "",
+						evilbrowseSchemeHandlerFactory);
+				try {
+					cefApp.registerSchemeHandlerFactory("turtlebrowse", "",
+							evilbrowseSchemeHandlerFactory);
+				} catch (Exception e) {
+					System.err.println("Failed to register legacy turtlebrowse scheme: " + e.getMessage());
+				}
+			}
+		});
+
+		try {
+			CefApp cefApp = builder.build();
+			return cefApp;
+		} catch (Exception error) {
+			System.out.print("Error while building CEF app:");
+			System.out.println(error.getMessage());
+			throw new RuntimeException("Error while building CEF app:", error);
+		}
+	}
+
+	public CefApp getCefApp() {
+		return cefApp;
+	}
+
+	private File getInstallDir() {
+		Path installPath = Main.getStoragePath("cef-install");
+
+		// Reuse the already-downloaded JCEF natives from a legacy install so
+		// the rename does not force a ~300MB re-download.
+		try {
+			if (!Files.exists(installPath.resolve("install.lock"))) {
+				Path legacy = legacyInstallDir();
+				if (legacy != null && Files.exists(legacy.resolve("install.lock"))) {
+					System.out.println("Reusing legacy JCEF install: " + legacy);
+					return legacy.toFile();
+				}
+			}
+		} catch (Exception ignored) {
+		}
+
+		final File installFile = installPath.toFile();
+
+		if (!installFile.exists()) {
+			installFile.mkdirs();
+		}
+
+		return installFile;
+	}
+
+	private Path legacyInstallDir() {
+		final String userHome = System.getProperty("user.home");
+		final String installDir = "cef-install";
+		if (OS.isWindows()) {
+			String localAppData = System.getenv("LOCALAPPDATA");
+			if (localAppData == null || localAppData.isBlank()) {
+				return null;
+			}
+			return Paths.get(localAppData, "ingStudios", "Turtlebrowse", installDir);
+		} else if (OS.isLinux()) {
+			String xdgDataHome = System.getenv("XDG_DATA_HOME");
+			if (xdgDataHome == null || xdgDataHome.isBlank()) {
+				xdgDataHome = userHome + "/.local/share";
+			}
+			return Paths.get(xdgDataHome, "ingStudios", "Turtlebrowse", installDir);
+		} else if (OS.isMacintosh()) {
+			return Paths.get(userHome, "Library", "Application Support", "Turtlebrowse", installDir);
+		}
+		return null;
+	}
+
+	private boolean isJcefInstalled() {
+		final Path lockPath = getInstallDir().toPath().resolve("install.lock");
+		return Files.exists(lockPath);
+	}
+}

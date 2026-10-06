@@ -36,8 +36,13 @@ onMounted(async () => {
 
 <template>
 	<m3e-dialog ref="dialog" dismissible>
-		<span slot="header">AI integrations</span>
+		<span slot="header">AI integrations (optional)</span>
 		<div class="ai-dialog">
+			<p class="ai-note">
+				AI is a secondary, opt-in feature. It is <strong>off by default</strong> so the
+				browser opens fast. Enabling it requires a local Ollama instance; the model
+				is loaded on first use, never at startup.
+			</p>
 			<div class="toggle-setting">
 				<p>Enable local AI integrations</p>
 				<m3e-switch
@@ -59,6 +64,7 @@ onMounted(async () => {
 						"
 					/>
 				</m3e-form-field>
+				<p class="ai-note">First use may download the model via Ollama. The browser stays usable meanwhile.</p>
 			</div>
 		</div>
 	</m3e-dialog>
@@ -85,5 +91,11 @@ onMounted(async () => {
 
 .ai-enabled {
 	all: inherit;
+}
+
+.ai-note {
+	opacity: 0.75;
+	font-size: 0.9rem;
+	margin: 0 0 8px 0;
 }
 </style>

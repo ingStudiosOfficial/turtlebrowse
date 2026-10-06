@@ -1,0 +1,20 @@
+Name:           evilbrowse
+Version:        #VERSION#
+Release:        1%{?dist}
+Summary:        The Open Source Web Browser Built for the Agentic Era
+License:        Apache-2.0
+Source0:        #BINARY_RPM_NAME#
+
+%description
+#DESC#
+
+%prep
+
+%build
+
+%install
+mkdir -p %{buildroot}
+rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
+
+%files
+/*

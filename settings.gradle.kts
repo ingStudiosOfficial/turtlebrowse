@@ -10,5 +10,5 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-rootProject.name = "turtlebrowse"
+rootProject.name = "evilbrowse"
 include("app")

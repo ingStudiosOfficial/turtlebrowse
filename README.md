@@ -1,14 +1,30 @@
 <div align="center">
 <img src=".github/branding/logo_full_trans.png" align="center" width="200px" />
 
-<h1 align="center">Turtlebrowse</h1>
+<h1 align="center">EvilBrowse</h1>
 
 <p align="center">
-A <b>Material You</b> themed JVM based <b>agentic</b> browser made in JCEF (Java Chromium Embedded Framework), Swing, and JavaFX.
+A polished, private, local-first Chromium desktop browser with <b>vertical tabs</b>, built-in <b>uBlock-Origin filter blocking</b>, and <b>opt-in local AI</b> — stabilized from Turtlebrowse.
 </p>
-<p><a href="https://www.youtube.com/watch?v=WzU8Cnl3kE0">YouTube Video</a> • <a href="https://turtlebrowse.ingstudios.dev">Download</a> • <a href="/CHANGELOG.md">Changelog</a> • <a href="/LICENSE">License</a></p>
+<p><a href="/CHANGELOG.md">Changelog</a> • <a href="/LICENSE">License</a> • Forked from <a href="https://github.com/ingStudiosOfficial/turtlebrowse">ingStudiosOfficial/turtlebrowse</a></p>
 <hr />
 </div>
+
+> **Why "Evil"?** The name is playful: the browser is "evil" because it fights bugs and refuses to behave badly. It is a legitimate web browser, not malware.
+
+## Download
+
+EvilBrowse packages are built from this repo with Gradle `jpackage` (see `app/build.gradle.kts`). The upstream Turtlebrowse downloads live at [turtlebrowse.ingstudios.dev](https://turtlebrowse.ingstudios.dev).
+
+## Features
+
+- Vertical tabs with collapsible sidebar, plus optional classic horizontal strip
+- uBlock Origin filter lists + EasyList ad/tracker blocking (toggle in Settings → Privacy)
+- Fast cold startup: AI is opt-in and never initializes unless enabled
+- Powered by the Java Chromium Embedded Framework
+- 100% local opt-in agentic AI via Ollama
+- Multiple isolated user profiles + guest mode
+- Free and open-source (FOSS, Apache 2.0)
 
 <div align="center">
 	<h2>YouTube Video</h2>
@@ -40,13 +56,13 @@ If you want to download a previous version of Turtlebrowse, it can be found in t
 
 ## Development
 
-Turtlebrowse has reached a stable stage, but we are always looking for contributors. We welcome any sort of contributions that are **human made**. Here's how to build Turtlebrowse.
+EvilBrowse is a stabilization fork of Turtlebrowse and welcomes contributions. We welcome any sort of contributions that are **human made**. Here's how to build EvilBrowse.
 
 ### Prerequisites
 
-- **Git** - Source control for Turtlebrowse
+- **Git** - Source control for EvilBrowse
 
-- **JDK 25** - Turtlebrowse is powered by Java 25 and uses the latest features
+- **JDK 25** - EvilBrowse is powered by Java 25 and uses the latest features
 
 - **Node.js** - Used to build the internal pages and website
 
@@ -142,7 +158,7 @@ go run .
 
 2. **Build the binary**
 ```bash
-go build -o ./build/turtlebrowseupdates .
+go build -o ./build/evilbrowseupdates .
 ```
 
 ## Credits
@@ -160,6 +176,6 @@ The other dependencies that can be found in [build.gradle.kts](app/build.gradle.
 
 ## License
 
-Turtlebrowse is licensed under the Apache 2.0 License. Check [LICENSE](./LICENSE) for more details.
+EvilBrowse is licensed under the Apache 2.0 License. Check [LICENSE](./LICENSE) for more details.
 
 © 2026 (ing) Studios and Ethan Lee

@@ -12,7 +12,7 @@ export function useNewtab() {
 		wallpaper.value = await getWallpaper();
 		console.log('Wallpaper:', wallpaper.value);
 		if (wallpaper.value)
-			wallpaperUrl.value = `turtlebrowse://api/get-wallpaper?t=${Date.now()}`;
+			wallpaperUrl.value = `evilbrowse://api/get-wallpaper?t=${Date.now()}`;
 	}
 
 	async function saveWallpaper(file: File) {

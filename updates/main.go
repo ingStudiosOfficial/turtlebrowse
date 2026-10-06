@@ -50,7 +50,7 @@ func fetchReleaseInfo() {
 		return
 	}
 
-	req.Header.Set("User-Agent", "Turtlebrowse-Update-Proxy")
+	req.Header.Set("User-Agent", "EvilBrowse-Update-Proxy")
 
 	resp, err := client.Do(req)
 	if err != nil {

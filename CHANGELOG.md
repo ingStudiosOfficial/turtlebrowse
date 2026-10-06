@@ -1,6 +1,17 @@
-# Turtlebrowse Changelog
+# EvilBrowse Changelog
+
+All prior history inherited from the Turtlebrowse fork base.
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
+
+## EvilBrowse (unreleased)
+
+- Renamed Turtlebrowse to EvilBrowse (package dev.evilbrowse, evilbrowse:// pages, packaging)
+- Vertical tabs with collapsible sidebar + optional horizontal strip (Settings → Appearance)
+- uBlock Origin filter lists (uAssets + EasyList/EasyPrivacy) with async load, disk cache and toggle
+- AI made opt-in/lazy: no Ollama init at startup; fast cold open
+- Fixed empty toolbar crash (style set on bound property), collapse threading/header overflow
+- Legacy turtlebrowse:// URLs and profile data keep working via migration fallbacks
 
 ## v1.11.0
 

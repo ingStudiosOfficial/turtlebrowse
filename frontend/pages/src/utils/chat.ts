@@ -9,7 +9,7 @@ export function promptStreaming(
 	onFinish: (response: string) => void,
 ) {
 	const source = new EventSource(
-		`turtlebrowse://api/prompt-stream?prompt=${encodeURIComponent(prompt)}`,
+		`evilbrowse://api/prompt-stream?prompt=${encodeURIComponent(prompt)}`,
 	);
 	console.log('EventSource created:', source.readyState);
 	source.addEventListener('open', () => {

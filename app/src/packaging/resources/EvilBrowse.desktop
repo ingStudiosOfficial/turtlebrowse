@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=EvilBrowse
+Comment=EvilBrowse
+Exec=/opt/evilbrowse/bin/EvilBrowse --url %u
+Icon=/opt/evilbrowse/lib/EvilBrowse.png
+Terminal=false
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;

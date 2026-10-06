@@ -152,7 +152,7 @@ val jvmArgs = baseJvmArgs +
     else emptyList()
 
 application {
-    mainClass.set("dev.ingstudios.turtlebrowse.Main")
+    mainClass.set("dev.evilbrowse.Main")
     applicationDefaultJvmArgs = jvmArgs
 }
 
@@ -195,7 +195,7 @@ tasks.jpackage {
     javaLauncher = launcher
     runtimeImage = layout.buildDirectory.dir("rt").get().asFile
     
-    appName = "Turtlebrowse"
+    appName = "EvilBrowse"
     vendor = "(ing) Studios"
     appVersion = version.toString()
     copyright = "2026 (ing) Studios and Ethan Lee"
@@ -205,7 +205,7 @@ tasks.jpackage {
     
     mainJar = "app-all.jar"
     dependsOn(tasks.shadowJar)
-    mainClass = "dev.ingstudios.turtlebrowse.Main"
+    mainClass = "dev.evilbrowse.Main"
 
     destination = layout.buildDirectory.dir("dist")
 
@@ -226,14 +226,14 @@ tasks.jpackage {
         winMenu = true
         winShortcut = true
         winShortcutPrompt = true
-        installDir = "ingStudios\\Turtlebrowse"
+        installDir = "EvilBrowse"
         winUpgradeUuid = "6f701d42-0c33-443a-98fa-6543c3e7b3df"
     }
 
     mac {
         type = org.panteleyev.jpackage.ImageType.PKG
-        macPackageName = "Turtlebrowse"
-        macPackageIdentifier = "dev.ingstudios.turtlebrowse"
+        macPackageName = "EvilBrowse"
+        macPackageIdentifier = "dev.evilbrowse"
     }
 
     linux {
@@ -250,7 +250,7 @@ tasks.jpackage {
         }
 
         if (pkgType != "appimage") {
-            linuxPackageName = "turtlebrowse"
+            linuxPackageName = "evilbrowse"
             linuxShortcut = true
             linuxMenuGroup = "Network;WebBrowser;"
             linuxAppCategory = "web"
@@ -272,31 +272,31 @@ tasks.register<Exec>("buildAppImage") {
         "bash", "-c",
         """
         # Clear old AppDir
-        rm -rf Turtlebrowse.AppDir
+        rm -rf EvilBrowse.AppDir
 
         # Rename the directory to have the AppDir prefix
-        mv Turtlebrowse Turtlebrowse.AppDir
+        mv EvilBrowse EvilBrowse.AppDir
         
         # Create the AppRun script
-        cat << 'EOF' > Turtlebrowse.AppDir/AppRun
+        cat << 'EOF' > EvilBrowse.AppDir/AppRun
 #!/bin/sh
 HERE="${'$'}(dirname "${'$'}(readlink -f "${'$'}{0}")")"
-exec "${'$'}HERE/bin/Turtlebrowse" "${'$'}@"
+exec "${'$'}HERE/bin/EvilBrowse" "${'$'}@"
 EOF
-        chmod +x Turtlebrowse.AppDir/AppRun
+        chmod +x EvilBrowse.AppDir/AppRun
         
-        cp ${projectDir}/src/main/resources/logo_full_trans.png Turtlebrowse.AppDir/turtlebrowse.png
+        cp ${projectDir}/src/main/resources/logo_full_trans.png EvilBrowse.AppDir/evilbrowse.png
         
-        cat << 'EOF' > Turtlebrowse.AppDir/turtlebrowse.desktop
+        cat << 'EOF' > EvilBrowse.AppDir/evilbrowse.desktop
 [Desktop Entry]
 Type=Application
-Name=Turtlebrowse
+Name=EvilBrowse
 Exec=AppRun
-Icon=turtlebrowse
+Icon=evilbrowse
 Categories=Network;WebBrowser;
 EOF
 
-        appimagetool Turtlebrowse.AppDir Turtlebrowse_amd64.AppImage
+        appimagetool EvilBrowse.AppDir EvilBrowse_amd64.AppImage
         """
     )
 }

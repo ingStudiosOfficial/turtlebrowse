@@ -11,9 +11,9 @@
 
 		<div class="personalization" style="text-align: left">
 			<div class="feature-box">
-				<h3 class="feature-header">Personalize Turtlebrowse to your liking</h3>
+				<h3 class="feature-header">Personalize EvilBrowse to your liking</h3>
 				<p class="feature-text">
-					Turtlebrowse dynamically generates a Material You theme from your system accent
+					EvilBrowse dynamically generates a Material You theme from your system accent
 					color or a color of your liking.
 				</p>
 			</div>

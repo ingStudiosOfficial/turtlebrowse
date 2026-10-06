@@ -4,12 +4,13 @@ import type { NewtabSettings } from '@/interfaces/NewtabSettings';
 import type { UpdateInfo } from '@/interfaces/UpdateInfo';
 import type { Appearance } from '@/types/Appearance';
 import type { SearchEngine } from '@/types/SearchEngine';
+import type { TabPosition } from '@/types/TabPosition';
 
 async function communicateWithBackend(
 	request: string,
 	params?: Record<string, string>,
 ): Promise<Response> {
-	const response = await fetch(`turtlebrowse://api/${request}`, {
+	const response = await fetch(`evilbrowse://api/${request}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -103,6 +104,23 @@ export async function setDiscordPresenceSetting(enabled: boolean) {
 		await fetchFromJavaText('SET_DISCORD_SETTING', { enabled: enabled.toString() });
 	} catch (error) {
 		console.error('Failed to set Discord setting:', error);
+	}
+}
+
+export async function getDiscordClientId(): Promise<string> {
+	try {
+		const raw = (await fetchFromJavaText('GET_DISCORD_CLIENT_ID')) as string | undefined;
+		return raw ?? '';
+	} catch {
+		return '';
+	}
+}
+
+export async function setDiscordClientId(clientId: string) {
+	try {
+		await fetchFromJavaText('SET_DISCORD_CLIENT_ID', { clientId });
+	} catch (error) {
+		console.error('Failed to set Discord client ID:', error);
 	}
 }
 
@@ -248,5 +266,80 @@ export async function getUpdateInfo(refresh: boolean = false): Promise<UpdateInf
 	} catch (error) {
 		console.error(error);
 		return null;
+	}
+}
+
+export async function getSidebarCollapsed(): Promise<boolean> {
+	try {
+		const raw = (await fetchFromJavaText('GET_SIDEBAR_COLLAPSED')) as string | undefined;
+		return raw?.toLowerCase() === 'true';
+	} catch {
+		return false;
+	}
+}
+
+export async function setSidebarCollapsed(collapsed: boolean) {
+	try {
+		await fetchFromJavaText('SET_SIDEBAR_COLLAPSED', { collapsed: collapsed.toString() });
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export async function getTabPosition(): Promise<TabPosition> {
+	try {
+		const raw = (await fetchFromJavaText('GET_TAB_POSITION')) as string | undefined;
+		return raw === 'horizontal' ? 'horizontal' : 'vertical';
+	} catch {
+		return 'vertical';
+	}
+}
+
+export async function setTabPosition(position: TabPosition) {
+	try {
+		await fetchFromJavaText('SET_TAB_POSITION', { position });
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export async function getAdblockEnabled(): Promise<boolean> {
+	try {
+		const raw = (await fetchFromJavaText('GET_ADBLOCK_ENABLED')) as string | undefined;
+		return raw?.toLowerCase() !== 'false';
+	} catch {
+		return true;
+	}
+}
+
+export async function setAdblockEnabled(enabled: boolean) {
+	try {
+		await fetchFromJavaText('SET_ADBLOCK_ENABLED', { enabled: enabled.toString() });
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export interface AdblockStatus {
+	enabled: boolean;
+	rules: number;
+	blocked: number;
+	lastUpdate: number;
+	lists: string[];
+}
+
+export async function getAdblockStatus(): Promise<AdblockStatus | null> {
+	try {
+		return (await fetchFromJavaJson('GET_ADBLOCK_STATUS')) as AdblockStatus;
+	} catch {
+		return null;
+	}
+}
+
+export async function refreshFilterLists() {
+	try {
+		await fetchFromJavaText('REFRESH_FILTER_LISTS');
+	} catch (error) {
+		console.error(error);
 	}
 }

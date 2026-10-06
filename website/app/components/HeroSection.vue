@@ -13,7 +13,7 @@ function openGithub() {
 		</div>
 		<m3e-button variant="filled" size="medium" @click="navigateTo('/download')">
 			<Icon slot="icon" name="material-symbols:download" />
-			Download Turtlebrowse
+			Download EvilBrowse
 		</m3e-button>
 		<m3e-button variant="text" size="medium" @click="openGithub()">
 			<Icon slot="icon" name="mdi:github" />

@@ -2,16 +2,16 @@
 useSeoMeta({
 	title: 'Download',
 	description:
-		'Download Turtlebrowse for Debian Linux, Ubuntu Linux, Fedora Linux, openSUSE Linux, Windows 10, Windows 11, and macOS. Built by (ing) Studios.',
+		'Download EvilBrowse for Debian Linux, Ubuntu Linux, Fedora Linux, openSUSE Linux, Windows 10, Windows 11, and macOS. Built by (ing) Studios.',
 	ogType: 'website',
 	ogUrl: 'https://turtlebrowse.ingstudios.dev/download',
-	ogTitle: 'Download | Turtlebrowse - The Open Source Web Browser Built for the Agentic Era',
+	ogTitle: 'Download | EvilBrowse - The Open Source Web Browser Built for the Agentic Era',
 	ogDescription:
-		'Download Turtlebrowse for Debian Linux, Ubuntu Linux, Fedora Linux, openSUSE Linux, Windows 10, Windows 11, and macOS.',
+		'Download EvilBrowse for Debian Linux, Ubuntu Linux, Fedora Linux, openSUSE Linux, Windows 10, Windows 11, and macOS.',
 	ogImage: 'https://turtlebrowse.ingstudios.dev/logo_full_trans.png',
 	ogImageWidth: 500,
 	ogImageHeight: 500,
-	ogSiteName: 'Turtlebrowse',
+	ogSiteName: 'EvilBrowse',
 });
 
 const RELEASE_VERSION = 'latest';
@@ -34,8 +34,8 @@ const { data: version } = await useFetch('https://turtlebrowseupdates.ingstudios
 
 <template>
 	<div class="download-wrapper">
-		<h1 class="download-title">Download Turtlebrowse {{ version }} (Latest)</h1>
-		<p>Download Turtlebrowse for your respective operating system and CPU architecture.</p>
+		<h1 class="download-title">Download EvilBrowse {{ version }} (Latest)</h1>
+		<p>Download EvilBrowse for your respective operating system and CPU architecture.</p>
 		<m3e-card>
 			<m3e-action-list slot="content" variant="segmented">
 				<m3e-list-action @click="download('debian_amd64.deb')">

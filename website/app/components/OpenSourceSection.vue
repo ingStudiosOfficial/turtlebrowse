@@ -58,7 +58,7 @@
 		</m3e-list>
 		<m3e-button variant="filled" size="medium" @click="navigateTo('/download')">
 			<Icon slot="icon" name="material-symbols:download" />
-			Download Turtlebrowse
+			Download EvilBrowse
 		</m3e-button>
 	</div>
 </template>

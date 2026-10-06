@@ -129,6 +129,10 @@ onUnmounted(() => {
 
 <template>
 	<div class="newtab-wrapper" :class="wallpaperUrl !== null ? 'bg-wallpaper' : ''">
+		<div class="brand">
+			<span class="brand-mark">e</span>
+			<span class="brand-name">EvilBrowse</span>
+		</div>
 		<div class="center-wrapper">
 			<div class="wrapper-bg"></div>
 			<h1>
@@ -138,6 +142,7 @@ onUnmounted(() => {
 						: `Hello, ${userName}!`
 				}}
 			</h1>
+			<p class="subtitle">Private, local-first browsing that fights bugs, not you.</p>
 			<m3e-form-field
 				class="search-bar"
 				variant="outlined"
@@ -204,6 +209,39 @@ onUnmounted(() => {
 
 .search-bar {
 	width: 100%;
+}
+
+.brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 18px;
+	opacity: 0.95;
+}
+
+.brand-mark {
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 800;
+	font-size: 20px;
+	background: var(--md-sys-color-primary);
+	color: var(--md-sys-color-on-primary);
+}
+
+.brand-name {
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: 0.2px;
+}
+
+.subtitle {
+	margin: 0 0 18px 0;
+	opacity: 0.75;
+	font-size: 14px;
 }
 
 .settings-btn {

@@ -1,6 +1,6 @@
 export async function getWallpaper(): Promise<File | null> {
 	try {
-		const response = await fetch('turtlebrowse://api/get-wallpaper', {
+		const response = await fetch('evilbrowse://api/get-wallpaper', {
 			method: 'GET',
 		});
 
@@ -26,7 +26,7 @@ export async function setWallpaper(image: File) {
 	try {
 		const arrayBuffer = await image.arrayBuffer();
 
-		const response = await fetch(`turtlebrowse://api/set-wallpaper`, {
+		const response = await fetch(`evilbrowse://api/set-wallpaper`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': image.type,
@@ -44,7 +44,7 @@ export async function setWallpaper(image: File) {
 
 export async function clearWallpaper() {
 	try {
-		const response = await fetch(`turtlebrowse://api/CLEAR_WALLPAPER`, {
+		const response = await fetch(`evilbrowse://api/CLEAR_WALLPAPER`, {
 			method: 'POST',
 		});
 
