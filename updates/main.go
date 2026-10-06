@@ -27,11 +27,11 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", getVersionHandler)
 
-	cors.Default().Handler(mux)
+	handler := cors.Default().Handler(mux)
 
 	go func() {
 		log.Printf("Server starting on port %d", *port)
-		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
+		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), handler))
 	}()
 
 	go func() {
