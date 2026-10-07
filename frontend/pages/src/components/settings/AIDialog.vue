@@ -6,6 +6,7 @@ import { onMounted, ref, useTemplateRef } from 'vue';
 import '@m3e/web/form-field';
 import { getAISettings, setAISettings } from '@/utils/java_bridge';
 import type { M3eSwitchElement } from '@m3e/web/switch';
+import { M3eSnackbar } from '@m3e/web/snackbar';
 
 const dialog = useTemplateRef<M3eDialogElement>('dialog');
 const aiEnabled = ref<boolean>(false);
@@ -18,6 +19,8 @@ async function toggleAIEnabled(target: M3eSwitchElement) {
 	console.log('Enabled:', checked);
 
 	aiEnabled.value = checked;
+
+	M3eSnackbar.open('Restart Turtlebrowse to apply changes');
 
 	await setAISettings({
 		enabled: aiEnabled.value,

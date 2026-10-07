@@ -4,6 +4,7 @@ import type { NewtabSettings } from '@/interfaces/NewtabSettings';
 import type { UpdateInfo } from '@/interfaces/UpdateInfo';
 import type { Appearance } from '@/types/Appearance';
 import type { SearchEngine } from '@/types/SearchEngine';
+import { M3eSnackbar } from '@m3e/web/snackbar';
 
 async function communicateWithBackend(
 	request: string,
@@ -176,6 +177,7 @@ export async function getAISettings(): Promise<AISettings> {
 
 export async function setAISettings(settings: AISettings) {
 	try {
+		M3eSnackbar.open('Restart Turtlebrowse to apply changes');
 		await fetchFromJavaText('SET_AI_SETTINGS', {
 			enabled: settings.enabled.toString(),
 			model: settings.model,

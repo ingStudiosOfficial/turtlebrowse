@@ -188,7 +188,8 @@ public class ZoomSidebar extends ToolSidebar {
 	}
 
 	private double getZoom() {
-		return parent.currentBrowser.getZoomLevel() * 100;
+		final double zoomLevel = parent.currentBrowser.getZoomLevel();
+		return (zoomLevel == 0 ? 1 : zoomLevel) * 100;
 	}
 
 	private void setZoom() {
