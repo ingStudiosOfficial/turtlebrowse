@@ -122,7 +122,6 @@ val isMac = osName.contains("darwin") || osName.contains("mac") || osName.contai
 val baseJvmArgs = listOf(
     "--enable-native-access=ALL-UNNAMED,javafx.graphics",
     "--add-modules=jdk.incubator.vector",
-    "-Djava.library.path=build/natives",
     "-Dsun.java2d.opengl=false",
     "-Dsun.java2d.xrender=false",
     "-Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel",
@@ -136,7 +135,7 @@ val baseJvmArgs = listOf(
     "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
     "--add-exports=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
     "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
-    "-Djava.library.path=./libs"
+    "-Djava.library.path=\$APPDIR:\$APPDIR/libs:\$APPDIR/lib:./libs"
 )
 
 val jvmArgs = baseJvmArgs + 
@@ -187,8 +186,16 @@ tasks.shadowJar {
     archiveFileName.set("app-all.jar")
 }
 
+val copyNativesToDist = tasks.register<Copy>("copyNativesToDist") {
+    from("libs") {
+        include("*.so", "*.dll", "*.dylib")
+    }
+    into(layout.buildDirectory.dir("libs"))
+}
+
 tasks.jpackage {
     dependsOn(prepareRuntime)
+    dependsOn(copyNativesToDist)
 
     verbose = true
 
