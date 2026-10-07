@@ -106,6 +106,29 @@ export async function setDiscordPresenceSetting(enabled: boolean) {
 	}
 }
 
+export async function getAdblockSetting(): Promise<boolean> {
+	try {
+		const enabled = (await fetchFromJavaText('GET_ADBLOCK_SETTING')) as string | undefined;
+
+		if (enabled === undefined) {
+			return false;
+		}
+
+		return enabled.toLowerCase() === 'true';
+	} catch (error) {
+		console.error('Error while getting adblock setting:', error);
+		return false;
+	}
+}
+
+export async function setAdblockSetting(enabled: boolean) {
+	try {
+		await fetchFromJavaText('SET_ADBLOCK_SETTING', { enabled: enabled.toString() });
+	} catch (error) {
+		console.error('Failed to set adblock setting:', error);
+	}
+}
+
 export async function getAppearance(): Promise<Appearance> {
 	try {
 		const appearance = (await fetchFromJavaText('GET_APPEARANCE')) as Appearance | undefined;

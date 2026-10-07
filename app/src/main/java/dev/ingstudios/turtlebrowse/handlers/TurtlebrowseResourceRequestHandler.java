@@ -16,12 +16,16 @@ import org.cef.network.CefRequest.ResourceType;
 
 import com.example.adblock.AdvtBlocker;
 
+import dev.ingstudios.turtlebrowse.windows.MainWindow;
+
 public class TurtlebrowseResourceRequestHandler extends CefResourceRequestHandlerAdapter {
 	private final AdvtBlocker blocker;
 	private final HttpClient httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
+	private final MainWindow parent;
 
-	public TurtlebrowseResourceRequestHandler(String userAgent) {
-		final List<String> rules = getEasyListRules(userAgent);
+	public TurtlebrowseResourceRequestHandler(MainWindow parent) {
+		this.parent = parent;
+		final List<String> rules = getEasyListRules(parent.userAgent);
 		blocker = AdvtBlocker.createInstance(rules);
 	}
 
@@ -30,7 +34,7 @@ public class TurtlebrowseResourceRequestHandler extends CefResourceRequestHandle
 		final String resourceType = resourceTypeToString(request.getResourceType());
 
 		final boolean result = blocker.checkUrls(request.getURL(), browser.getURL(), resourceType);
-		if (result) {
+		if (result && parent.adblockEnabled) {
 			System.out.println("Blocked resource: " + request.getURL());
 			return true;
 		}

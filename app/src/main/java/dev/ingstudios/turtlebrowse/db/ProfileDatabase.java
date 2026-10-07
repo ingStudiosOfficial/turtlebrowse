@@ -127,6 +127,39 @@ public class ProfileDatabase {
 		settingsCollection.update(discordDocument);
 	}
 
+	public boolean getAdblockSetting() {
+		final Document adblockDocument = settingsCollection.find(where("setting").eq("adblock"))
+				.firstOrNull();
+
+		if (adblockDocument == null) {
+			final Document newAdblockDocumment = Document.createDocument().put("setting", "adblock")
+					.put("enabled", true);
+			settingsCollection.insert(newAdblockDocumment);
+			return true;
+		}
+
+		return Boolean.valueOf(adblockDocument.get("enabled").toString());
+	}
+
+	public void setAdblockSetting(boolean enabled) {
+		System.out.printf("Setting adblock setting: %s\n", enabled);
+
+		final Document adblockDocument = settingsCollection.find(where("setting").eq("adblock"))
+				.firstOrNull();
+
+		if (adblockDocument == null) {
+			System.err.println("Adblock document is null.");
+			final Document newAdblockDocument = Document.createDocument().put("setting", "adblock")
+					.put("enabled", enabled);
+			settingsCollection.insert(newAdblockDocument);
+			return;
+		}
+
+		adblockDocument.put("enabled", enabled);
+
+		settingsCollection.update(adblockDocument);
+	}
+
 	public String getAppearance() {
 		final Document themeDocument = settingsCollection.find(where("setting").eq("appearance"))
 				.firstOrNull();

@@ -155,6 +155,7 @@ Huge thank you to the [Java Chromium Embedded Framework](https://github.com/chro
 - [JetBrains/jediterm](https://github.com/JetBrains/jediterm) for providing integrated terminal support
 - [sshahine/JFoenix](https://github.com/sshahine/JFoenix) for beautiful Material 3 JavaFX components
 - [ollama4j/ollama4j](https://github.com/ollama4j/ollama4j) for the Java API wrapper for Ollama
+- [breadrock1/adblock-coffee](https://github.com/breadrock1/adblock-coffee) for Java bindings for `adblock-rust`
 
 The other dependencies that can be found in [build.gradle.kts](app/build.gradle.kts) are also very much appredicated!
 

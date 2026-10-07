@@ -4,8 +4,8 @@ import '@m3e/web/dialog';
 import { M3eDialogElement } from '@m3e/web/dialog';
 import { onMounted, ref, useTemplateRef } from 'vue';
 import '@m3e/web/form-field';
-import type { M3eCheckboxElement } from '@m3e/web/checkbox';
 import { getAISettings, setAISettings } from '@/utils/java_bridge';
+import type { M3eSwitchElement } from '@m3e/web/switch';
 
 const dialog = useTemplateRef<M3eDialogElement>('dialog');
 const aiEnabled = ref<boolean>(false);
@@ -13,7 +13,7 @@ const aiModel = ref<string>('gemma4:e2b');
 
 const { aiDialog } = useDialog();
 
-async function toggleAIEnabled(target: M3eCheckboxElement) {
+async function toggleAIEnabled(target: M3eSwitchElement) {
 	const checked = target.checked;
 	console.log('Enabled:', checked);
 

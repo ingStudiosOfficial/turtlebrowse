@@ -112,6 +112,7 @@ public class MainWindow extends JFrame {
 	public final ProfileDatabase profileDatabase;
 	public String defaultSearchProvider = SearchURLTemplates.searchTemplates.get("brave");
 	public boolean enableDiscordPresence = false;
+	public boolean adblockEnabled = true;
 	private String browserAppearance = "system";
 	public AISettings aiSettings = new AISettings(false, "gemma4:e2b");
 	public NewtabSettings newtabSettings = new NewtabSettings("");
@@ -134,6 +135,7 @@ public class MainWindow extends JFrame {
 
 		defaultSearchProvider = SearchURLTemplates.searchTemplates.get(profileDatabase.getDefaultSearchEngine());
 		enableDiscordPresence = profileDatabase.getDiscordPresenceSetting();
+		adblockEnabled = profileDatabase.getAdblockSetting();
 		browserAppearance = profileDatabase.getAppearance();
 		aiSettings = profileDatabase.getAISettings();
 		newtabSettings = profileDatabase.getNewtabSettings();
@@ -584,6 +586,23 @@ public class MainWindow extends JFrame {
 				updateInfoMap.put("needsUpdate", shouldUpdate);
 
 				return gson.toJson(updateInfoMap);
+			}
+
+			case "GET_ADBLOCK_SETTING": {
+				final boolean adblockEnabled = profileDatabase.getAdblockSetting();
+				return String.valueOf(adblockEnabled);
+			}
+
+			case "SET_ADBLOCK_SETTING": {
+				final boolean adblockSettingToSet = params.get("enabled").getAsBoolean();
+				adblockEnabled = adblockSettingToSet;
+				if (adblockSettingToSet) {
+					DiscordPresenceManager.getInstance().init();
+				} else {
+					DiscordPresenceManager.getInstance().disableDiscordPresence();
+				}
+				profileDatabase.setAdblockSetting(adblockSettingToSet);
+				return "\"ok\"";
 			}
 
 			default:

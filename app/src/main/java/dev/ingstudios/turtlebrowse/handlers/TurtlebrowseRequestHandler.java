@@ -18,7 +18,7 @@ public class TurtlebrowseRequestHandler extends CefRequestHandlerAdapter {
 
 	public TurtlebrowseRequestHandler(MainWindow parent) {
 		this.parent = parent;
-		resourceRequestHandler = new TurtlebrowseResourceRequestHandler(parent.userAgent);
+		resourceRequestHandler = new TurtlebrowseResourceRequestHandler(parent);
 	}
 
 	@Override

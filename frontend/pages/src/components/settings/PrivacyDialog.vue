@@ -4,21 +4,31 @@ import '@m3e/web/dialog';
 import { M3eDialogElement } from '@m3e/web/dialog';
 import { onMounted, ref, useTemplateRef } from 'vue';
 import '@m3e/web/switch';
-import { getDiscordPresenceSetting, setDiscordPresenceSetting } from '@/utils/java_bridge';
-import type { M3eCheckboxElement } from '@m3e/web/checkbox';
+import { getDiscordPresenceSetting, setAdblockSetting, setDiscordPresenceSetting } from '@/utils/java_bridge';
+import type { M3eSwitchElement } from '@m3e/web/switch';
 
 const dialog = useTemplateRef<M3eDialogElement>('dialog');
 const discordPresenceEnabled = ref<boolean>(false);
+const adblockEnabled = ref<boolean>(true);
 
 const { privacyDialog } = useDialog();
 
-async function toggleDiscordPresence(target: M3eCheckboxElement) {
+async function toggleDiscordPresence(target: M3eSwitchElement) {
 	const checked = target.checked;
 	console.log('Enabled:', checked);
 
 	discordPresenceEnabled.value = checked;
 
 	await setDiscordPresenceSetting(checked);
+}
+
+async function toggleAdblock(target: M3eSwitchElement) {
+	const checked = target.checked;
+	console.log('Enabled:', checked);
+
+	adblockEnabled.value = checked;
+
+	setAdblockSetting(checked);
 }
 
 onMounted(async () => {
@@ -38,6 +48,14 @@ onMounted(async () => {
 					icons="both"
 					:checked="discordPresenceEnabled"
 					@change="toggleDiscordPresence($event.target)"
+				></m3e-switch>
+			</div>
+			<div class="toggle-setting">
+				<p>Enable ad-blocking</p>
+				<m3e-switch
+					icons="both"
+					:checked="adblockEnabled"
+					@change="toggleAdblock($event.target)"
 				></m3e-switch>
 			</div>
 		</div>
