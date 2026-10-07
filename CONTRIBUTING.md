@@ -49,3 +49,5 @@ cd turtlebrowse
 Detailed build instructions can be found in the [README](./README.md#development).
 
 Thanks for contributing to Turtlebrowse!
+
+© 2026 (ing) Studios and Ethan Lee
