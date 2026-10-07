@@ -52,22 +52,49 @@ Turtlebrowse has reached a stable stage, but we are always looking for contribut
 
 ### Building and Running
 
-#### Browser
-
 1. **Clone the repository**
 ```bash
 git clone https://github.com/ingStudiosOfficial/turtlebrowse.git
 cd turtlebrowse
 ```
 
-2. **Build the Gradle project**
+#### Full Build Script (POSIX complient shells only)
+
+Turtlebrowse provides a full build script to build the entire project.
+
+**Full build script**
+```bash
+# Relative to the root of the project
+./full-build.sh
+```
+
+or build individual sections
+
+**Frontend pages**
+```bash
+./build-frontend.sh
+```
+
+**Website**
+```bash
+./build-website.sh
+```
+
+**Update proxy**
+```bash
+./build-proxy.sh
+```
+
+#### Browser
+
+1. **Build the Gradle project**
 ```bash
 # Relative to the root of the project
 cd app
 ./gradlew build # or ./gradlew.bat build on Windows
 ```
 
-3. **Run the Gradle project**
+2. **Run the Gradle project**
 ```bash
 ./gradlew run # or ./gradlew.bat run on Windows
 ```
