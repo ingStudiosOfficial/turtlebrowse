@@ -84,6 +84,9 @@ public class TabBar extends JPanel {
 	private static final int COLLAPSED_WIDTH = 60;
 	private static final int STRIP_HEIGHT = 40;
 	private static final double H_TAB_WIDTH = 160;
+	private static final double H_TAB_MAX_WIDTH = 220;
+	private static final double H_TAB_MIN_WIDTH = 52;
+	private static final String SHRINK_LISTENER_KEY = "evilbrowseShrinkListener";
 
 	public TabBar(CefClient client, List<CefBrowser> tabs, MainWindow parent) {
 		this.parent = parent;
@@ -295,18 +298,7 @@ public class TabBar extends JPanel {
 			final Paint bg = parent.profileMaterialColorScheme.getSurface().get();
 			return new Background(new BackgroundFill(bg, null, null));
 		}, parent.profileMaterialColorScheme.getSurface()));
-
-		final ScrollPane scroll = new ScrollPane(tabStrip);
-		scroll.setFitToHeight(true);
-		scroll.setFitToWidth(false);
-		scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-		scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-		scroll.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint bg = parent.profileMaterialColorScheme.getSurface().get();
-			return new Background(new BackgroundFill(bg, null, null));
-		}, parent.profileMaterialColorScheme.getSurface()));
-		HBox.setHgrow(scroll, Priority.ALWAYS);
+		HBox.setHgrow(tabStrip, Priority.ALWAYS);
 
 		final HBox strip = new HBox(0);
 		strip.setAlignment(Pos.CENTER_LEFT);
@@ -314,9 +306,10 @@ public class TabBar extends JPanel {
 			final Paint bg = parent.profileMaterialColorScheme.getSurface().get();
 			return new Background(new BackgroundFill(bg, null, null));
 		}, parent.profileMaterialColorScheme.getSurface()));
-		// Firefox order: scrollable tabs first, New Tab button trailing.
-		strip.getChildren().addAll(scroll, header, createWindowControls());
-		HBox.setHgrow(scroll, Priority.ALWAYS);
+		// Firefox order: shrinking tabs first, New Tab button trailing.
+		// No scrollbar: tabs flex and shrink like Firefox instead of scrolling.
+		strip.getChildren().addAll(tabStrip, header, createWindowControls());
+		HBox.setHgrow(tabStrip, Priority.ALWAYS);
 
 		root.setCenter(strip);
 		tabList = null;
@@ -422,6 +415,10 @@ public class TabBar extends JPanel {
 			pressX[0] = event.getScreenX();
 			pressY[0] = event.getScreenY();
 			dragging[0] = true;
+			try {
+				parent.beginWindowDrag(event.getScreenX(), event.getScreenY());
+			} catch (Exception ignored) {
+			}
 		});
 		target.setOnMouseDragged(event -> {
 			if (!dragging[0]) {
@@ -865,10 +862,12 @@ public class TabBar extends JPanel {
 				: null;
 
 		if (horizontal) {
-			// Strip mode: fixed-width rows, everything visible, no collapse.
+			// Strip mode: tabs flex to share the row and shrink like Firefox
+			// instead of scrolling. Everything visible, no collapse.
 			if (title != null) {
 				title.setVisible(true);
 				title.setManaged(true);
+				title.setMinWidth(0);
 			}
 			if (closeBtn != null) {
 				closeBtn.setVisible(true);
@@ -885,8 +884,30 @@ public class TabBar extends JPanel {
 			tabBox.setAlignment(Pos.CENTER_LEFT);
 			tabBox.setPadding(new Insets(3, 6, 3, 6));
 			tabBox.setPrefWidth(H_TAB_WIDTH);
-			tabBox.setMaxWidth(H_TAB_WIDTH);
-			tabBox.setMinWidth(H_TAB_WIDTH);
+			tabBox.setMaxWidth(H_TAB_MAX_WIDTH);
+			tabBox.setMinWidth(H_TAB_MIN_WIDTH);
+			HBox.setHgrow(tabBox, Priority.ALWAYS);
+			if (tabBox.getProperties().putIfAbsent(SHRINK_LISTENER_KEY, Boolean.TRUE) == null) {
+				final Label titleRef = title;
+				final javafx.scene.Node closeRef = closeBtn;
+				tabBox.widthProperty().addListener((obs, oldW, newW) -> {
+					try {
+						if (!horizontal) {
+							return;
+						}
+						final boolean roomy = newW.doubleValue() >= 120;
+						if (closeRef != null) {
+							closeRef.setVisible(roomy);
+							closeRef.setManaged(roomy);
+						}
+						if (titleRef != null) {
+							titleRef.setVisible(newW.doubleValue() >= 64);
+							titleRef.setManaged(newW.doubleValue() >= 64);
+						}
+					} catch (Exception ignored) {
+					}
+				});
+			}
 		} else if (collapsed) {
 			if (title != null) {
 				title.setVisible(false);
@@ -901,6 +922,7 @@ public class TabBar extends JPanel {
 			tabBox.setPrefWidth(Region.USE_COMPUTED_SIZE);
 			tabBox.setMaxWidth(Double.MAX_VALUE);
 			tabBox.setMinWidth(0);
+			HBox.setHgrow(tabBox, Priority.NEVER);
 			if (fav != null) {
 				fav.setMinSize(28, 28);
 				fav.setMaxSize(28, 28);
@@ -932,6 +954,7 @@ public class TabBar extends JPanel {
 			tabBox.setPrefWidth(Region.USE_COMPUTED_SIZE);
 			tabBox.setMaxWidth(Double.MAX_VALUE);
 			tabBox.setMinWidth(0);
+			HBox.setHgrow(tabBox, Priority.NEVER);
 		}
 
 		tabBox.backgroundProperty().bind(Bindings.createObjectBinding(() -> {

@@ -148,7 +148,6 @@ public class Main {
 			SwingUtilities.invokeLater(() -> {
 				final MainWindow mainWindow = new MainWindow(launchProfile, launchUrl);
 				mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
-				mainWindow.setUndecorated(false);
 				mainWindow.setVisible(true);
 			});
 			return;
@@ -176,7 +175,6 @@ public class Main {
 				}
 				final MainWindow mainWindow = new MainWindow(currentProfile);
 				mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
-				mainWindow.setUndecorated(false);
 				mainWindow.setVisible(true);
 			});
 		} else {

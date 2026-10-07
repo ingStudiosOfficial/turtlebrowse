@@ -268,8 +268,18 @@ public class MainWindow extends JFrame {
 			public void close() {
 				dispose();
 			}
-		}, toAwt(profileMaterialColorScheme.getSurface().get()),
-				toAwt(profileMaterialColorScheme.getOnSurface().get()));
+
+			@Override
+			public void dragBy(int dx, int dy) {
+				moveWindowBy(dx, dy);
+			}
+
+			@Override
+			public void beginDrag(double screenX, double screenY) {
+				beginWindowDrag(screenX, screenY);
+			}
+		}, colorToAwt(profileMaterialColorScheme.getSurface().get()),
+				colorToAwt(profileMaterialColorScheme.getOnSurface().get()));
 
 		// Sidebar wrapper so controls can sit at the top in vertical mode.
 		sidebarPanel = new JPanel(new BorderLayout());
@@ -306,6 +316,20 @@ public class MainWindow extends JFrame {
 				// CefApp.dispose() and then dispose() disposed again,
 				// killing other windows sharing the singleton CefApp.
 				dispose();
+			}
+		});
+
+		addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
+			public void componentResized(java.awt.event.ComponentEvent event) {
+				try {
+					if (!isWindowMaximized() && !isFullscreen
+							&& getWidth() > 0 && getHeight() > 0) {
+						lastNormalSize = getSize();
+					}
+				} catch (Exception ignored) {
+				}
+				updateWindowShape();
 			}
 		});
 
@@ -1442,8 +1466,8 @@ public class MainWindow extends JFrame {
 				try {
 					if (windowControlBar != null) {
 						windowControlBar.refreshColors(
-								toAwt(profileMaterialColorScheme.getSurface().get()),
-								toAwt(profileMaterialColorScheme.getOnSurface().get()));
+								colorToAwt(profileMaterialColorScheme.getSurface().get()),
+								colorToAwt(profileMaterialColorScheme.getOnSurface().get()));
 					}
 				} catch (Exception ignored) {
 				}
@@ -1523,13 +1547,6 @@ public class MainWindow extends JFrame {
 		return "horizontal".equalsIgnoreCase(tabPosition) ? "horizontal" : "vertical";
 	}
 
-	private static java.awt.Color toAwt(Color color) {
-		return color != null ? new java.awt.Color(
-				(float) color.getRed(), (float) color.getGreen(),
-				(float) color.getBlue(), (float) color.getOpacity())
-				: new java.awt.Color(0x17, 0x13, 0x16);
-	}
-
 	/** Called from the JavaFX tab strip to drag an undecorated window. */
 	public void moveWindowBy(int dx, int dy) {
 		SwingUtilities.invokeLater(() -> {
@@ -1541,6 +1558,62 @@ public class MainWindow extends JFrame {
 			} catch (Exception ignored) {
 			}
 		});
+	}
+
+	private java.awt.Dimension lastNormalSize = new java.awt.Dimension(1280, 800);
+
+	/**
+	 * Firefox behavior: starting a drag on a maximized window restores it
+	 * first, keeping the cursor at the same relative strip position so the
+	 * grab feels continuous.
+	 */
+	public void beginWindowDrag(double screenX, double screenY) {
+		SwingUtilities.invokeLater(() -> {
+			try {
+				if ((getExtendedState() & JFrame.MAXIMIZED_BOTH) == 0) {
+					return;
+				}
+				final double w = getWidth();
+				double fx = w > 0 ? (screenX - getX()) / w : 0.2;
+				fx = Math.min(0.95, Math.max(0.05, fx));
+				setExtendedState(JFrame.NORMAL);
+				final java.awt.Dimension size = lastNormalSize != null
+						? lastNormalSize
+						: new java.awt.Dimension(1280, 800);
+				setSize(size);
+				final int nx = (int) Math.round(screenX - fx * size.width);
+				final int ny = (int) Math.round(screenY - 20);
+				setLocation(nx, ny);
+			} catch (Exception ignored) {
+			}
+		});
+	}
+
+	private static final double WINDOW_CORNER_RADIUS = 14;
+
+	/**
+	 * Rounded window corners for the undecorated frame. Cleared whenever the
+	 * window is maximized or fullscreen so content uses the full screen.
+	 */
+	private void updateWindowShape() {
+		if (!SwingUtilities.isEventDispatchThread()) {
+			SwingUtilities.invokeLater(this::updateWindowShape);
+			return;
+		}
+		try {
+			if (isWindowMaximized() || isFullscreen) {
+				setShape(null);
+				return;
+			}
+			final int w = getWidth();
+			final int h = getHeight();
+			if (w <= 0 || h <= 0) {
+				return;
+			}
+			setShape(new java.awt.geom.RoundRectangle2D.Double(
+					0, 0, w, h, WINDOW_CORNER_RADIUS, WINDOW_CORNER_RADIUS));
+		} catch (Exception ignored) {
+		}
 	}
 
 	public boolean isWindowMaximized() {
@@ -1555,8 +1628,13 @@ public class MainWindow extends JFrame {
 					// Restore below the WM titlebar-free area.
 					setVisible(true);
 				} else {
+					if ((getExtendedState() & JFrame.MAXIMIZED_BOTH) == 0
+							&& getWidth() > 0 && getHeight() > 0) {
+						lastNormalSize = getSize();
+					}
 					setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
 				}
+				updateWindowShape();
 			} catch (Exception ignored) {
 			}
 		});
@@ -1661,6 +1739,7 @@ public class MainWindow extends JFrame {
 				root.repaint();
 			} catch (Exception ignored) {
 			}
+			updateWindowShape();
 		});
 	}
 }

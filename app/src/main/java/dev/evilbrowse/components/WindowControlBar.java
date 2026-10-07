@@ -26,6 +26,10 @@ public class WindowControlBar extends JPanel {
 		void toggleMaximize();
 
 		void close();
+
+		void dragBy(int dx, int dy);
+
+		void beginDrag(double screenX, double screenY);
 	}
 
 	private static final int BTN = 34;
@@ -38,6 +42,8 @@ public class WindowControlBar extends JPanel {
 	private static final Color CLOSE_HOVER = new Color(0xE8, 0x3A, 0x3A);
 
 	private int hoverIndex = -1;
+	private int lastX;
+	private int lastY;
 
 	public WindowControlBar(WindowActions actions, Color baseColor, Color glyphColor) {
 		this.actions = actions;
@@ -73,6 +79,16 @@ public class WindowControlBar extends JPanel {
 
 		addMouseListener(new MouseAdapter() {
 			@Override
+			public void mousePressed(MouseEvent e) {
+				lastX = e.getXOnScreen();
+				lastY = e.getYOnScreen();
+				if (indexAt(e.getX()) < 0
+						&& e.getButton() == MouseEvent.BUTTON1) {
+					actions.beginDrag(e.getXOnScreen(), e.getYOnScreen());
+				}
+			}
+
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				int idx = indexAt(e.getX());
 				if (e.getClickCount() == 2 && idx < 0) {
@@ -85,6 +101,22 @@ public class WindowControlBar extends JPanel {
 					actions.toggleMaximize();
 				} else if (idx == 2) {
 					actions.close();
+				}
+			}
+		});
+
+		addMouseMotionListener(new MouseAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				if (indexAt(e.getX()) >= 0) {
+					return; // Never drag off a window button.
+				}
+				int dx = e.getXOnScreen() - lastX;
+				int dy = e.getYOnScreen() - lastY;
+				lastX = e.getXOnScreen();
+				lastY = e.getYOnScreen();
+				if (dx != 0 || dy != 0) {
+					actions.dragBy(dx, dy);
 				}
 			}
 		});
