@@ -10,7 +10,7 @@ A polished, private, local-first Chromium desktop browser with <b>vertical tabs<
 <hr />
 </div>
 
-> **Why "Evil"?** The name is playful: the browser is "evil" because it fights bugs and refuses to behave badly. It is a legitimate web browser, not malware.
+> **Why "Evil"?** because evilness is evil
 
 ## Features
 
