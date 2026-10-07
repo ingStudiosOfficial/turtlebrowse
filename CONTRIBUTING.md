@@ -85,7 +85,7 @@ cd turtlebrowse
 git switch -c development/brief-feature-description
 ```
 
-3. **Full build script**
+4. **Full build script**
 ```bash
 # Relative to the root of the project
 ./full-build.sh
