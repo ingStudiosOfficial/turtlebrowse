@@ -2,6 +2,10 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.11.1
+
+- Fixed native library loading for `adblock-coffee`
+
 ## v1.11.0
 
 - Added ad-blocking with EasyList rules via CEF resource request handler
