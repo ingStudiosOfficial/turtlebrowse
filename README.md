@@ -50,6 +50,8 @@ Turtlebrowse has reached a stable stage, but we are always looking for contribut
 
 - **Node.js** - Used to build the internal pages and website
 
+- **Go 1.26.0 or higher** - Used for the update microservice
+
 ### Building and Running
 
 1. **Clone the repository**
