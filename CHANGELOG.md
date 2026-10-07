@@ -2,6 +2,12 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.11.2
+
+- Added adblock toggle
+- Added restart browser snackbar for AI model settings
+- Added zoom level guard if is 0
+
 ## v1.11.1
 
 - Fixed native library loading for `adblock-coffee`
