@@ -62,7 +62,7 @@ cd turtlebrowse
 
 Turtlebrowse provides a full build script to build the entire project.
 
-**Full build script**
+- Full build script
 ```bash
 # Relative to the root of the project
 ./full-build.sh
@@ -70,17 +70,17 @@ Turtlebrowse provides a full build script to build the entire project.
 
 or build individual sections
 
-**Frontend pages**
+- Frontend pages
 ```bash
 ./build-frontend.sh
 ```
 
-**Website**
+- Website
 ```bash
 ./build-website.sh
 ```
 
-**Update proxy**
+- Update proxy
 ```bash
 ./build-proxy.sh
 ```
@@ -158,7 +158,7 @@ npm run dev
 npm run build
 ```
 
-### Updates proxy
+#### Updates proxy
 
 1. **Run the Go project**
 ```bash
