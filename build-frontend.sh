@@ -9,12 +9,14 @@ NC='\033[0m'
 
 echo "Building internal pages..."
 cd frontend/pages
+npm install
 npm run build
 cd ../..
 echo ""
 
 echo "Building Dino game..."
 cd frontend/games/dino
+npm install
 npm run build
 cd ../..
 echo ""

@@ -20,6 +20,9 @@ echo ""
 ./build-frontend.sh
 echo ""
 
+./build-website.sh
+echo ""
+
 ./build-proxy.sh
 echo ""
 
