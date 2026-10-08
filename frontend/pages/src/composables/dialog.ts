@@ -7,9 +7,12 @@ const searchEnginesDialog = ref<M3eDialogElement | null>(null);
 const aiDialog = ref<M3eDialogElement | null>(null);
 const newtabSettingsDialog = ref<M3eDialogElement | null>(null);
 const updatesDialog = ref<M3eDialogElement | null>(null);
+const downloadsDialog = ref<M3eDialogElement | null>(null);
 
 export function useDialog() {
-	function showDialog(dialog: 'privacy' | 'appearance' | 'search' | 'ai' | 'ns' | 'updates') {
+	function showDialog(
+		dialog: 'privacy' | 'appearance' | 'search' | 'ai' | 'ns' | 'updates' | 'downloads',
+	) {
 		console.log('Showing dialog:', dialog);
 
 		switch (dialog) {
@@ -37,6 +40,10 @@ export function useDialog() {
 				updatesDialog.value?.show();
 				break;
 			}
+			case 'downloads': {
+				downloadsDialog.value?.show();
+				break;
+			}
 		}
 	}
 
@@ -47,6 +54,7 @@ export function useDialog() {
 		aiDialog,
 		newtabSettingsDialog,
 		updatesDialog,
+		downloadsDialog,
 		showDialog,
 	};
 }

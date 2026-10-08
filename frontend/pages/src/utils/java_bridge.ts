@@ -295,3 +295,23 @@ export async function setNewtabPageUrl(url: string) {
 		console.error(error);
 	}
 }
+
+export async function getDownloadsDir(): Promise<string> {
+	try {
+		const dir = await fetchFromJavaText('GET_DOWNLOADS_DIRECTORY');
+		return dir || 'Downloads';
+	} catch (error) {
+		console.error(error);
+		return 'Downloads';
+	}
+}
+
+export async function chooseDownloadsDir(): Promise<string> {
+	try {
+		const dir = await fetchFromJavaText('CHOOSE_DOWNLOADS_DIRECTORY');
+		return dir || 'Downloads';
+	} catch (error) {
+		console.error(error);
+		return 'Downloads';
+	}
+}

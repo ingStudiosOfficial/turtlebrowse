@@ -62,6 +62,7 @@ import dev.ingstudios.turtlebrowse.handlers.TurtlebrowsePrintHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseRequestHandler;
 import dev.ingstudios.turtlebrowse.managers.CefAppManager;
 import dev.ingstudios.turtlebrowse.managers.DiscordPresenceManager;
+import dev.ingstudios.turtlebrowse.managers.FileSystemManager;
 import dev.ingstudios.turtlebrowse.managers.InstanceManager;
 import dev.ingstudios.turtlebrowse.managers.UpdateManager;
 import dev.ingstudios.turtlebrowse.managers.WallpaperManager;
@@ -624,6 +625,17 @@ public class MainWindow extends JFrame {
 				startUrl = parsedUrl;
 				profileDatabase.setNewtabUrl(parsedUrl);
 				return "\"ok\"";
+			}
+
+			case "GET_DOWNLOADS_DIRECTORY": {
+				final String dir = profileDatabase.getDownloadsDir();
+				return dir;
+			}
+
+			case "CHOOSE_DOWNLOADS_DIRECTORY": {
+				final String dir = FileSystemManager.getInstance().chooseDownloadsDirectory();
+				profileDatabase.setDownloadsDir(dir);
+				return dir;
 			}
 
 			default:

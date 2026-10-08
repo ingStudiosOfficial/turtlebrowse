@@ -441,9 +441,8 @@ public class Main {
 	}
 
 	public static String parseUrl(String url) {
-		if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file://")) { // General
-																									// http/https and
-																									// file URLs
+		if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file://")
+				|| url.startsWith("turtlebrowse://")) { // Already prefixed URLs
 			return url;
 		} else if ((OS.isLinux() || OS.isMacintosh()) && url.startsWith("/")) { // File URLs on POSIX systems
 			return "file://%s".formatted(url);

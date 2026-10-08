@@ -4,7 +4,11 @@ import '@m3e/web/dialog';
 import { M3eDialogElement } from '@m3e/web/dialog';
 import { onMounted, ref, useTemplateRef } from 'vue';
 import '@m3e/web/switch';
-import { getDiscordPresenceSetting, setAdblockSetting, setDiscordPresenceSetting } from '@/utils/java_bridge';
+import {
+	getDiscordPresenceSetting,
+	setAdblockSetting,
+	setDiscordPresenceSetting,
+} from '@/utils/java_bridge';
 import type { M3eSwitchElement } from '@m3e/web/switch';
 import '@m3e/web/heading';
 import '@m3e/web/divider';

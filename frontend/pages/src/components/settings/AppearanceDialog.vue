@@ -6,7 +6,12 @@ import { nextTick, onMounted, ref, useTemplateRef } from 'vue';
 import '@m3e/web/select';
 import '@m3e/web/option';
 import '@m3e/web/icon';
-import { getAppearance, getNewtabPageUrl, setAppearance, setNewtabPageUrl } from '@/utils/java_bridge';
+import {
+	getAppearance,
+	getNewtabPageUrl,
+	setAppearance,
+	setNewtabPageUrl,
+} from '@/utils/java_bridge';
 import type { M3eSelectElement } from '@m3e/web/select';
 import type { Appearance } from '@/types/Appearance';
 import '@m3e/web/heading';
@@ -30,6 +35,12 @@ async function changeAppearance(target: M3eSelectElement) {
 }
 
 async function setNewtabUrl(url: string) {
+	if (url.trim().length === 0) {
+		newtabUrl.value = 'turtlebrowse://newtab';
+		await setNewtabPageUrl('turtlebrowse://newtab');
+		return;
+	}
+
 	newtabUrl.value = url;
 	await setNewtabPageUrl(url);
 }
@@ -58,9 +69,7 @@ onMounted(async () => {
 					<m3e-option value="light" :selected="appearance === 'light'">
 						Light
 					</m3e-option>
-					<m3e-option value="dark" :selected="appearance === 'dark'">
-						Dark
-					</m3e-option>
+					<m3e-option value="dark" :selected="appearance === 'dark'"> Dark </m3e-option>
 				</m3e-select>
 			</m3e-form-field>
 
@@ -71,9 +80,12 @@ onMounted(async () => {
 			<m3e-heading variant="title" size="large">New Tab</m3e-heading>
 
 			<m3e-form-field>
-					<label slot="label">New Tab page URL</label>
-					<input v-model="newtabUrl" @change="setNewtabUrl(($event.target as HTMLInputElement).value)" />
-					<span slot="hint">Page URL can be a http url or a local file url</span>
+				<label slot="label">New Tab page URL</label>
+				<input
+					v-model="newtabUrl"
+					@change="setNewtabUrl(($event.target as HTMLInputElement).value)"
+				/>
+				<span slot="hint">Page URL can be a http url or a local file url</span>
 			</m3e-form-field>
 		</div>
 	</m3e-dialog>

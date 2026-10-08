@@ -9,6 +9,7 @@ import SearchEnginesDialog from './components/settings/SearchEnginesDialog.vue';
 import AIDialog from './components/settings/AIDialog.vue';
 import UpdatesDialog from './components/settings/UpdatesDialog.vue';
 import AppearanceDialog from './components/settings/AppearanceDialog.vue';
+import DownloadsDialog from './components/settings/DownloadsDialog.vue';
 
 const { showDialog } = useDialog();
 </script>
@@ -48,6 +49,12 @@ const { showDialog } = useDialog();
 					</m3e-avatar>
 					<span class="settings-text">Browser updates</span>
 				</m3e-list-action>
+				<m3e-list-action @click="showDialog('downloads')">
+					<m3e-avatar slot="leading">
+						<m3e-icon optical-size="30" weight="600" name="download"></m3e-icon>
+					</m3e-avatar>
+					<span class="settings-text">Downloads</span>
+				</m3e-list-action>
 			</m3e-action-list>
 		</m3e-card>
 
@@ -56,6 +63,7 @@ const { showDialog } = useDialog();
 		<SearchEnginesDialog></SearchEnginesDialog>
 		<AIDialog></AIDialog>
 		<UpdatesDialog></UpdatesDialog>
+		<DownloadsDialog></DownloadsDialog>
 	</div>
 </template>
 

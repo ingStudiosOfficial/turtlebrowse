@@ -50,7 +50,10 @@ onMounted(async () => {
 			</div>
 			<div v-else-if="needsUpdate === true" class="update-box">
 				<p>Browser update recommended (v{{ currentVersion }} to v{{ latestVersion }})</p>
-				<m3e-button variant="filled" @click="navigateToSite('https://turtlebrowse.ingstudios.dev/download')">
+				<m3e-button
+					variant="filled"
+					@click="navigateToSite('https://turtlebrowse.ingstudios.dev/download')"
+				>
 					<m3e-icon slot="icon" name="update"></m3e-icon>
 					Update Turtlebrowse
 				</m3e-button>

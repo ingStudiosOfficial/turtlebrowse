@@ -338,6 +338,38 @@ public class ProfileDatabase {
 		settingsCollection.update(urlDocument);
 	}
 
+	public String getDownloadsDir() {
+		final Document downloadsDocument = settingsCollection.find(where("setting").eq("downloadsDir"))
+				.firstOrNull();
+
+		if (downloadsDocument == null) {
+			final String home = System.getProperty("user.home");
+			final Document newDownloadsDocument = Document.createDocument().put("setting", "downloadsDir")
+					.put("path", home);
+			settingsCollection.insert(newDownloadsDocument);
+			return home;
+		}
+
+		return downloadsDocument.get("path").toString();
+	}
+
+	public void setDownloadsDir(String dir) {
+		final Document downloadsDocument = settingsCollection.find(where("setting").eq("downloadsDir"))
+				.firstOrNull();
+
+		if (downloadsDocument == null) {
+			final String home = System.getProperty("user.home");
+			final Document newDownloadsDocument = Document.createDocument().put("setting", "downloadsDir")
+					.put("path", home);
+			settingsCollection.insert(newDownloadsDocument);
+			return;
+		}
+
+		downloadsDocument.put("path", dir);
+
+		settingsCollection.update(downloadsDocument);
+	}
+
 	public record AISettings(boolean enabled, String model) {
 	}
 

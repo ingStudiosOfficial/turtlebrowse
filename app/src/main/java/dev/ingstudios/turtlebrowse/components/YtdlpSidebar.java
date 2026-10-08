@@ -1,8 +1,6 @@
 package dev.ingstudios.turtlebrowse.components;
 
 import java.awt.BorderLayout;
-import java.io.File;
-import java.nio.file.Files;
 
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -31,6 +29,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
+import dev.ingstudios.turtlebrowse.managers.FileSystemManager;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class YtdlpSidebar extends ToolSidebar {
@@ -43,6 +42,7 @@ public class YtdlpSidebar extends ToolSidebar {
 	private final MainWindow parent;
 	private Label titleLabel;
 	private Label downloadLabel;
+	private FileSystemManager fileSystemManager = FileSystemManager.getInstance();
 
 	public YtdlpSidebar(MainWindow parent) {
 		this.parent = parent;
@@ -110,7 +110,9 @@ public class YtdlpSidebar extends ToolSidebar {
 			};
 
 			onDone = (name) -> {
-				downloadLabel.setText("Successfully downloaded %s to %s.".formatted(name, getDownloadDirectory()));
+				downloadLabel.setText(
+						"Successfully downloaded %s to %s.".formatted(name,
+								fileSystemManager.getDownloadsDirectory().toString()));
 			};
 
 			onTitle = (title) -> {
@@ -188,7 +190,7 @@ public class YtdlpSidebar extends ToolSidebar {
 	}
 
 	private void downloadVideo(String url) {
-		final String directory = getDownloadDirectory();
+		final String directory = fileSystemManager.getDownloadsDirectory().toString();
 
 		try {
 			final VideoInfo info = YtDlp.getVideoInfo(url).get(0);
@@ -222,16 +224,6 @@ public class YtdlpSidebar extends ToolSidebar {
 			Platform.runLater(() -> {
 				onError.onError(e.getMessage());
 			});
-		}
-	}
-
-	private String getDownloadDirectory() {
-		final String home = System.getProperty("user.home");
-		final File downloads = new File(home + File.separator + "Downloads");
-		if (Files.isDirectory(downloads.toPath())) {
-			return downloads.toString();
-		} else {
-			return home;
 		}
 	}
 }
