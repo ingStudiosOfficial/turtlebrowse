@@ -2,7 +2,17 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.11.4
+
+**8/10/2026**
+
+- Added downloads directory picker
+- Unified `yt-dlp` downloads directory and default downloads directory with `FileSystemManager`
+- Fixed newtab page `turtlebrowse://` URLs
+
 ## v1.11.3
+
+**8/10/2026**
 
 - Added custom newtab URLs
 - Fixed local file handling scheme
@@ -10,15 +20,21 @@ All major and minor changes, alongside with bug fixes go here. More details avai
 
 ## v1.11.2
 
+**7/10/2026**
+
 - Added adblock toggle
 - Added restart browser snackbar for AI model settings
 - Added zoom level guard if is 0
 
 ## v1.11.1
 
+**7/10/2026**
+
 - Fixed native library loading for `adblock-coffee`
 
 ## v1.11.0
+
+**6/10/2026**
 
 - Added ad-blocking with EasyList rules via CEF resource request handler
 - Added `adblock-coffee` into `app/libs/` containing the jar and shared libraries
@@ -26,11 +42,15 @@ All major and minor changes, alongside with bug fixes go here. More details avai
 
 ## v1.10.1
 
+**5/10/2026**
+
 - Added copy address link to clipboard in context menu
 - Added open link in new tab in context menu
 - Added page zoom controls
 
 ## v1.10.0
+
+**2/10/2026**
 
 - Bumped JCEF from 146.0.10 to 152.0.6
 - Fixed `ikonli-materialdesign2-pack` icons not showing
