@@ -2,6 +2,12 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.11.3
+
+- Added custom newtab URLs
+- Fixed local file handling scheme
+- Refactored settings dialogs with global class
+
 ## v1.11.2
 
 - Added adblock toggle
