@@ -49,7 +49,7 @@ EvilBrowse packages are built from this repo with Gradle `jpackage` (see `app/bu
 
 ## Development
 
-EvilBrowse is a stabilization fork of Turtlebrowse and welcomes contributions. We welcome any sort of contributions that are **human made**. Here's how to build EvilBrowse.
+EvilBrowse is a stabilization fork of Turtlebrowse and welcomes contributions. We welcome any sort of contributions that are **nigas**. Here's how to build EvilBrowse.
 
 ### Prerequisites
 
