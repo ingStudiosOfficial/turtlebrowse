@@ -79,7 +79,7 @@ import javafx.scene.paint.Color;
 public class MainWindow extends JFrame {
 	private final boolean USE_OSR = false;
 
-	final public String startUrl = "turtlebrowse://newtab";
+	public String startUrl = "turtlebrowse://newtab";
 	private CefClient cefClient;
 	public CefBrowser currentBrowser;
 	public ArrayList<CefBrowser> openedBrowserTabs = new ArrayList<>();
@@ -121,7 +121,7 @@ public class MainWindow extends JFrame {
 	private boolean isFullscreen = false;
 
 	public MainWindow(ProfileStructureWithId profile) {
-		this(profile, "turtlebrowse://newtab");
+		this(profile, null);
 	}
 
 	public MainWindow(ProfileStructureWithId profile, String launchUrl) {
@@ -139,6 +139,7 @@ public class MainWindow extends JFrame {
 		browserAppearance = profileDatabase.getAppearance();
 		aiSettings = profileDatabase.getAISettings();
 		newtabSettings = profileDatabase.getNewtabSettings();
+		startUrl = profileDatabase.getNewtabUrl();
 
 		cefAppManager = CefAppManager.getInstance(this);
 		cefApp = cefAppManager.getCefApp();
@@ -205,7 +206,7 @@ public class MainWindow extends JFrame {
 		cefClient.addKeyboardHandler(new CefKeyboardHandler(this, startUrl));
 
 		// Keyboard handler (Swing)
-		new SwingKeyboardHandler(this, startUrl);
+		new SwingKeyboardHandler(this);
 
 		cefClient.addFocusHandler(new TurtlebrowseFocusHandler(this));
 
@@ -262,7 +263,12 @@ public class MainWindow extends JFrame {
 		});
 
 		SwingUtilities.invokeLater(() -> {
-			createTab(launchUrl);
+			if (launchUrl != null) {
+				createTab(launchUrl);
+			} else {
+				createTab(startUrl);
+			}
+
 			setVisible(true);
 		});
 	}
@@ -602,6 +608,21 @@ public class MainWindow extends JFrame {
 					DiscordPresenceManager.getInstance().disableDiscordPresence();
 				}
 				profileDatabase.setAdblockSetting(adblockSettingToSet);
+				return "\"ok\"";
+			}
+
+			case "GET_NEWTAB_URL": {
+				final String url = profileDatabase.getNewtabUrl();
+				return url;
+			}
+
+			case "SET_NEWTAB_URL": {
+				final String url = params.get("url").getAsString();
+
+				final String parsedUrl = Main.parseUrl(url);
+
+				startUrl = parsedUrl;
+				profileDatabase.setNewtabUrl(parsedUrl);
 				return "\"ok\"";
 			}
 

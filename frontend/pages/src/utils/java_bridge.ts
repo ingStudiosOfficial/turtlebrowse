@@ -275,3 +275,23 @@ export async function getUpdateInfo(refresh: boolean = false): Promise<UpdateInf
 		return null;
 	}
 }
+
+export async function getNewtabPageUrl(): Promise<string> {
+	try {
+		const url = await fetchFromJavaText('GET_NEWTAB_URL');
+		return url || 'turtlebrowse://newtab';
+	} catch (error) {
+		console.error(error);
+		return 'turtlebrowse://newtab';
+	}
+}
+
+export async function setNewtabPageUrl(url: string) {
+	try {
+		await fetchFromJavaText('SET_NEWTAB_URL', {
+			url: url,
+		});
+	} catch (error) {
+		console.error(error);
+	}
+}

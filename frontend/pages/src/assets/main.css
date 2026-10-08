@@ -16,3 +16,13 @@ body {
 ::-webkit-scrollbar {
 	display: none;
 }
+
+.settings-item-dialog {
+	display: flex;
+	flex-direction: column;
+	align-items: left;
+	justify-content: center;
+	gap: 16px;
+	box-sizing: border-box;
+	margin: 0;
+}

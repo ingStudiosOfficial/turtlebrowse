@@ -314,20 +314,7 @@ public class Main {
 		if (url.isBlank())
 			return "";
 
-		if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file://")) { // General
-																									// http/https and
-																									// file URLs
-			return url;
-		} else if ((OS.isLinux() || OS.isMacintosh()) && url.startsWith("/")) { // File URLs on POSIX systems
-			return "file://%s".formatted(url);
-		} else if (OS.isWindows() && url.length() >= 3
-				&& Character.isLetter(url.charAt(0))
-				&& url.charAt(1) == ':'
-				&& (url.charAt(2) == '\\' || url.charAt(2) == '/')) { // File URLs on Windows systems
-			return "file:///%s".formatted(url);
-		} else { // Default fallback for standard web URLs
-			return "https://%s".formatted(url);
-		}
+		return parseUrl(url);
 	}
 
 	public static MainDatabase getDb() {
@@ -451,5 +438,22 @@ public class Main {
 		}
 
 		System.exit(0);
+	}
+
+	public static String parseUrl(String url) {
+		if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("file://")) { // General
+																									// http/https and
+																									// file URLs
+			return url;
+		} else if ((OS.isLinux() || OS.isMacintosh()) && url.startsWith("/")) { // File URLs on POSIX systems
+			return "file://%s".formatted(url);
+		} else if (OS.isWindows() && url.length() >= 3
+				&& Character.isLetter(url.charAt(0))
+				&& url.charAt(1) == ':'
+				&& (url.charAt(2) == '\\' || url.charAt(2) == '/')) { // File URLs on Windows systems
+			return "file:///%s".formatted(url);
+		} else { // Default fallback for standard web URLs
+			return "https://%s".formatted(url);
+		}
 	}
 }

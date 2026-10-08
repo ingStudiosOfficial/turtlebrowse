@@ -9,7 +9,7 @@ import dev.ingstudios.turtlebrowse.windows.MainWindow;
 import java.awt.AWTEvent;
 
 public class SwingKeyboardHandler {
-	public SwingKeyboardHandler(MainWindow parent, String startUrl) {
+	public SwingKeyboardHandler(MainWindow parent) {
 		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
 			@Override
 			public void eventDispatched(AWTEvent event) {
@@ -31,7 +31,7 @@ public class SwingKeyboardHandler {
 						} else if (keyCode == KeyEvent.VK_T && ctrlPressed) { // New tab (Ctrl + T)
 							keyEvent.consume();
 							System.out.println("Ctrl + T detected, creating a new tab.");
-							parent.createTab(startUrl, true);
+							parent.createTab(parent.startUrl, true);
 						} else if (keyCode == KeyEvent.VK_W && ctrlPressed) { // Close current tab (Ctrl
 																				// + W)
 							keyEvent.consume();

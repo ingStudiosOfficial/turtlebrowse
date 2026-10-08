@@ -7,6 +7,7 @@ import '@m3e/web/form-field';
 import { getAISettings, setAISettings } from '@/utils/java_bridge';
 import type { M3eSwitchElement } from '@m3e/web/switch';
 import { M3eSnackbar } from '@m3e/web/snackbar';
+import '@m3e/web/heading';
 
 const dialog = useTemplateRef<M3eDialogElement>('dialog');
 const aiEnabled = ref<boolean>(false);
@@ -40,7 +41,8 @@ onMounted(async () => {
 <template>
 	<m3e-dialog ref="dialog" dismissible>
 		<span slot="header">AI integrations</span>
-		<div class="ai-dialog">
+		<div class="settings-item-dialog">
+			<m3e-heading variant="title" size="large">Local AI integrations</m3e-heading>
 			<div class="toggle-setting">
 				<p>Enable local AI integrations</p>
 				<m3e-switch
@@ -68,16 +70,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.ai-dialog {
-	display: flex;
-	flex-direction: column;
-	align-items: left;
-	justify-content: center;
-	gap: 8px;
-	box-sizing: border-box;
-	padding: 8px;
-}
-
 .toggle-setting {
 	display: flex;
 	flex-direction: row;

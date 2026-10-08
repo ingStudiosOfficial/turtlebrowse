@@ -12,12 +12,10 @@ import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class CefKeyboardHandler extends CefKeyboardHandlerAdapter {
 	private MainWindow parent;
-	private String startUrl;
 
 	public CefKeyboardHandler(MainWindow parent, String startUrl) {
 		System.out.println("New keyboard handler created.");
 		this.parent = parent;
-		this.startUrl = startUrl;
 	}
 
 	@Override
@@ -36,7 +34,7 @@ public class CefKeyboardHandler extends CefKeyboardHandlerAdapter {
 			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_T) { // New tab (Ctrl + T)
 				System.out.println("Ctrl + T pressed.");
 				SwingUtilities.invokeLater(() -> {
-					parent.createTab(startUrl, true);
+					parent.createTab(parent.startUrl, true);
 				});
 				return true;
 			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_W) { // Close current tab (Ctrl + W)

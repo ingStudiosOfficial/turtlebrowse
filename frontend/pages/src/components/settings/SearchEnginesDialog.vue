@@ -9,6 +9,7 @@ import '@m3e/web/form-field';
 import type { M3eSelectElement } from '@m3e/web/select';
 import type { SearchEngine } from '@/types/SearchEngine';
 import { getDefaultSearchEngine, setDefaultSearchEngine } from '@/utils/java_bridge';
+import '@m3e/web/heading';
 
 const { searchEnginesDialog } = useDialog();
 
@@ -84,7 +85,8 @@ onMounted(async () => {
 <template>
 	<m3e-dialog ref="dialog" dismissible>
 		<span slot="header">Search engines</span>
-		<div class="search-engine-dialog">
+		<div class="settings-item-dialog">
+			<m3e-heading variant="title" size="large">Search engines</m3e-heading>
 			<m3e-form-field>
 				<label slot="label">Default search engine</label>
 				<m3e-select :key="searchEngine" @change="changeSearchEngine($event.target)">
@@ -105,15 +107,3 @@ onMounted(async () => {
 		</div>
 	</m3e-dialog>
 </template>
-
-<style scoped>
-.search-engine-dialog {
-	display: flex;
-	flex-direction: column;
-	align-items: left;
-	justify-content: center;
-	gap: 8px;
-	box-sizing: border-box;
-	padding: 8px;
-}
-</style>

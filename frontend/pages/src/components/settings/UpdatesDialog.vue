@@ -43,7 +43,7 @@ onMounted(async () => {
 <template>
 	<m3e-dialog ref="dialog" dismissible>
 		<span slot="header">Browser updates</span>
-		<div class="updates-dialog">
+		<div class="settings-item-dialog">
 			<div v-if="needsUpdate === null" class="update-box">
 				<m3e-loading-indicator variant="contained"></m3e-loading-indicator>
 				<p>Checking for updates...</p>
@@ -69,16 +69,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.updates-dialog {
-	display: flex;
-	flex-direction: column;
-	align-items: left;
-	justify-content: center;
-	gap: 8px;
-	box-sizing: border-box;
-	padding: 8px;
-}
-
 .update-box {
 	display: flex;
 	flex-direction: column;

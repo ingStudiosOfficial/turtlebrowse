@@ -6,6 +6,8 @@ import { onMounted, ref, useTemplateRef } from 'vue';
 import '@m3e/web/switch';
 import { getDiscordPresenceSetting, setAdblockSetting, setDiscordPresenceSetting } from '@/utils/java_bridge';
 import type { M3eSwitchElement } from '@m3e/web/switch';
+import '@m3e/web/heading';
+import '@m3e/web/divider';
 
 const dialog = useTemplateRef<M3eDialogElement>('dialog');
 const discordPresenceEnabled = ref<boolean>(false);
@@ -41,15 +43,20 @@ onMounted(async () => {
 <template>
 	<m3e-dialog ref="dialog" dismissible>
 		<span slot="header">Privacy & security</span>
-		<div class="privacy-dialog">
+		<div class="settings-item-dialog">
+			<m3e-heading variant="title" size="large">Discord Rich Presence</m3e-heading>
 			<div class="toggle-setting">
-				<p>Enable Discord Presence</p>
+				<p>Enable Discord Rich Presence</p>
 				<m3e-switch
 					icons="both"
 					:checked="discordPresenceEnabled"
 					@change="toggleDiscordPresence($event.target)"
 				></m3e-switch>
 			</div>
+
+			<m3e-divider></m3e-divider>
+
+			<m3e-heading variant="title" size="large">Ad-blocking</m3e-heading>
 			<div class="toggle-setting">
 				<p>Enable ad-blocking</p>
 				<m3e-switch
@@ -63,16 +70,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.privacy-dialog {
-	display: flex;
-	flex-direction: column;
-	align-items: left;
-	justify-content: center;
-	gap: 8px;
-	box-sizing: border-box;
-	padding: 8px;
-}
-
 .toggle-setting {
 	display: flex;
 	flex-direction: row;

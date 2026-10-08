@@ -308,6 +308,36 @@ public class ProfileDatabase {
 		return history;
 	}
 
+	public String getNewtabUrl() {
+		final Document urlDocument = settingsCollection.find(where("setting").eq("newtabUrl"))
+				.firstOrNull();
+
+		if (urlDocument == null) {
+			final Document newUrlDocument = Document.createDocument().put("setting", "newtabUrl")
+					.put("url", "turtlebrowse://newtab");
+			settingsCollection.insert(newUrlDocument);
+			return "turtlebrowse://newtab";
+		}
+
+		return urlDocument.get("url").toString();
+	}
+
+	public void setNewtabUrl(String url) {
+		final Document urlDocument = settingsCollection.find(where("setting").eq("newtabUrl"))
+				.firstOrNull();
+
+		if (urlDocument == null) {
+			final Document newUrlDocument = Document.createDocument().put("setting", "newtabUrl")
+					.put("url", "turtlebrowse://newtab");
+			settingsCollection.insert(newUrlDocument);
+			return;
+		}
+
+		urlDocument.put("url", url);
+
+		settingsCollection.update(urlDocument);
+	}
+
 	public record AISettings(boolean enabled, String model) {
 	}
 
