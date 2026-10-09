@@ -38,7 +38,7 @@ public class ThemeWizardPane extends WizardPane {
 
 		final ColorPicker seedColorPicker = new ColorPicker(wizardData.themeColor);
 		seedColorPicker.setBackground(new Background(
-				new BackgroundFill(Main.mainMaterialColorScheme.getSurfaceContainer().get(), new CornerRadii(25),
+				new BackgroundFill(Main.mainMaterialColorScheme.getPrimaryContainer().get(), new CornerRadii(25),
 						null)));
 		seedColorPicker.setOnAction(event -> {
 			wizardData.themeColor = seedColorPicker.getValue();

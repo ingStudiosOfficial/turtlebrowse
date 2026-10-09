@@ -85,14 +85,14 @@ public class TabBar extends JPanel {
 	public void addTabToUI(CefBrowser browser) {
 		final Label tabTitle = new Label("Loading...");
 		tabTitle.textFillProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint fillColor = parent.profileMaterialColorScheme.getOnSurface().get();
+			final Paint fillColor = parent.profileMaterialColorScheme.getOnPrimaryContainer().get();
 			return fillColor;
-		}, parent.profileMaterialColorScheme.getOnSurface()));
+		}, parent.profileMaterialColorScheme.getOnPrimaryContainer()));
 
 		final JFXButton closeButton = new JFXButton("");
 		final FontIcon closeIcon = new FontIcon(Material2OutlinedAL.CLOSE);
-		closeIcon.setIconColor(parent.profileMaterialColorScheme.getOnSurface().get());
-		parent.profileMaterialColorScheme.getOnSurface().addListener((observable, oldPaint, newPaint) -> {
+		closeIcon.setIconColor(parent.profileMaterialColorScheme.getOnPrimaryContainer().get());
+		parent.profileMaterialColorScheme.getOnPrimaryContainer().addListener((observable, oldPaint, newPaint) -> {
 			closeIcon.setIconColor(newPaint);
 		});
 		closeButton.setGraphic(closeIcon);
@@ -108,13 +108,15 @@ public class TabBar extends JPanel {
 		final HBox tabBox = new HBox(10);
 		tabBox.setStyle("-fx-padding: 10px; -fx-pref-width: 150px;");
 		tabBox.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+			final Paint backgroundColor = parent.profileMaterialColorScheme.getPrimaryContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-		}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+		}, parent.profileMaterialColorScheme.getPrimaryContainer()));
 		tabBox.setMaxHeight(Double.MAX_VALUE);
+
 		final Region tabSpacer = new Region();
 		tabBox.setAlignment(Pos.CENTER);
 		HBox.setHgrow(tabSpacer, Priority.ALWAYS);
+
 		tabBox.setOnMouseEntered(event -> {
 			tabBox.setCursor(Cursor.HAND);
 		});
@@ -132,8 +134,8 @@ public class TabBar extends JPanel {
 					closeTab(tabBox, browser);
 				});
 		});
-
 		tabBox.setTranslateY(100);
+
 		final TranslateTransition boxTransition = new TranslateTransition(Duration.seconds(0.3), tabBox);
 		boxTransition.setFromY(100);
 		boxTransition.setToY(0);
@@ -158,17 +160,17 @@ public class TabBar extends JPanel {
 	private JFXButton buildButton(Ikon iconName) {
 		final JFXButton button = new JFXButton("");
 		final FontIcon icon = new FontIcon(iconName);
-		icon.setIconColor(parent.profileMaterialColorScheme.getOnSurface().get());
-		parent.profileMaterialColorScheme.getOnSurface().addListener((observable, oldPaint, newPaint) -> {
+		icon.setIconColor(parent.profileMaterialColorScheme.getOnPrimaryContainer().get());
+		parent.profileMaterialColorScheme.getOnPrimaryContainer().addListener((observable, oldPaint, newPaint) -> {
 			icon.setIconColor(newPaint);
 		});
 		button.setGraphic(icon);
 		button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		button.setStyle("-fx-padding: 10px;");
 		button.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+			final Paint backgroundColor = parent.profileMaterialColorScheme.getPrimaryContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-		}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+		}, parent.profileMaterialColorScheme.getPrimaryContainer()));
 		button.setOnMouseEntered(event -> {
 			button.setCursor(Cursor.HAND);
 		});
@@ -213,11 +215,11 @@ public class TabBar extends JPanel {
 
 			tabBox.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
 				boolean isActive = (browserKey == currentBrowser);
-				Paint color = isActive ? parent.profileMaterialColorScheme.getSurfaceContainer().get()
+				Paint color = isActive ? parent.profileMaterialColorScheme.getPrimaryContainer().get()
 						: parent.profileMaterialColorScheme.getSurface().get();
 
 				return new Background(new BackgroundFill(color, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer(),
+			}, parent.profileMaterialColorScheme.getPrimaryContainer(),
 					parent.profileMaterialColorScheme.getSurface()));
 		}
 	}

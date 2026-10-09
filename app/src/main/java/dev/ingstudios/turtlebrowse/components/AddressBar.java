@@ -97,16 +97,16 @@ public class AddressBar extends JPanel {
 
 			addressField = new TextField(startUrl);
 			addressField.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+				final Paint backgroundColor = parent.profileMaterialColorScheme.getPrimaryContainer().get();
 				return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-			}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+			}, parent.profileMaterialColorScheme.getPrimaryContainer()));
 			addressField.styleProperty().bind(Bindings.createStringBinding(() -> {
-				final Paint color = parent.profileMaterialColorScheme.getOnSurface().get();
+				final Paint color = parent.profileMaterialColorScheme.getOnPrimaryContainer().get();
 				if (color instanceof Color c) {
 					return "-fx-text-inner-color: %s; -fx-padding: 10px;".formatted(parent.colorToHex(c));
 				}
 				return "";
-			}, parent.profileMaterialColorScheme.getOnSurface()));
+			}, parent.profileMaterialColorScheme.getOnPrimaryContainer()));
 			addressField.setOnAction(event -> {
 				onAddressEnter();
 			});
@@ -321,17 +321,17 @@ public class AddressBar extends JPanel {
 	private JFXButton buildButton(Ikon iconName) {
 		final JFXButton button = new JFXButton("");
 		final FontIcon icon = new FontIcon(iconName);
-		icon.setIconColor(parent.profileMaterialColorScheme.getOnSurface().get());
-		parent.profileMaterialColorScheme.getOnSurface().addListener((observable, oldPaint, newPaint) -> {
+		icon.setIconColor(parent.profileMaterialColorScheme.getOnPrimaryContainer().get());
+		parent.profileMaterialColorScheme.getOnPrimaryContainer().addListener((observable, oldPaint, newPaint) -> {
 			icon.setIconColor(newPaint);
 		});
 		button.setGraphic(icon);
 		button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		button.setStyle("-fx-padding: 10px;");
 		button.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+			final Paint backgroundColor = parent.profileMaterialColorScheme.getPrimaryContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-		}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+		}, parent.profileMaterialColorScheme.getPrimaryContainer()));
 		button.setOnMouseEntered(event -> {
 			button.setCursor(Cursor.HAND);
 		});

@@ -116,9 +116,9 @@ public class NewProfileWindow extends Stage {
 		nameTextField.setText(name);
 		nameTextField.setStyle("-fx-padding: 10px;");
 		nameTextField.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint backgroundColor = Main.mainMaterialColorScheme.getSurfaceContainer().get();
+			final Paint backgroundColor = Main.mainMaterialColorScheme.getPrimaryContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-		}, Main.mainMaterialColorScheme.getSurfaceContainer()));
+		}, Main.mainMaterialColorScheme.getPrimaryContainer()));
 		nameTextField.setPromptText("Enter your preferred name");
 		nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
 			name = newValue;
@@ -129,7 +129,7 @@ public class NewProfileWindow extends Stage {
 
 		final ColorPicker seedColorPicker = new ColorPicker(themeColor);
 		seedColorPicker.setBackground(new Background(
-				new BackgroundFill(Main.mainMaterialColorScheme.getSurfaceContainer().get(), new CornerRadii(25),
+				new BackgroundFill(Main.mainMaterialColorScheme.getPrimaryContainer().get(), new CornerRadii(25),
 						null)));
 		seedColorPicker.setOnAction(event -> {
 			themeColor = seedColorPicker.getValue();
@@ -138,9 +138,9 @@ public class NewProfileWindow extends Stage {
 		final JFXButton createButton = new JFXButton(isEditing ? "Save" : "Create");
 		createButton.setFont(Font.font("Google Sans Flex", FontWeight.NORMAL, 25));
 		createButton.textFillProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint fillColor = Main.mainMaterialColorScheme.getOnSurface().get();
+			final Paint fillColor = Main.mainMaterialColorScheme.getOnPrimaryContainer().get();
 			return fillColor;
-		}, Main.mainMaterialColorScheme.getOnSurface()));
+		}, Main.mainMaterialColorScheme.getOnPrimaryContainer()));
 		createButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
 			final Paint backgroundColor = Main.mainMaterialColorScheme.getPrimaryContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));

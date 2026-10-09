@@ -164,17 +164,17 @@ public class MoreSidebar extends JPanel {
 	private JFXButton createMenuItem(Ikon iconName) {
 		final JFXButton item = new JFXButton("");
 		final FontIcon icon = new FontIcon(iconName);
-		icon.setIconColor(parent.profileMaterialColorScheme.getOnSurface().get());
-		parent.profileMaterialColorScheme.getOnSurface().addListener((observable, oldPaint, newPaint) -> {
+		icon.setIconColor(parent.profileMaterialColorScheme.getOnPrimaryContainer().get());
+		parent.profileMaterialColorScheme.getOnPrimaryContainer().addListener((observable, oldPaint, newPaint) -> {
 			icon.setIconColor(newPaint);
 		});
 		item.setGraphic(icon);
 		item.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		item.setStyle("-fx-padding: 10px;");
 		item.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint backgroundColor = parent.profileMaterialColorScheme.getSurfaceContainer().get();
+			final Paint backgroundColor = parent.profileMaterialColorScheme.getPrimaryContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-		}, parent.profileMaterialColorScheme.getSurfaceContainer()));
+		}, parent.profileMaterialColorScheme.getPrimaryContainer()));
 		item.setOnMouseEntered(event -> {
 			item.setCursor(Cursor.HAND);
 		});

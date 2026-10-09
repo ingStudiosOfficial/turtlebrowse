@@ -40,9 +40,9 @@ public class PersonalizationWizardPane extends WizardPane {
 		nameTextField.setText(wizardData.name);
 		nameTextField.setStyle("-fx-padding: 10px;");
 		nameTextField.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint backgroundColor = Main.mainMaterialColorScheme.getSurfaceContainer().get();
+			final Paint backgroundColor = Main.mainMaterialColorScheme.getPrimaryContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-		}, Main.mainMaterialColorScheme.getSurfaceContainer()));
+		}, Main.mainMaterialColorScheme.getPrimaryContainer()));
 		nameTextField.setPromptText("Enter your preferred name");
 		nameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
 			wizardData.name = newValue;

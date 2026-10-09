@@ -91,6 +91,9 @@ dependencies {
 
     // adblock-coffee
     implementation(files("libs/adblock-coffee-1.1.7.jar"))
+
+    // TwelveMonkeys ImageIO
+    implementation(platform("com.twelvemonkeys.imageio:imageio:3.15.3"))
 }
 
 // Apply a specific Java toolchain. 

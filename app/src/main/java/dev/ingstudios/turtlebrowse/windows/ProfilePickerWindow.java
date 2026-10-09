@@ -88,9 +88,9 @@ public class ProfilePickerWindow extends Stage {
 		final JFXButton newProfileButton = new JFXButton();
 		newProfileButton.setStyle("-fx-padding: 10px;");
 		newProfileButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint backgroundColor = Main.mainMaterialColorScheme.getSurfaceContainer().get();
+			final Paint backgroundColor = Main.mainMaterialColorScheme.getPrimaryContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-		}, Main.mainMaterialColorScheme.getSurfaceContainer()));
+		}, Main.mainMaterialColorScheme.getPrimaryContainer()));
 
 		final VBox newProfileBox = new VBox();
 		newProfileBox.setAlignment(Pos.CENTER);
@@ -161,9 +161,9 @@ public class ProfilePickerWindow extends Stage {
 		final JFXButton profileButton = new JFXButton();
 		profileButton.setStyle("-fx-padding: 10px;");
 		profileButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint backgroundColor = Main.mainMaterialColorScheme.getSurfaceContainer().get();
+			final Paint backgroundColor = Main.mainMaterialColorScheme.getPrimaryContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-		}, Main.mainMaterialColorScheme.getSurfaceContainer()));
+		}, Main.mainMaterialColorScheme.getPrimaryContainer()));
 		profileButton.setOnMouseEntered(event -> {
 			profileButton.setCursor(Cursor.HAND);
 		});
