@@ -15,6 +15,7 @@ const { searchEnginesDialog } = useDialog();
 
 const dialog = useTemplateRef<M3eDialogElement>('dialog');
 const searchEngine = ref<SearchEngine>('brave');
+const searchTemplate = ref<string | null | undefined>(null);
 
 const defaultSearchEngines: { name: string; value: SearchEngine }[] = [
 	{
@@ -55,12 +56,10 @@ const defaultSearchEngines: { name: string; value: SearchEngine }[] = [
 		name: 'Microsoft Bing',
 		value: 'bing',
 	},
-	/*
 	{
 		name: 'Custom',
 		value: 'custom',
 	},
-	*/
 ];
 
 async function changeSearchEngine(target: M3eSelectElement) {
@@ -71,14 +70,30 @@ async function changeSearchEngine(target: M3eSelectElement) {
 
 	searchEngine.value = name;
 
-	await setDefaultSearchEngine(name);
+	if (searchEngine.value !== 'custom' || (searchEngine.value === 'custom' && searchTemplate.value && searchTemplate.value.trim().length !== 0))
+		await setDefaultSearchEngine({
+			engine: searchEngine.value,
+			template: searchTemplate.value,
+		});
+}
+
+async function changeSearchTemplate(target: HTMLInputElement) {
+	const template = target.value;
+	searchTemplate.value = template
+	await setDefaultSearchEngine({
+		engine: searchEngine.value,
+		template: searchTemplate.value,
+	});
 }
 
 onMounted(async () => {
 	searchEnginesDialog.value = dialog.value;
 
-	searchEngine.value = await getDefaultSearchEngine();
-	console.log('Default search engine:', searchEngine.value);
+	const fetched = await getDefaultSearchEngine();
+	console.log('Fetched:', fetched, fetched.engine, Object.keys(fetched));
+	searchEngine.value = fetched.engine;
+	console.log('Default search engine:', searchEngine.value, fetched.engine);
+	searchTemplate.value = fetched.template;
 });
 </script>
 
@@ -102,7 +117,8 @@ onMounted(async () => {
 			</m3e-form-field>
 			<m3e-form-field v-if="searchEngine === 'custom'">
 				<label slot="label">Search engine URL</label>
-				<input />
+				<input v-model="searchTemplate" @change="changeSearchTemplate($event.target as HTMLInputElement)" />
+				<span slot="hint">Format search engine query with %s</span>
 			</m3e-form-field>
 		</div>
 	</m3e-dialog>

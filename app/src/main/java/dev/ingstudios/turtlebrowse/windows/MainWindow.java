@@ -50,6 +50,7 @@ import dev.ingstudios.turtlebrowse.db.MainDatabase.ProfileStructureWithId;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase.AISettings;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase.HistoryItem;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase.NewtabSettings;
+import dev.ingstudios.turtlebrowse.db.ProfileDatabase.SearchEngine;
 import dev.ingstudios.turtlebrowse.handlers.CefKeyboardHandler;
 import dev.ingstudios.turtlebrowse.handlers.SwingKeyboardHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseContextMenuHandler;
@@ -135,7 +136,9 @@ public class MainWindow extends JFrame {
 
 		profileDatabase = ProfileDatabase.getInstance(currentProfile.getIdAsString());
 
-		defaultSearchProvider = SearchURLTemplates.searchTemplates.get(profileDatabase.getDefaultSearchEngine());
+		final SearchEngine searchEngine = profileDatabase.getDefaultSearchEngine();
+		defaultSearchProvider = searchEngine.engine() == "custom" ? searchEngine.template()
+				: SearchURLTemplates.searchTemplates.get(searchEngine.engine());
 		enableDiscordPresence = profileDatabase.getDiscordPresenceSetting();
 		adblockEnabled = profileDatabase.getAdblockSetting();
 		browserAppearance = profileDatabase.getAppearance();
@@ -489,14 +492,28 @@ public class MainWindow extends JFrame {
 			}
 
 			case "GET_SEARCH_ENGINE": {
-				final String searchEngine = profileDatabase.getDefaultSearchEngine();
-				return searchEngine;
+				final SearchEngine searchEngine = profileDatabase.getDefaultSearchEngine();
+				final JsonObject json = new JsonObject();
+				json.addProperty("engine", searchEngine.engine());
+				if (searchEngine.template() != null)
+					json.addProperty("template", searchEngine.template());
+				System.out.println("Search engine JSON: " + json.getAsString());
+				return json.getAsString();
 			}
 
 			case "SET_SEARCH_ENGINE": {
 				final String searchEngineToSet = params.get("engine").getAsString();
-				defaultSearchProvider = SearchURLTemplates.searchTemplates.get(searchEngineToSet);
-				profileDatabase.setDefaultSearchEngine(searchEngineToSet);
+
+				if (!searchEngineToSet.equals("custom")) {
+					defaultSearchProvider = SearchURLTemplates.searchTemplates.get(searchEngineToSet);
+					profileDatabase.setDefaultSearchEngine(searchEngineToSet, null);
+				} else {
+					final String template = params.get("template").getAsString();
+					System.out.println("Setting template: " + template);
+					defaultSearchProvider = template;
+					profileDatabase.setDefaultSearchEngine(searchEngineToSet, template);
+				}
+
 				return "\"ok\"";
 			}
 

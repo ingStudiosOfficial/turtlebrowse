@@ -61,7 +61,7 @@ public class ProfileDatabase {
 		return instance;
 	}
 
-	public String getDefaultSearchEngine() {
+	public SearchEngine getDefaultSearchEngine() {
 		final Document searchEngineDocument = settingsCollection.find(where("setting").eq("searchEngine"))
 				.firstOrNull();
 
@@ -69,13 +69,18 @@ public class ProfileDatabase {
 			final Document newSearchEngineDocument = Document.createDocument().put("setting", "searchEngine")
 					.put("engine", "brave");
 			settingsCollection.insert(newSearchEngineDocument);
-			return "brave";
+			return new SearchEngine("brave", null);
 		}
 
-		return searchEngineDocument.get("engine").toString();
+		// New feature, check if null before getting toString so it doesn't break for
+		// older versions
+		final Object templateObject = searchEngineDocument.get("template");
+		final String template = templateObject != null ? templateObject.toString() : null;
+
+		return new SearchEngine(searchEngineDocument.get("engine").toString(), template);
 	}
 
-	public void setDefaultSearchEngine(String searchEngine) {
+	public void setDefaultSearchEngine(String searchEngine, String template) {
 		System.out.printf("Setting search engine: %s\n", searchEngine);
 
 		final Document searchEngineDocument = settingsCollection.find(where("setting").eq("searchEngine"))
@@ -84,12 +89,14 @@ public class ProfileDatabase {
 		if (searchEngineDocument == null) {
 			System.err.println("Search engine document is null.");
 			final Document newSearchEngineDocument = Document.createDocument().put("setting", "searchEngine")
-					.put("engine", searchEngine);
+					.put("engine", searchEngine)
+					.put("template", template);
 			settingsCollection.insert(newSearchEngineDocument);
 			return;
 		}
 
 		searchEngineDocument.put("engine", searchEngine);
+		searchEngineDocument.put("template", template);
 
 		settingsCollection.update(searchEngineDocument);
 	}
@@ -377,5 +384,8 @@ public class ProfileDatabase {
 	}
 
 	public record HistoryItem(String url, String title, long timestamp, UUID id) {
+	}
+
+	public record SearchEngine(String engine, String template) {
 	}
 }

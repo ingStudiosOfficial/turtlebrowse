@@ -1,9 +1,9 @@
 import type { AISettings } from '@/interfaces/AISettings';
 import type { HistoryItem } from '@/interfaces/HistoryItem';
 import type { NewtabSettings } from '@/interfaces/NewtabSettings';
+import type { SearchEngineObject } from '@/interfaces/SearchEngineObject';
 import type { UpdateInfo } from '@/interfaces/UpdateInfo';
 import type { Appearance } from '@/types/Appearance';
-import type { SearchEngine } from '@/types/SearchEngine';
 import { M3eSnackbar } from '@m3e/web/snackbar';
 
 async function communicateWithBackend(
@@ -59,26 +59,35 @@ export async function getTheme(): Promise<string | undefined> {
 	}
 }
 
-export async function getDefaultSearchEngine(): Promise<SearchEngine> {
+export async function getDefaultSearchEngine(): Promise<SearchEngineObject> {
 	try {
 		const searchEngine = (await fetchFromJavaText('GET_SEARCH_ENGINE')) as
-			| SearchEngine
+			SearchEngineObject
 			| undefined;
 
 		if (!searchEngine) {
-			return 'brave';
+			return {
+				engine: 'brave',
+				template: null,
+			};
 		}
 
 		return searchEngine;
 	} catch (error) {
 		console.error('Error while getting default search engine:', error);
-		return 'brave';
+		return {
+			engine: 'brave',
+			template: null,
+		};
 	}
 }
 
-export async function setDefaultSearchEngine(engine: SearchEngine) {
+export async function setDefaultSearchEngine(engine: SearchEngineObject) {
 	try {
-		await fetchFromJavaText('SET_SEARCH_ENGINE', { engine: engine });
+		await fetchFromJavaJson('SET_SEARCH_ENGINE', {
+			engine: engine.engine,
+			template: engine.template || '',
+		});
 	} catch (error) {
 		console.error('Failed to set search engine:', error);
 	}
