@@ -11,6 +11,8 @@ import org.cef.OS;
 import org.cef.CefApp.CefAppState;
 import org.cef.callback.CefSchemeRegistrar;
 
+import com.jthemedetecor.OsThemeDetector;
+
 import dev.ingstudios.turtlebrowse.Main;
 import dev.ingstudios.turtlebrowse.db.MainDatabase;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseSchemeHandlerFactory;
@@ -47,6 +49,14 @@ public class CefAppManager {
 
 		if (OS.isLinux()) {
 			builder.addJcefArgs("--single-process", "--ozone-platform=x11");
+		}
+
+		if (parent.browserAppearance.equals("dark")) {
+			builder.addJcefArgs("--force-dark-mode");
+		} else if (parent.browserAppearance.equals("system")) {
+			if (OsThemeDetector.isSupported() && parent.themeDetector.isDark()) {
+				builder.addJcefArgs("--force-dark-mode");
+			}
 		}
 
 		final File installDir = getInstallDir();

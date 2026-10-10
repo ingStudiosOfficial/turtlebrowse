@@ -116,11 +116,11 @@ public class MainWindow extends JFrame {
 	public String defaultSearchProvider = SearchURLTemplates.searchTemplates.get("brave");
 	public boolean enableDiscordPresence = false;
 	public boolean adblockEnabled = true;
-	private String browserAppearance = "system";
+	public String browserAppearance = "system";
 	public AISettings aiSettings = new AISettings(false, "gemma4:e2b");
 	public NewtabSettings newtabSettings = new NewtabSettings("");
 	public final SearchAutosuggest searchAutosuggest;
-	private final OsThemeDetector themeDetector = OsThemeDetector.getDetector();
+	public final OsThemeDetector themeDetector = OsThemeDetector.getDetector();
 	private boolean isFullscreen = false;
 
 	public MainWindow(ProfileStructureWithId profile) {
