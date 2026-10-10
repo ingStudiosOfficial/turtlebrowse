@@ -2,6 +2,14 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.11.5
+
+- Added favicon rendering
+- Added `.svg` favicon rendering
+- Added `.ico` favicon rendering
+- Added local favicon rendering
+- Changed local page favicon
+
 ## v1.11.4
 
 **8/10/2026**
