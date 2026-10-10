@@ -1,11 +1,5 @@
 package dev.ingstudios.turtlebrowse.handlers;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.cef.browser.CefBrowser;
@@ -16,17 +10,21 @@ import org.cef.network.CefRequest.ResourceType;
 
 import com.example.adblock.AdvtBlocker;
 
+import dev.ingstudios.turtlebrowse.managers.AdblockManager;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class TurtlebrowseResourceRequestHandler extends CefResourceRequestHandlerAdapter {
-	private final AdvtBlocker blocker;
-	private final HttpClient httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
+	private AdvtBlocker blocker;
 	private final MainWindow parent;
+	private AdblockManager adblockManager;
 
 	public TurtlebrowseResourceRequestHandler(MainWindow parent) {
 		this.parent = parent;
-		final List<String> rules = getEasyListRules(parent.userAgent);
-		blocker = AdvtBlocker.createInstance(rules);
+		Thread.ofVirtual().start(() -> {
+			adblockManager = AdblockManager.getInstance(parent);
+			final List<String> rules = adblockManager.getRules();
+			blocker = AdvtBlocker.createInstance(rules);
+		});
 	}
 
 	@Override
@@ -40,39 +38,6 @@ public class TurtlebrowseResourceRequestHandler extends CefResourceRequestHandle
 		}
 
 		return false;
-	}
-
-	private List<String> getEasyListRules(String userAgent) {
-		try {
-			System.out.println("Initializing EasyList rules.");
-
-			final HttpRequest request = HttpRequest.newBuilder()
-					.uri(URI.create("https://easylist.to/easylist/easylist.txt"))
-					.header("User-Agent", userAgent)
-					.build();
-
-			final HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-			final int statusCode = response.statusCode();
-
-			if (statusCode != 200) {
-				System.out.println("EasyList fetch unsuccessful.");
-				return new ArrayList<>();
-			}
-
-			final String body = response.body();
-			if (body == null) {
-				System.out.println("EasyList body is null.");
-				return new ArrayList<>();
-			}
-
-			final List<String> lines = new ArrayList<>(Arrays.asList(body.split("\n")));
-
-			return lines;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ArrayList<>();
-		}
 	}
 
 	private String resourceTypeToString(ResourceType resourceType) {

@@ -37,6 +37,7 @@ If you want to download a previous version of Turtlebrowse, it can be found in t
 - Guest/private mode where all data from disk is deleted when closed
 - An integrated terminal in the sidebar
 - Available for Linux, Windows, and macOS on different architectures
+- Built-in rust-based ad-blocker featuring rules from EasyList, Fanboy's Lists, EasyPrivacy, and UBlockOrigin
 
 ## Development
 

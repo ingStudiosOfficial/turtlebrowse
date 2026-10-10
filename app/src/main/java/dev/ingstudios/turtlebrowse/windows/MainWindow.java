@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -277,8 +278,20 @@ public class MainWindow extends JFrame {
 		});
 	}
 
-	public String getCachePath() {
-		return Main.getStoragePath("cef-cache", currentProfile.getIdAsString()).toString();
+	public Path getCefCachePath() {
+		return Main.getStoragePath("cef-cache", currentProfile.getIdAsString());
+	}
+
+	public Path getProfileCachePath(String... names) {
+		Path profileCachePath = Main.getStoragePath("profiles", currentProfile.getIdAsString());
+
+		if (names != null) {
+			for (final String name : names) {
+				profileCachePath = profileCachePath.resolve(name);
+			}
+		}
+
+		return profileCachePath;
 	}
 
 	public void updateWindowTitle(String pageTitle) {
@@ -298,7 +311,7 @@ public class MainWindow extends JFrame {
 
 		openedBrowserTabs.add(browser);
 
-		Component ui = browser.getUIComponent();
+		final Component ui = browser.getUIComponent();
 		browserContainer.add(ui, String.valueOf(System.identityHashCode(browser)));
 
 		Platform.runLater(() -> {
