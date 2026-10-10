@@ -1,6 +1,7 @@
 package dev.ingstudios.turtlebrowse.handlers;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -88,6 +89,19 @@ public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 
 				final ArrayList<String> urls = gson.fromJson(iconsArray.toString(), new TypeToken<ArrayList<String>>() {
 				}.getType());
+
+				urls.sort(Comparator.comparingInt(url -> {
+					final String lower = url.toString().toLowerCase();
+					if (lower.endsWith(".png")) {
+						return 1;
+					} else if (lower.endsWith(".ico")) {
+						return 2;
+					} else if (lower.endsWith(".svg")) {
+						return 4;
+					} else {
+						return 3;
+					}
+				}));
 
 				parent.tabBar.updateFavicon(browser, urls.get(0));
 			} catch (Exception e) {
