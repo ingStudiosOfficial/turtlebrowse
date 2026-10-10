@@ -161,9 +161,9 @@ public class ProfilePickerWindow extends Stage {
 		final JFXButton profileButton = new JFXButton();
 		profileButton.setStyle("-fx-padding: 10px;");
 		profileButton.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-			final Paint backgroundColor = Main.mainMaterialColorScheme.getPrimaryContainer().get();
+			final Paint backgroundColor = Main.mainMaterialColorScheme.getSurfaceContainer().get();
 			return new Background(new BackgroundFill(backgroundColor, new CornerRadii(25), null));
-		}, Main.mainMaterialColorScheme.getPrimaryContainer()));
+		}, Main.mainMaterialColorScheme.getSurfaceContainer()));
 		profileButton.setOnMouseEntered(event -> {
 			profileButton.setCursor(Cursor.HAND);
 		});
