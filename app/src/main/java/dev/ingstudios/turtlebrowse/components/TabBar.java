@@ -1,9 +1,11 @@
 package dev.ingstudios.turtlebrowse.components;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -20,11 +22,13 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.embed.swing.JFXPanel;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -83,6 +87,10 @@ public class TabBar extends JPanel {
 	}
 
 	public void addTabToUI(CefBrowser browser) {
+		final ImageView tabIcon = new ImageView();
+		tabIcon.setFitWidth(16);
+		tabIcon.setFitHeight(16);
+
 		final Label tabTitle = new Label("Loading...");
 		tabTitle.textFillProperty().bind(Bindings.createObjectBinding(() -> {
 			final Paint fillColor = parent.profileMaterialColorScheme.getOnPrimaryContainer().get();
@@ -148,7 +156,7 @@ public class TabBar extends JPanel {
 			});
 		});
 
-		tabBox.getChildren().addAll(tabTitle, tabSpacer, closeButton);
+		tabBox.getChildren().addAll(tabIcon, tabTitle, tabSpacer, closeButton);
 
 		tabMap.put(browser, tabBox);
 
@@ -204,7 +212,7 @@ public class TabBar extends JPanel {
 		final HBox box = tabMap.get(browser);
 		if (box == null)
 			return; // Temporary fix for threading issues
-		final Label tabTitle = (Label) box.getChildren().get(0);
+		final Label tabTitle = (Label) box.getChildren().get(1);
 		tabTitle.setText(title);
 	}
 
@@ -221,6 +229,19 @@ public class TabBar extends JPanel {
 				return new Background(new BackgroundFill(color, new CornerRadii(25), null));
 			}, parent.profileMaterialColorScheme.getPrimaryContainer(),
 					parent.profileMaterialColorScheme.getSurface()));
+		}
+	}
+
+	public void updateFavicon(CefBrowser browser, String faviconUrl) {
+		System.out.println("Favicon URL: " + faviconUrl);
+		final HBox box = tabMap.get(browser);
+		if (box == null)
+			return;
+		final ImageView tabIcon = (ImageView) box.getChildren().get(0);
+		try {
+			tabIcon.setImage(SwingFXUtils.toFXImage(ImageIO.read(new URI(faviconUrl).toURL()), null));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

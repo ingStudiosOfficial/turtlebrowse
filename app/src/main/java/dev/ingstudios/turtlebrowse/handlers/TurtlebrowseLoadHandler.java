@@ -2,14 +2,29 @@ package dev.ingstudios.turtlebrowse.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefLoadHandlerAdapter;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
+import dev.ingstudios.turtlebrowse.windows.MainWindow;
+
 public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 	private final List<JSQueueItem> queueStack = new java.util.concurrent.CopyOnWriteArrayList<>();
 	private final List<Integer> readyBrowsers = new ArrayList<>();
+	private final Gson gson = new Gson();
+	private final MainWindow parent;
+
+	public TurtlebrowseLoadHandler(MainWindow parent) {
+		this.parent = parent;
+	}
 
 	@Override
 	public void onLoadingStateChange(CefBrowser browser, boolean isLoading, boolean canGoBack, boolean canGoForward) {
@@ -23,11 +38,13 @@ public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 		for (final JSQueueItem item : queueStack) {
 			System.out.printf("Item: %s\n", item.code);
 			if (item.isSame(browser.getIdentifier())) {
-				browser.getMainFrame().executeJavaScript(item.code, item.url, 0);
+				browser.executeJavaScript(item.code, item.url, 0);
 				toRemove.add(item);
 			}
 		}
 		queueStack.removeAll(toRemove);
+
+		updateSiteFavicon(browser);
 	}
 
 	public void addToQueueStack(JSQueueItem item) {
@@ -46,5 +63,38 @@ public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 		public boolean isSame(int id) {
 			return id == identifier;
 		}
+	}
+
+	private void updateSiteFavicon(CefBrowser browser) {
+		System.out.println("Getting site favicons...");
+
+		final JsonObject paramsAsJson = new JsonObject();
+		paramsAsJson.addProperty("expression",
+				"Array.from(document.querySelectorAll('link[rel~=\"icon\"]')).map(el => el.href)");
+		paramsAsJson.addProperty("returnByValue", true);
+
+		final CompletableFuture<String> response = browser.getDevToolsClient()
+				.executeDevToolsMethod("Runtime.evaluate", gson.toJson(paramsAsJson)).thenApply(r -> {
+					return r;
+				});
+
+		Thread.ofVirtual().start(() -> {
+			try {
+				final String rawResponse = response.get();
+
+				final JsonObject json = JsonParser.parseString(rawResponse).getAsJsonObject();
+				final JsonObject result = json.getAsJsonObject("result");
+				final JsonArray iconsArray = result.getAsJsonArray("value");
+
+				final ArrayList<String> urls = gson.fromJson(iconsArray.toString(), new TypeToken<ArrayList<String>>() {
+				}.getType());
+
+				if (!urls.isEmpty()) {
+					parent.tabBar.updateFavicon(browser, urls.get(0));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 	}
 }

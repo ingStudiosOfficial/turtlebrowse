@@ -101,7 +101,7 @@ public class MainWindow extends JFrame {
 	public final MoreSidebar moreSidebar;
 	private final JPanel sidePanel;
 	private final Gson gson = new Gson();
-	public final TurtlebrowseLoadHandler loadHandler = new TurtlebrowseLoadHandler();
+	public final TurtlebrowseLoadHandler loadHandler;
 	public final TurtlebrowseRequestHandler requestHandler;
 	public final ProfileStructureWithId currentProfile;
 	public ColorSchemeProperty profileMaterialColorScheme = new SimpleColorSchemeProperty(
@@ -174,6 +174,9 @@ public class MainWindow extends JFrame {
 		// Request handler - keep here after user agent initializes but before address
 		// bar
 		requestHandler = new TurtlebrowseRequestHandler(this);
+
+		// Load handler
+		loadHandler = new TurtlebrowseLoadHandler(this);
 
 		searchAutosuggest = new SearchAutosuggest(userAgent, this);
 
