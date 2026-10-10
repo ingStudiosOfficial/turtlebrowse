@@ -4,6 +4,8 @@ All major and minor changes, alongside with bug fixes go here. More details avai
 
 ## v1.11.5
 
+- More Material 3 Expressive UI with primary colors
+- Added additional adblock blocklists
 - Added favicon rendering
 - Added `.svg` favicon rendering
 - Added `.ico` favicon rendering
