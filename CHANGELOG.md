@@ -2,7 +2,16 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.11.6
+
+**8/10/2026**
+
+- Added custom search engine templates
+- Fixed UI tab bar contrast issue
+
 ## v1.11.5
+
+**10/10/2026**
 
 - More Material 3 Expressive UI with primary colors
 - Added additional adblock blocklists
