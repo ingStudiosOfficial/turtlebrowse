@@ -95,11 +95,9 @@ dependencies {
     // TwelveMonkeys ImageIO
     implementation("com.twelvemonkeys.imageio:imageio:3.15.3")
     implementation("com.twelvemonkeys.imageio:twelvemonkeys-imageio-ico:2.3")
-    implementation("com.twelvemonkeys.imageio:twelvemonkeys-imageio-batik:2.3")
 
     // Apache Batik
-    implementation("org.apache.xmlgraphics:batik-transcoder:1.19")
-    implementation("org.apache.xmlgraphics:batik-codec:1.19")
+    implementation("org.apache.xmlgraphics:batik-all:1.19")
 }
 
 // Apply a specific Java toolchain. 

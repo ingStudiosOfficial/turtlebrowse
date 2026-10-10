@@ -1,14 +1,23 @@
 package dev.ingstudios.turtlebrowse.components;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.JPEGTranscoder;
 import org.cef.CefClient;
 import org.cef.browser.CefBrowser;
 import org.kordamp.ikonli.Ikon;
@@ -44,6 +53,7 @@ public class TabBar extends JPanel {
 	private final Map<CefBrowser, HBox> tabMap = new HashMap<>();
 	private HBox root;
 	private MainWindow parent;
+	private final JPEGTranscoder transcoder = new JPEGTranscoder();
 
 	public TabBar(CefClient client, ArrayList<CefBrowser> tabs, MainWindow parent) {
 		this.parent = parent;
@@ -235,6 +245,7 @@ public class TabBar extends JPanel {
 
 	public void updateFavicon(CefBrowser browser, String faviconUrl) {
 		System.out.println("Favicon URL: " + faviconUrl);
+
 		final HBox box = tabMap.get(browser);
 		if (box == null)
 			return;
@@ -246,8 +257,39 @@ public class TabBar extends JPanel {
 			return;
 		}
 
-		try {
-			final java.awt.image.BufferedImage buffered = ImageIO.read(new URI(faviconUrl).toURL());
+		if (faviconUrl.startsWith("turtlebrowse://")) {
+			System.out.println("Favicon is local URL.");
+			final InputStream inputStream = getResourceStream(faviconUrl);
+			System.out.println("Local input stream: " + inputStream);
+			if (inputStream != null) {
+				tabIcon.setImage(new Image(inputStream));
+				return;
+			}
+		}
+
+		try (InputStream inputStream = new URI(faviconUrl).toURL().openStream()) {
+			final String mimeType = URLConnection.guessContentTypeFromName(faviconUrl);
+			System.out.println("Mime type: " + mimeType);
+
+			if (mimeType != null && mimeType.equals("image/svg+xml")) {
+				final TranscoderInput input = new TranscoderInput(inputStream);
+
+				final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+				final TranscoderOutput output = new TranscoderOutput(outputStream);
+
+				transcoder.transcode(input, output);
+
+				inputStream.close();
+
+				final byte[] imageBytes = outputStream.toByteArray();
+				final Image image = new Image(new ByteArrayInputStream(imageBytes));
+
+				tabIcon.setImage(image);
+
+				return;
+			}
+
+			final java.awt.image.BufferedImage buffered = ImageIO.read(inputStream);
 			Platform.runLater(() -> {
 				if (buffered != null) {
 					System.out.println("Setting tab image.");
@@ -265,5 +307,24 @@ public class TabBar extends JPanel {
 	private void setDefaultIcon(ImageView tabIcon) {
 		System.out.println("Setting default image.");
 		tabIcon.setImage(new Image(getClass().getResource("/web.png").toExternalForm()));
+	}
+
+	private InputStream getResourceStream(String url) {
+		final Pattern pattern = Pattern.compile("turtlebrowse://[^/]+(/.*)");
+		final Matcher matcher = pattern.matcher(url);
+
+		if (matcher.find()) {
+			final String group = matcher.group(1);
+			System.out.println("Match found: " + group);
+			final InputStream resource = loadResource("/web" + group);
+			return resource;
+		} else {
+			System.out.println("Match not found.");
+			return null;
+		}
+	}
+
+	private InputStream loadResource(String resourcePath) {
+		return getClass().getResourceAsStream(resourcePath);
 	}
 }

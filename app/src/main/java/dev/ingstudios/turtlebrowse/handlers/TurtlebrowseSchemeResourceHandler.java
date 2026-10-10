@@ -1,6 +1,7 @@
 package dev.ingstudios.turtlebrowse.handlers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Vector;
 
@@ -32,7 +33,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 	}
 
 	private void loadResource(String resourcePath) {
-		try (var inputStream = getClass().getResourceAsStream(resourcePath)) {
+		try (InputStream inputStream = getClass().getResourceAsStream(resourcePath)) {
 			if (inputStream != null) {
 				this.data = inputStream.readAllBytes();
 

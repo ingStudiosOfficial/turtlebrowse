@@ -90,13 +90,15 @@ public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 				final ArrayList<String> urls = gson.fromJson(iconsArray.toString(), new TypeToken<ArrayList<String>>() {
 				}.getType());
 
+				System.out.println("Favicon URLs: " + urls.toString());
+
 				urls.sort(Comparator.comparingInt(url -> {
 					final String lower = url.toString().toLowerCase();
-					if (lower.endsWith(".png")) {
+					if (lower.endsWith(".svg")) {
 						return 1;
-					} else if (lower.endsWith(".ico")) {
+					} else if (lower.endsWith(".png")) {
 						return 2;
-					} else if (lower.endsWith(".svg")) {
+					} else if (lower.endsWith(".ico")) {
 						return 4;
 					} else {
 						return 3;
