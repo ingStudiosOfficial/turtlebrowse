@@ -89,9 +89,7 @@ public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 				final ArrayList<String> urls = gson.fromJson(iconsArray.toString(), new TypeToken<ArrayList<String>>() {
 				}.getType());
 
-				if (!urls.isEmpty()) {
-					parent.tabBar.updateFavicon(browser, urls.get(0));
-				}
+				parent.tabBar.updateFavicon(browser, urls.get(0));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

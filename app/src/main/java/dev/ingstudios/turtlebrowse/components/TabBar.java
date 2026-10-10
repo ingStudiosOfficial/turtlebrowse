@@ -28,6 +28,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
@@ -237,11 +238,32 @@ public class TabBar extends JPanel {
 		final HBox box = tabMap.get(browser);
 		if (box == null)
 			return;
+
 		final ImageView tabIcon = (ImageView) box.getChildren().get(0);
+
+		if (faviconUrl == null) {
+			setDefaultIcon(tabIcon);
+			return;
+		}
+
 		try {
-			tabIcon.setImage(SwingFXUtils.toFXImage(ImageIO.read(new URI(faviconUrl).toURL()), null));
+			final java.awt.image.BufferedImage buffered = ImageIO.read(new URI(faviconUrl).toURL());
+			Platform.runLater(() -> {
+				if (buffered != null) {
+					System.out.println("Setting tab image.");
+					tabIcon.setImage(SwingFXUtils.toFXImage(buffered, null));
+				} else {
+					setDefaultIcon(tabIcon);
+				}
+			});
 		} catch (Exception e) {
 			e.printStackTrace();
+			setDefaultIcon(tabIcon);
 		}
+	}
+
+	private void setDefaultIcon(ImageView tabIcon) {
+		System.out.println("Setting default image.");
+		tabIcon.setImage(new Image(getClass().getResource("/web.png").toExternalForm()));
 	}
 }
