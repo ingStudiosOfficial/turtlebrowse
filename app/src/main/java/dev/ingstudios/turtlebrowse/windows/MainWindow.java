@@ -137,7 +137,8 @@ public class MainWindow extends JFrame {
 		profileDatabase = ProfileDatabase.getInstance(currentProfile.getIdAsString());
 
 		final SearchEngine searchEngine = profileDatabase.getDefaultSearchEngine();
-		defaultSearchProvider = searchEngine.engine() == "custom" ? searchEngine.template()
+		System.out.println("Initializing search engine: " + searchEngine.engine());
+		defaultSearchProvider = searchEngine.engine().equals("custom") ? searchEngine.template()
 				: SearchURLTemplates.searchTemplates.get(searchEngine.engine());
 		enableDiscordPresence = profileDatabase.getDiscordPresenceSetting();
 		adblockEnabled = profileDatabase.getAdblockSetting();
@@ -702,7 +703,7 @@ public class MainWindow extends JFrame {
 		System.out.println("Is dark: " + isDark);
 
 		final Brightness brightness = isDark ? Brightness.DARK : Brightness.LIGHT;
-		final Contrast contrast = isDark ? Contrast.HIGH : Contrast.DEFAULT;
+		final Contrast contrast = Contrast.DEFAULT;
 
 		if (accentColor == null) {
 			profileMaterialColorScheme

@@ -233,13 +233,22 @@ public class TabBar extends JPanel {
 			final CefBrowser browserKey = entry.getKey();
 
 			tabBox.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				boolean isActive = (browserKey == currentBrowser);
-				Paint color = isActive ? parent.profileMaterialColorScheme.getPrimaryContainer().get()
+				final boolean isActive = (browserKey == currentBrowser);
+				final Paint color = isActive ? parent.profileMaterialColorScheme.getPrimaryContainer().get()
 						: parent.profileMaterialColorScheme.getSurface().get();
 
 				return new Background(new BackgroundFill(color, new CornerRadii(25), null));
 			}, parent.profileMaterialColorScheme.getPrimaryContainer(),
 					parent.profileMaterialColorScheme.getSurface()));
+
+			final Label tabLabel = (Label) tabBox.getChildren().get(1);
+			tabLabel.textFillProperty().bind(Bindings.createObjectBinding(() -> {
+				final boolean isActive = (browserKey == currentBrowser);
+				final Paint color = isActive ? parent.profileMaterialColorScheme.getOnPrimaryContainer().get()
+						: parent.profileMaterialColorScheme.getOnSurface().get();
+				return color;
+			}, parent.profileMaterialColorScheme.getOnPrimaryContainer(),
+					parent.profileMaterialColorScheme.getOnSurface()));
 		}
 	}
 
