@@ -4,6 +4,13 @@ All major and minor changes, alongside with bug fixes go here. More details avai
 
 ## v1.11.7
 
+**11/10/2026**
+
+- Added cube engine minigame
+- Fixed favicon path loading for local URLs for dino and cube engine
+
+## v1.11.7
+
 **10/10/2026**
 
 - Added force dark mode for websites based on user appearance
