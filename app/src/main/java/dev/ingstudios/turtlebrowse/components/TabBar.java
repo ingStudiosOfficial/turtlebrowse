@@ -325,7 +325,17 @@ public class TabBar extends JPanel {
 		if (matcher.find()) {
 			final String group = matcher.group(1);
 			System.out.println("Match found: " + group);
-			final InputStream resource = loadResource("/web" + group);
+
+			String pathPrefix = "/web";
+			if (url.startsWith("turtlebrowse://dino")) {
+				pathPrefix = "/dino";
+			} else if (url.startsWith("turtlebrowse://cube")) {
+				pathPrefix = "/cube-engine";
+			} else {
+				pathPrefix = "/web";
+			}
+
+			final InputStream resource = loadResource(pathPrefix + group);
 			return resource;
 		} else {
 			System.out.println("Match not found.");

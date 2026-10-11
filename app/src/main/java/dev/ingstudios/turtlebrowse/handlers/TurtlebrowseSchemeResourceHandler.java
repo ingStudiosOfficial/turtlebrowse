@@ -54,7 +54,7 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			} else {
 				this.data = "<html><body>404 Resource Not Found</body></html>".getBytes(StandardCharsets.UTF_8);
 				this.mimeType = "text/html";
-				this.statusCode = 200;
+				this.statusCode = 404;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -138,6 +138,22 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 				loadResource("/dino/dino.html");
 			} else {
 				loadResource("/dino" + path);
+			}
+
+			System.out.println("Data loaded, length: " + (data != null ? data.length : "NULL"));
+			System.out.println("MIME type: " + mimeType);
+
+			handleRequest.set(true);
+			callback.Continue();
+			return true;
+		} else if (url.startsWith("turtlebrowse://cube")) {
+			final String path = url.substring("turtlebrowse://cube".length());
+			System.out.println("Parsed path: '" + path + "'");
+
+			if (path.isBlank() || path.equals("/")) {
+				loadResource("/cube-engine/play.html");
+			} else {
+				loadResource("/cube-engine" + path);
 			}
 
 			System.out.println("Data loaded, length: " + (data != null ? data.length : "NULL"));

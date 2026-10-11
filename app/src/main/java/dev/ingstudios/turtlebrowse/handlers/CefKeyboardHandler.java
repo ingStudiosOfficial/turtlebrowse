@@ -20,8 +20,6 @@ public class CefKeyboardHandler extends CefKeyboardHandlerAdapter {
 
 	@Override
 	public boolean onKeyEvent(CefBrowser browser, CefKeyEvent event) {
-		System.out.println("Key pressed.");
-
 		if (event.type == CefKeyEvent.EventType.KEYEVENT_RAWKEYDOWN) {
 			final boolean ctrlPressed = (event.modifiers & EventFlags.EVENTFLAG_CONTROL_DOWN) != 0;
 			final boolean shiftPressed = (event.modifiers & EventFlags.EVENTFLAG_SHIFT_DOWN) != 0;
