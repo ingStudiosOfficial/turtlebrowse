@@ -2,13 +2,13 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
-## v1.11.8
+## v1.11.9
 
 **12/10/2026**
 
 - Fixed cube engine not being in git repo
 
-## v1.11.7
+## v1.11.8
 
 **11/10/2026**
 
