@@ -324,3 +324,11 @@ export async function chooseDownloadsDir(): Promise<string> {
 		return 'Downloads';
 	}
 }
+
+export async function appImageUpdate() {
+	try {
+		await fetchFromJavaText('UPDATE_APPIMAGE');
+	} catch (error) {
+		console.error(error);
+	}
+}

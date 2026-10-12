@@ -1,12 +1,17 @@
 package dev.ingstudios.turtlebrowse.managers;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 
+import dev.ingstudios.turtlebrowse.environment.AppImageUtils;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class UpdateManager {
@@ -93,5 +98,48 @@ public class UpdateManager {
 		}
 
 		return false;
+	}
+
+	public void updateAppImage() {
+		final String appImagePath = AppImageUtils.getAppImagePath();
+		if (appImagePath != null && !appImagePath.isBlank()) {
+			try {
+				final URL scriptUrl = getClass().getResource("/updates/update-appimage.sh");
+
+				final File temporary = File.createTempFile("update-appimage", ".sh");
+				temporary.deleteOnExit();
+
+				try (InputStream in = scriptUrl.openStream()) {
+					Files.copy(in, temporary.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				}
+
+				if (!temporary.setExecutable(true)) {
+					System.out.println("Failed to make script executable.");
+					return;
+				}
+
+				final ProcessBuilder processBuilder = new ProcessBuilder(temporary.getAbsolutePath(), appImagePath);
+				processBuilder.inheritIO();
+
+				final Process process = processBuilder.start();
+				final int exitCode = process.waitFor();
+
+				if (exitCode != 0) {
+					System.out.println("Failed to update: " + exitCode);
+				} else {
+					Thread.ofVirtual().start(() -> {
+						try {
+							final ProcessBuilder relaunchProcessBuilder = new ProcessBuilder(appImagePath);
+							relaunchProcessBuilder.start();
+							parent.dispose();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					});
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

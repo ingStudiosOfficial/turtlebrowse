@@ -51,6 +51,7 @@ import dev.ingstudios.turtlebrowse.db.ProfileDatabase.AISettings;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase.HistoryItem;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase.NewtabSettings;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase.SearchEngine;
+import dev.ingstudios.turtlebrowse.environment.AppImageUtils;
 import dev.ingstudios.turtlebrowse.handlers.CefKeyboardHandler;
 import dev.ingstudios.turtlebrowse.handlers.SwingKeyboardHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseContextMenuHandler;
@@ -625,6 +626,7 @@ public class MainWindow extends JFrame {
 				updateInfoMap.put("currentVersion", currentVersion);
 				updateInfoMap.put("latestVersion", latestVersion);
 				updateInfoMap.put("needsUpdate", shouldUpdate);
+				updateInfoMap.put("isAppImage", AppImageUtils.isAppImage());
 
 				return gson.toJson(updateInfoMap);
 			}
@@ -670,6 +672,11 @@ public class MainWindow extends JFrame {
 				final String dir = FileSystemManager.getInstance().chooseDownloadsDirectory();
 				profileDatabase.setDownloadsDir(dir);
 				return dir;
+			}
+
+			case "UPDATE_APPIMAGE": {
+				UpdateManager.getInstance(this).updateAppImage();
+				return "\"ok\"";
 			}
 
 			default:

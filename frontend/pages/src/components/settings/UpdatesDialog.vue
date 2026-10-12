@@ -7,7 +7,7 @@ import '@m3e/web/button';
 import '@m3e/web/icon';
 import '@m3e/web/icon-button';
 import '@m3e/web/loading-indicator';
-import { getUpdateInfo, navigateToSite } from '@/utils/java_bridge';
+import { appImageUpdate, getUpdateInfo, navigateToSite } from '@/utils/java_bridge';
 
 const dialog = useTemplateRef<M3eDialogElement>('dialog');
 
@@ -16,6 +16,8 @@ const { updatesDialog } = useDialog();
 const currentVersion = ref<string>('1.0.0');
 const latestVersion = ref<string>('1.0.0');
 const needsUpdate = ref<boolean | null>(null);
+const isAppImage = ref<boolean>(false);
+const updating = ref<boolean>(false);
 
 async function refreshUpdateInfo() {
 	needsUpdate.value = null;
@@ -25,6 +27,17 @@ async function refreshUpdateInfo() {
 		currentVersion.value = updateInfo.currentVersion;
 		latestVersion.value = updateInfo.latestVersion;
 		needsUpdate.value = updateInfo.needsUpdate;
+		isAppImage.value = updateInfo.isAppImage;
+	}
+}
+
+async function updateBrowser() {
+	if (isAppImage.value) {
+		updating.value = true;
+		await appImageUpdate();
+		updating.value = false;
+	} else {
+		navigateToSite('https://turtlebrowse.ingstudios.dev/download')
 	}
 }
 
@@ -36,6 +49,7 @@ onMounted(async () => {
 		currentVersion.value = updateInfo.currentVersion;
 		latestVersion.value = updateInfo.latestVersion;
 		needsUpdate.value = updateInfo.needsUpdate;
+		isAppImage.value = updateInfo.isAppImage;
 	}
 });
 </script>
@@ -49,14 +63,17 @@ onMounted(async () => {
 				<p>Checking for updates...</p>
 			</div>
 			<div v-else-if="needsUpdate === true" class="update-box">
-				<p>Browser update recommended (v{{ currentVersion }} to v{{ latestVersion }})</p>
+				<p v-if="isAppImage">Automatic browser update available (v{{ currentVersion }} to v{{ latestVersion }})</p>
+				<p v-else>Browser update recommended (v{{ currentVersion }} to v{{ latestVersion }})</p>
 				<m3e-button
+					v-if="!updating"
 					variant="filled"
-					@click="navigateToSite('https://turtlebrowse.ingstudios.dev/download')"
+					@click="updateBrowser()"
 				>
 					<m3e-icon slot="icon" name="update"></m3e-icon>
 					Update Turtlebrowse
 				</m3e-button>
+				<m3e-loading-indicator v-else variant="contained"></m3e-loading-indicator>
 			</div>
 			<div v-else class="update-box">
 				<m3e-icon name="check"></m3e-icon>
