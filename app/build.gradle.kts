@@ -125,8 +125,7 @@ tasks.processResources {
 val osName = System.getProperty("os.name").lowercase()
 val isLinux = osName.contains("linux")
 val isMac = osName.contains("darwin") || osName.contains("mac") || osName.contains("osx")
-
-val libsDir = projectDir.resolve("libs").absolutePath
+val isWindows = osName.contains("windows")
 
 val baseJvmArgs = listOf(
     "--enable-native-access=ALL-UNNAMED,javafx.graphics",
@@ -144,19 +143,22 @@ val baseJvmArgs = listOf(
     "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
     "--add-exports=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
     "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
-    "-Djava.library.path=$libsDir"
 )
 
 val jvmArgs = baseJvmArgs + 
-    if (isLinux) listOf("-Dglass.platform=gtk") 
+    if (isLinux) listOf("-Dglass.platform=gtk", "-Djava.library.path=\$APP_HOME/libs") 
     else if (isMac) listOf(
         "--add-exports=java.desktop/sun.awt=ALL-UNNAMED",
         "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
         "--add-exports=java.desktop/sun.lwawt=ALL-UNNAMED",
         "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
         "--add-exports=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
-        "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED"
-    ) 
+        "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
+        "-Djava.library.path=\$APP_HOME/libs"
+    )
+    else if (isWindows) listOf(
+        "-Djava.library.path=%APP_HOME%/libs"
+    )
     else emptyList()
 
 application {
