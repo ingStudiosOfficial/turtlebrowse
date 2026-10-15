@@ -19,7 +19,6 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -47,7 +46,7 @@ public class AISidebar extends ToolSidebar {
 	private final JFXPanel actionsBarJfxPanel;
 	private final MainWindow parent;
 
-	public AISidebar(CefClient client, MainWindow parent, boolean useOsr, BooleanProperty isUiFocused) {
+	public AISidebar(CefClient client, MainWindow parent, boolean useOsr) {
 		this.parent = parent;
 
 		this.setLayout(new java.awt.BorderLayout());
@@ -92,7 +91,6 @@ public class AISidebar extends ToolSidebar {
 				@Override
 				public void mousePressed(java.awt.event.MouseEvent event) {
 					SwingUtilities.invokeLater(() -> {
-						isUiFocused.set(false);
 						browserComponent.requestFocusInWindow();
 						aiBrowser.setFocus(true);
 					});

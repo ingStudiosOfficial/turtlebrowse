@@ -200,8 +200,6 @@ public class AddressBar extends JPanel {
 
 			addressField.focusedProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue) {
-					parent.isUiFocused.set(true);
-
 					if (!wasFocused) {
 						Platform.runLater(() -> addressField.selectAll());
 						wasFocused = true;
@@ -209,7 +207,6 @@ public class AddressBar extends JPanel {
 				} else {
 					System.out.println("Address field lost focus.");
 					Platform.runLater(() -> autoSuggestPopup.hide());
-					parent.isUiFocused.set(false);
 					wasFocused = false;
 				}
 			});
@@ -360,8 +357,6 @@ public class AddressBar extends JPanel {
 			addressBarPanel.requestFocusInWindow();
 
 			Platform.runLater(() -> {
-				this.parent.isUiFocused.set(true);
-
 				if (!addressField.isFocused()) {
 					addressField.requestFocus();
 				} else if (forceSelect) {
@@ -383,7 +378,6 @@ public class AddressBar extends JPanel {
 
 		if (browser != null) {
 			browser.loadURL(enteredUrl);
-			this.parent.isUiFocused.set(false);
 			SwingUtilities.invokeLater(() -> browser.setFocus(true));
 		} else {
 			System.out.println("Browser is null.");

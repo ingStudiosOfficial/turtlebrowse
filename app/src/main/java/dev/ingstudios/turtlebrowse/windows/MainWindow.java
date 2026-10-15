@@ -76,8 +76,6 @@ import dev.ingstudios.turtlebrowse.search.SearchAutosuggest;
 import dev.ingstudios.turtlebrowse.search.SearchURLTemplates;
 import io.github.ollama4j.exceptions.OllamaException;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.paint.Color;
 
 public class MainWindow extends JFrame {
@@ -93,7 +91,6 @@ public class MainWindow extends JFrame {
 	public AddressBar addressBar;
 	public TabBar tabBar;
 	public final Map<CefBrowser, String> titleMap = new HashMap<>();
-	public final BooleanProperty isUiFocused = new SimpleBooleanProperty(false);
 	public OllamaChat ollamaSession;
 	private ToolSidebar toolSidebar;
 	public final AISidebar aiSidebar;
@@ -195,7 +192,7 @@ public class MainWindow extends JFrame {
 		tabBar = new TabBar(cefClient, openedBrowserTabs, this);
 
 		// AI sidebar
-		aiSidebar = new AISidebar(cefClient, this, USE_OSR, isUiFocused);
+		aiSidebar = new AISidebar(cefClient, this, USE_OSR);
 
 		// yt-dlp sidebar
 		ytdlpSidebar = new YtdlpSidebar(this);
@@ -380,7 +377,6 @@ public class MainWindow extends JFrame {
 					@Override
 					public void mousePressed(java.awt.event.MouseEvent event) {
 						SwingUtilities.invokeLater(() -> {
-							isUiFocused.set(false);
 							browser.setFocus(true);
 						});
 					}
