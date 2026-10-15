@@ -157,7 +157,7 @@ val jvmArgs = baseJvmArgs +
         "-Djava.library.path=\$APPDIR:\$APPDIR/libs:\$APPDIR/lib:./libs"
     )
     else if (isWindows) listOf(
-        "-Djava.library.path=%APPDIR%;%APPDIR%\libs;%APPDIR%\lib;.\libs"
+        "-Djava.library.path=%APPDIR%;%APPDIR%\\libs;%APPDIR%\\lib;.\\libs"
     )
     else emptyList()
 
