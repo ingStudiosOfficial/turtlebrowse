@@ -2,6 +2,13 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.11.11
+
+**15/10/2026**
+
+- Added adblock support for Windows and macOS with the built `dll`s and `dylib`s
+- Fixed Windows focus issue
+
 ## v1.11.10
 
 **12/10/2026**
