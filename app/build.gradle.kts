@@ -113,7 +113,7 @@ javafx {
     modules("javafx.controls", "javafx.graphics", "javafx.base", "javafx.swing")
 }
 
-version = "1.11.11"
+version = "1.11.12"
 
 tasks.processResources {
     inputs.property("version", project.version)
