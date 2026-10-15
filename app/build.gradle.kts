@@ -124,7 +124,9 @@ tasks.processResources {
 
 val osName = System.getProperty("os.name").lowercase()
 val isLinux = osName.contains("linux")
-val isMac = osName.contains("darwin") || osName.contains("mac") || osName.contains("osx")   
+val isMac = osName.contains("darwin") || osName.contains("mac") || osName.contains("osx")
+
+val libsDir = projectDir.resolve("libs").absolutePath
 
 val baseJvmArgs = listOf(
     "--enable-native-access=ALL-UNNAMED,javafx.graphics",
@@ -142,7 +144,7 @@ val baseJvmArgs = listOf(
     "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
     "--add-exports=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
     "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
-    "-Djava.library.path=\$APPDIR:\$APPDIR/libs:\$APPDIR/lib:./libs"
+    "-Djava.library.path=$libsDir"
 )
 
 val jvmArgs = baseJvmArgs + 

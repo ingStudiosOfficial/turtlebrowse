@@ -23,6 +23,7 @@ public class TurtlebrowseResourceRequestHandler extends CefResourceRequestHandle
 		Thread.ofVirtual().start(() -> {
 			adblockManager = AdblockManager.getInstance(parent);
 			final List<String> rules = adblockManager.getRules();
+			System.out.println("java.library.path: " + System.getProperty("java.library.path"));
 			blocker = AdvtBlocker.createInstance(rules);
 		});
 	}
