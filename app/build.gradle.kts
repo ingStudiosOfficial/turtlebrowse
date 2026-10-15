@@ -146,7 +146,7 @@ val baseJvmArgs = listOf(
 )
 
 val jvmArgs = baseJvmArgs + 
-    if (isLinux) listOf("-Dglass.platform=gtk", "-Djava.library.path=\$APP_HOME/libs") 
+    if (isLinux) listOf("-Dglass.platform=gtk", "-Djava.library.path=\$APPDIR:\$APPDIR/libs:\$APPDIR/lib:./libs") 
     else if (isMac) listOf(
         "--add-exports=java.desktop/sun.awt=ALL-UNNAMED",
         "--add-opens=java.desktop/sun.awt=ALL-UNNAMED",
@@ -154,10 +154,10 @@ val jvmArgs = baseJvmArgs +
         "--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED",
         "--add-exports=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
         "--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED",
-        "-Djava.library.path=\$APP_HOME/libs"
+        "-Djava.library.path=\$APPDIR:\$APPDIR/libs:\$APPDIR/lib:./libs"
     )
     else if (isWindows) listOf(
-        "-Djava.library.path=%APP_HOME%/libs"
+        "-Djava.library.path=\\\$APPDIR/libs"
     )
     else emptyList()
 
