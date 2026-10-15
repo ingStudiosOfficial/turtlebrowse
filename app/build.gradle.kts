@@ -157,7 +157,7 @@ val jvmArgs = baseJvmArgs +
         "-Djava.library.path=\$APPDIR:\$APPDIR/libs:\$APPDIR/lib:./libs"
     )
     else if (isWindows) listOf(
-        "-Djava.library.path=${projectDir}\\libs"
+        "-Djava.library.path=APP_HOME_PLACEHOLDER\\libs"
     )
     else emptyList()
 
@@ -328,4 +328,11 @@ tasks.named<JavaExec>("run") {
     environment("_JAVA_AWT_WM_NONREPARENTING", "0")
     environment("GDK_BACKEND", "x11")
     environment("WAYLAND_DISPLAY", "")
+}
+
+tasks.startScripts {
+    doLast {
+        unixScript.text = unixScript.text.replace("APP_HOME_PLACEHOLDER", "\$APP_HOME")
+        windowsScript.text = windowsScript.text.replace("APP_HOME_PLACEHOLDER", "%APP_HOME%")
+    }
 }
