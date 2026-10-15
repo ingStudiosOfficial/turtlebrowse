@@ -1,5 +1,7 @@
 package dev.ingstudios.turtlebrowse.handlers;
 
+import java.awt.KeyboardFocusManager;
+
 import org.cef.browser.CefBrowser;
 import org.cef.handler.CefFocusHandlerAdapter;
 
@@ -12,6 +14,7 @@ public class TurtlebrowseFocusHandler extends CefFocusHandlerAdapter {
 	@Override
 	public void onGotFocus(CefBrowser browser) {
 		System.out.println("Browser got focus.");
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
 	}
 
 	@Override
