@@ -8,6 +8,10 @@ const prompts = ref<Conversation[]>([]);
 const isGenerating = ref<boolean>(false);
 
 function sendPrompt(conversation: Conversation) {
+	if (conversation.user.trim().length === 0) {
+		return;
+	}
+
 	prompt.value = conversation.user;
 
 	prompts.value.push(conversation);
@@ -27,6 +31,14 @@ function sendPrompt(conversation: Conversation) {
 			},
 			(response) => {
 				currentConversation.assistant.response = response;
+				isGenerating.value = false;
+			},
+			(message) => {
+				currentConversation.assistant.response =
+					'An error occurred while generating your response.';
+				M3eSnackbar.open(message, {
+					duration: 4000,
+				});
 				isGenerating.value = false;
 			},
 		);
@@ -60,6 +72,21 @@ function sendPromptKeyboard(event: KeyboardEvent) {
 	sendPrompt(conversation);
 }
 
+function sendPromptButton() {
+	isGenerating.value = true;
+
+	const conversation: Conversation = {
+		key: window.crypto.randomUUID(),
+		user: prompt.value,
+		assistant: {
+			thinking: '',
+			response: '',
+		},
+	};
+
+	sendPrompt(conversation);
+}
+
 export function usePrompt() {
 	return {
 		prompt,
@@ -67,5 +94,6 @@ export function usePrompt() {
 		isGenerating,
 		sendPrompt,
 		sendPromptKeyboard,
+		sendPromptButton,
 	};
 }

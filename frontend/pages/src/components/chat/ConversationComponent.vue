@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import '@m3e/web/form-field';
 import '@m3e/web/textarea-autosize';
+import '@m3e/web/icon-button';
+import '@m3e/web/icon';
 import ConversationBubble from './ConversationBubble.vue';
 import { usePrompt } from '@/composables/prompt';
 import { getUserName } from '@/utils/java_bridge';
 import { onMounted, ref } from 'vue';
 
-const { prompt, prompts, isGenerating, sendPromptKeyboard } = usePrompt();
+const { prompt, prompts, isGenerating, sendPromptKeyboard, sendPromptButton } = usePrompt();
 
 const userName = ref<string>('');
 
@@ -31,11 +33,16 @@ onMounted(async () => {
 			<h1>What's on your mind today, {{ userName }}?</h1>
 		</div>
 
-		<m3e-form-field class="form-field" variant="outlined" :disabled="isGenerating">
-			<label slot="label" for="prompt-field">Ask AI</label>
-			<textarea id="prompt-field" v-model="prompt" @keydown="sendPromptKeyboard"></textarea>
-		</m3e-form-field>
-		<m3e-textarea-autosize for="prompt-field" max-rows="6"></m3e-textarea-autosize>
+		<div class="bottom">
+			<m3e-form-field class="form-field" variant="outlined" :disabled="isGenerating">
+				<label slot="label" for="prompt-field">Ask AI</label>
+				<input id="prompt-field" v-model="prompt" @keydown="sendPromptKeyboard" />
+			</m3e-form-field>
+			<m3e-textarea-autosize for="prompt-field" max-rows="6"></m3e-textarea-autosize>
+			<m3e-icon-button variant="filled" :disabled="isGenerating" @click="sendPromptButton()">
+				<m3e-icon name="send"></m3e-icon>
+			</m3e-icon-button>
+		</div>
 	</div>
 </template>
 
@@ -79,7 +86,19 @@ onMounted(async () => {
 }
 
 .form-field {
+	flex-grow: 1;
+}
+
+.bottom {
+	display: flex;
+	flex-direction: row;
 	flex-shrink: 0;
 	width: 100%;
+	align-items: center;
+	gap: 16px;
+}
+
+.send-button {
+	flex-shrink: 0;
 }
 </style>

@@ -3,6 +3,7 @@ import '@m3e/web/expansion-panel';
 import { parseMessage } from '@/utils/parse';
 import { ref, watch } from 'vue';
 import '@m3e/web/loading-indicator';
+import { usePrompt } from '@/composables/prompt';
 
 interface ComponentProps {
 	message: string;
@@ -11,6 +12,8 @@ interface ComponentProps {
 }
 
 const props = defineProps<ComponentProps>();
+
+const { isGenerating } = usePrompt();
 
 const messageMessage = ref<string>('');
 const thinkingMessage = ref<string | null>(null);
@@ -34,7 +37,7 @@ watch(
 </script>
 
 <template>
-	<div class="thinking" v-if="!props.message && !props.thinking">
+	<div class="thinking" v-if="!props.message && !props.thinking && isGenerating">
 		<m3e-loading-indicator variant="contained"></m3e-loading-indicator>
 		<p>Thinking</p>
 	</div>

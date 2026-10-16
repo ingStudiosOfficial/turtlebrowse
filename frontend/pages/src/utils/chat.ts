@@ -7,6 +7,7 @@ export function promptStreaming(
 	onThink: (chunk: string) => void,
 	onResponse: (chunk: string) => void,
 	onFinish: (response: string) => void,
+	onError: (message: string) => void,
 ) {
 	const source = new EventSource(
 		`turtlebrowse://api/prompt-stream?prompt=${encodeURIComponent(prompt)}`,
@@ -40,6 +41,7 @@ export function promptStreaming(
 	source.addEventListener('error', (event) => {
 		console.error('SSE error:', event);
 		source.close();
+		onError('failed to communicate with backend via SSE');
 	});
 }
 

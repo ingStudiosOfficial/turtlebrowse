@@ -1,4 +1,4 @@
-import type { SearchEngine } from "@/types/SearchEngine";
+import type { SearchEngine } from '@/types/SearchEngine';
 
 export interface SearchEngineObject {
 	engine: SearchEngine;

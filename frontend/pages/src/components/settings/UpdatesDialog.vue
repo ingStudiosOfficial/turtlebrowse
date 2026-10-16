@@ -37,7 +37,7 @@ async function updateBrowser() {
 		await appImageUpdate();
 		updating.value = false;
 	} else {
-		navigateToSite('https://turtlebrowse.ingstudios.dev/download')
+		navigateToSite('https://turtlebrowse.ingstudios.dev/download');
 	}
 }
 
@@ -63,13 +63,15 @@ onMounted(async () => {
 				<p>Checking for updates...</p>
 			</div>
 			<div v-else-if="needsUpdate === true" class="update-box">
-				<p v-if="isAppImage">Automatic browser update available (v{{ currentVersion }} to v{{ latestVersion }})</p>
-				<p v-else>Browser update recommended (v{{ currentVersion }} to v{{ latestVersion }})</p>
-				<m3e-button
-					v-if="!updating"
-					variant="filled"
-					@click="updateBrowser()"
-				>
+				<p v-if="isAppImage">
+					Automatic browser update available (v{{ currentVersion }} to v{{
+						latestVersion
+					}})
+				</p>
+				<p v-else>
+					Browser update recommended (v{{ currentVersion }} to v{{ latestVersion }})
+				</p>
+				<m3e-button v-if="!updating" variant="filled" @click="updateBrowser()">
 					<m3e-icon slot="icon" name="update"></m3e-icon>
 					Update Turtlebrowse
 				</m3e-button>

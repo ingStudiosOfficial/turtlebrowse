@@ -62,7 +62,7 @@ export async function getTheme(): Promise<string | undefined> {
 export async function getDefaultSearchEngine(): Promise<SearchEngineObject> {
 	try {
 		const searchEngine = (await fetchFromJavaText('GET_SEARCH_ENGINE')) as
-			SearchEngineObject
+			| SearchEngineObject
 			| undefined;
 
 		if (!searchEngine) {

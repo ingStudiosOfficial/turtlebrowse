@@ -2,7 +2,18 @@
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:disable",
-    "editor.defaultFormatter": "redhat.java",
     "editor.formatOnSave": true,
-    "css.lint.vendorPrefix": "ignore"
+    "css.lint.vendorPrefix": "ignore",
+    "[java]": {
+        "editor.defaultFormatter": "redhat.java",
+    },
+    "[vue]": {
+        "editor.defaultFormatter": "oxc.oxc-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "oxc.oxc-vscode"
+    },
+    "[go]": {
+        "editor.defaultFormatter": "golang.go"
+    }
 }

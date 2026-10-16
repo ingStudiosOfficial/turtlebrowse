@@ -70,7 +70,12 @@ async function changeSearchEngine(target: M3eSelectElement) {
 
 	searchEngine.value = name;
 
-	if (searchEngine.value !== 'custom' || (searchEngine.value === 'custom' && searchTemplate.value && searchTemplate.value.trim().length !== 0))
+	if (
+		searchEngine.value !== 'custom' ||
+		(searchEngine.value === 'custom' &&
+			searchTemplate.value &&
+			searchTemplate.value.trim().length !== 0)
+	)
 		await setDefaultSearchEngine({
 			engine: searchEngine.value,
 			template: searchTemplate.value,
@@ -79,7 +84,7 @@ async function changeSearchEngine(target: M3eSelectElement) {
 
 async function changeSearchTemplate(target: HTMLInputElement) {
 	const template = target.value;
-	searchTemplate.value = template
+	searchTemplate.value = template;
 	await setDefaultSearchEngine({
 		engine: searchEngine.value,
 		template: searchTemplate.value,
@@ -117,7 +122,10 @@ onMounted(async () => {
 			</m3e-form-field>
 			<m3e-form-field v-if="searchEngine === 'custom'">
 				<label slot="label">Search engine URL</label>
-				<input v-model="searchTemplate" @change="changeSearchTemplate($event.target as HTMLInputElement)" />
+				<input
+					v-model="searchTemplate"
+					@change="changeSearchTemplate($event.target as HTMLInputElement)"
+				/>
 				<span slot="hint">Format search engine query with %s</span>
 			</m3e-form-field>
 		</div>
