@@ -122,7 +122,7 @@ public class OllamaChat {
 			Consumer<String> onDone, Consumer<String> onError) {
 		final OllamaChatRequest chatRequest = builder.withMessages(history).build();
 
-		OllamaChatStreamObserver streamObserver = new OllamaChatStreamObserver();
+		final OllamaChatStreamObserver streamObserver = new OllamaChatStreamObserver();
 		streamObserver.setThinkingStreamHandler(new OllamaGenerateTokenHandler() {
 			@Override
 			public void accept(String message) {
