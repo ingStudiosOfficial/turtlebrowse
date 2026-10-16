@@ -3,6 +3,7 @@ import '@m3e/web/form-field';
 import '@m3e/web/textarea-autosize';
 import '@m3e/web/icon-button';
 import '@m3e/web/icon';
+import '@m3e/web/tooltip';
 import ConversationBubble from './ConversationBubble.vue';
 import { usePrompt } from '@/composables/prompt';
 import { getUserName } from '@/utils/java_bridge';
@@ -12,6 +13,12 @@ const { prompt, prompts, isGenerating, sendPromptKeyboard, sendPromptButton } = 
 
 const userName = ref<string>('');
 
+function newChat() {
+	prompt.value = '';
+	prompts.value = [];
+	isGenerating.value = false;
+}
+
 onMounted(async () => {
 	userName.value = await getUserName();
 });
@@ -19,6 +26,13 @@ onMounted(async () => {
 
 <template>
 	<div class="conv-wrapper">
+		<div class="top">
+			<m3e-icon-button id="new-chat" @click="newChat">
+				<m3e-icon name="chat_add_on"></m3e-icon>
+			</m3e-icon-button>
+			<m3e-tooltip for="new-chat">New chat</m3e-tooltip>
+		</div>
+
 		<div v-if="prompts.length !== 0" class="conv-box">
 			<div v-for="conv in prompts" :key="conv.key" class="conv-group">
 				<ConversationBubble sender="user" :message="conv.user"></ConversationBubble>
@@ -89,6 +103,7 @@ onMounted(async () => {
 	flex-grow: 1;
 }
 
+.top,
 .bottom {
 	display: flex;
 	flex-direction: row;
@@ -96,6 +111,10 @@ onMounted(async () => {
 	width: 100%;
 	align-items: center;
 	gap: 16px;
+}
+
+.top {
+	justify-content: end;
 }
 
 .send-button {
