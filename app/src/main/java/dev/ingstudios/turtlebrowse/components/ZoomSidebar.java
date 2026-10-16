@@ -112,16 +112,14 @@ public class ZoomSidebar extends ToolSidebar {
 
 			final JFXButton decreaseZoom = buildButton(Material2OutlinedMZ.ZOOM_OUT);
 			decreaseZoom.setOnAction(event -> {
-				zoom -= 1;
+				zoomOut();
 				zoomField.setText(String.valueOf(zoom));
-				setZoom();
 			});
 
 			final JFXButton increaseZoom = buildButton(Material2OutlinedMZ.ZOOM_IN);
 			increaseZoom.setOnAction(event -> {
-				zoom += 1;
+				zoomIn();
 				zoomField.setText(String.valueOf(zoom));
-				setZoom();
 			});
 
 			zoomInOutBox.getChildren().addAll(decreaseZoom, increaseZoom);
@@ -194,5 +192,20 @@ public class ZoomSidebar extends ToolSidebar {
 
 	private void setZoom() {
 		parent.currentBrowser.setZoomLevel(zoom / 100);
+	}
+
+	public void zoomIn() {
+		zoom += 10;
+		setZoom();
+	}
+
+	public void zoomOut() {
+		zoom -= 10;
+		setZoom();
+	}
+
+	public void resetZoom() {
+		zoom = 100;
+		setZoom();
 	}
 }

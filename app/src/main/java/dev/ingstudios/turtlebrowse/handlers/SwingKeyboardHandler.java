@@ -112,6 +112,15 @@ public class SwingKeyboardHandler {
 						} else if (keyCode == KeyEvent.VK_F11 && ctrlPressed) { // Toggles fullscreen
 							keyEvent.consume();
 							parent.toggleFullscreen();
+						} else if (ctrlPressed && keyCode == KeyEvent.VK_EQUALS) { // Zooms in
+							keyEvent.consume();
+							parent.zoomSidebar.zoomIn();
+						} else if (ctrlPressed && keyCode == KeyEvent.VK_MINUS) { // Zooms out
+							keyEvent.consume();
+							parent.zoomSidebar.zoomOut();
+						} else if (ctrlPressed && keyCode == KeyEvent.VK_0) { // Resets zoom
+							keyEvent.consume();
+							parent.zoomSidebar.resetZoom();
 						}
 					}
 				}

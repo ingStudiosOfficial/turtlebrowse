@@ -115,6 +115,15 @@ public class CefKeyboardHandler extends CefKeyboardHandlerAdapter {
 			} else if (event.windows_key_code == KeyEvent.VK_F11) { // Toggles fullscreen
 				parent.toggleFullscreen();
 				return true;
+			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_EQUALS) { // Zooms in
+				parent.zoomSidebar.zoomIn();
+				return true;
+			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_MINUS) { // Zooms out
+				parent.zoomSidebar.zoomOut();
+				return true;
+			} else if (ctrlPressed && event.windows_key_code == KeyEvent.VK_0) { // Resets zoom
+				parent.zoomSidebar.resetZoom();
+				return true;
 			}
 		}
 
