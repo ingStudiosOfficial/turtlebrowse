@@ -332,7 +332,11 @@ tasks.named<JavaExec>("run") {
 
 tasks.startScripts {
     doLast {
-        unixScript.text = unixScript.text.replace("APP_HOME_PLACEHOLDER", "\$APP_HOME")
-        windowsScript.text = windowsScript.text.replace("APP_HOME_PLACEHOLDER", "%APP_HOME%")
+        unixScript.writeText(
+            unixScript.readText().replace("APP_HOME_PLACEHOLDER", "\$APP_HOME")
+        )
+        windowsScript.writeText(
+            windowsScript.readText().replace("APP_HOME_PLACEHOLDER", "%APP_HOME%")
+        )
     }
 }
