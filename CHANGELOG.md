@@ -2,6 +2,13 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.11.14
+
+**16/10/2026**
+
+- Updated chat UI
+- Added zoom keybindings
+
 ## v1.11.13
 
 **16/10/2026**
