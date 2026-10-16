@@ -2,6 +2,12 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.11.13
+
+**16/10/2026**
+
+- Fixed Windows libs path resolution
+
 ## v1.11.12
 
 **15/10/2026**
