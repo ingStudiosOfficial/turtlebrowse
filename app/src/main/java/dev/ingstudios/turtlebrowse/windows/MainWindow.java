@@ -635,11 +635,6 @@ public class MainWindow extends JFrame {
 			case "SET_ADBLOCK_SETTING": {
 				final boolean adblockSettingToSet = params.get("enabled").getAsBoolean();
 				adblockEnabled = adblockSettingToSet;
-				if (adblockSettingToSet) {
-					DiscordPresenceManager.getInstance().init();
-				} else {
-					DiscordPresenceManager.getInstance().disableDiscordPresence();
-				}
 				profileDatabase.setAdblockSetting(adblockSettingToSet);
 				return "\"ok\"";
 			}
