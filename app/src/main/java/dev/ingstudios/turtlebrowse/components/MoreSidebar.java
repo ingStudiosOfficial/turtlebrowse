@@ -121,6 +121,17 @@ public class MoreSidebar extends JPanel {
 				}
 			});
 
+			final JFXButton userscriptsButton = createMenuItem(MaterialDesignC.CODE_BLOCK_BRACES);
+			userscriptsButton.setOnAction(event -> {
+				System.out.println("Userscripts button clicked.");
+				if (parent.getSidebar() != parent.userscriptsSidebar) {
+					parent.setSidebar(parent.userscriptsSidebar);
+					parent.userscriptsSidebar.openSidebar();
+				} else {
+					parent.userscriptsSidebar.toggleSidebar();
+				}
+			});
+
 			final JFXButton closeButton = createMenuItem(Material2OutlinedAL.CLOSE);
 			closeButton.setOnAction(event -> {
 				closeSidebar();
@@ -134,6 +145,7 @@ public class MoreSidebar extends JPanel {
 					zoomButton,
 					findButton,
 					terminalButton,
+					userscriptsButton,
 					closeButton);
 		});
 

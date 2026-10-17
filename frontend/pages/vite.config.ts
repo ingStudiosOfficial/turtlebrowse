@@ -32,6 +32,7 @@ export default defineConfig({
 				chat: resolve(__dirname, 'chat.html'),
 				settings: resolve(__dirname, 'settings.html'),
 				history: resolve(__dirname, 'history.html'),
+				userscripts: resolve(__dirname, 'userscripts.html'),
 			},
 		},
 	},

@@ -43,6 +43,7 @@ import dev.ingstudios.turtlebrowse.components.MoreSidebar;
 import dev.ingstudios.turtlebrowse.components.TabBar;
 import dev.ingstudios.turtlebrowse.components.TerminalSidebar;
 import dev.ingstudios.turtlebrowse.components.ToolSidebar;
+import dev.ingstudios.turtlebrowse.components.UserscriptsSidebar;
 import dev.ingstudios.turtlebrowse.components.YtdlpSidebar;
 import dev.ingstudios.turtlebrowse.components.ZoomSidebar;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase;
@@ -98,6 +99,7 @@ public class MainWindow extends JFrame {
 	public final ZoomSidebar zoomSidebar;
 	public final FindSidebar findSidebar;
 	public final TerminalSidebar terminalSidebar;
+	public final UserscriptsSidebar userscriptsSidebar;
 	public final MoreSidebar moreSidebar;
 	private final JPanel sidePanel;
 	private final Gson gson = new Gson();
@@ -205,6 +207,9 @@ public class MainWindow extends JFrame {
 
 		// Terminal sidebar
 		terminalSidebar = new TerminalSidebar(this);
+
+		// Userscripts sidebar
+		userscriptsSidebar = new UserscriptsSidebar(this);
 
 		// More sidebar
 		moreSidebar = new MoreSidebar(this);
