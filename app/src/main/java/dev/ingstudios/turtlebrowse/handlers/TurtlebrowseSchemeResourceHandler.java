@@ -130,6 +130,22 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			handleRequest.set(true);
 			callback.Continue();
 			return true;
+		} else if (url.startsWith("turtlebrowse://userscripts")) {
+			final String path = url.substring("turtlebrowse://userscripts".length());
+			System.out.println("Parsed path: '" + path + "'");
+
+			if (path.isBlank() || path.equals("/")) {
+				loadResource("/web/userscripts.html");
+			} else {
+				loadResource("/web" + path);
+			}
+
+			System.out.println("Data loaded, length: " + (data != null ? data.length : "NULL"));
+			System.out.println("MIME type: " + mimeType);
+
+			handleRequest.set(true);
+			callback.Continue();
+			return true;
 		} else if (url.startsWith("turtlebrowse://dino")) {
 			final String path = url.substring("turtlebrowse://dino".length());
 			System.out.println("Parsed path: '" + path + "'");

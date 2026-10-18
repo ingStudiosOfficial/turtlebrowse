@@ -43,7 +43,6 @@ import dev.ingstudios.turtlebrowse.components.MoreSidebar;
 import dev.ingstudios.turtlebrowse.components.TabBar;
 import dev.ingstudios.turtlebrowse.components.TerminalSidebar;
 import dev.ingstudios.turtlebrowse.components.ToolSidebar;
-import dev.ingstudios.turtlebrowse.components.UserscriptsSidebar;
 import dev.ingstudios.turtlebrowse.components.YtdlpSidebar;
 import dev.ingstudios.turtlebrowse.components.ZoomSidebar;
 import dev.ingstudios.turtlebrowse.db.ProfileDatabase;
@@ -69,12 +68,14 @@ import dev.ingstudios.turtlebrowse.managers.DiscordPresenceManager;
 import dev.ingstudios.turtlebrowse.managers.FileSystemManager;
 import dev.ingstudios.turtlebrowse.managers.InstanceManager;
 import dev.ingstudios.turtlebrowse.managers.UpdateManager;
+import dev.ingstudios.turtlebrowse.managers.UserscriptsManager;
 import dev.ingstudios.turtlebrowse.managers.WallpaperManager;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager.WindowItem;
 import dev.ingstudios.turtlebrowse.ollama.OllamaChat;
 import dev.ingstudios.turtlebrowse.search.SearchAutosuggest;
 import dev.ingstudios.turtlebrowse.search.SearchURLTemplates;
+import dev.ingstudios.turtlebrowse.userscript.UserscriptParser.UserscriptMetadata;
 import io.github.ollama4j.exceptions.OllamaException;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
@@ -99,7 +100,6 @@ public class MainWindow extends JFrame {
 	public final ZoomSidebar zoomSidebar;
 	public final FindSidebar findSidebar;
 	public final TerminalSidebar terminalSidebar;
-	public final UserscriptsSidebar userscriptsSidebar;
 	public final MoreSidebar moreSidebar;
 	private final JPanel sidePanel;
 	private final Gson gson = new Gson();
@@ -207,9 +207,6 @@ public class MainWindow extends JFrame {
 
 		// Terminal sidebar
 		terminalSidebar = new TerminalSidebar(this);
-
-		// Userscripts sidebar
-		userscriptsSidebar = new UserscriptsSidebar(this);
 
 		// More sidebar
 		moreSidebar = new MoreSidebar(this);
@@ -673,6 +670,12 @@ public class MainWindow extends JFrame {
 			case "UPDATE_APPIMAGE": {
 				UpdateManager.getInstance(this).updateAppImage();
 				return "\"ok\"";
+			}
+
+			case "GET_USERSCRIPTS": {
+				final List<UserscriptMetadata> userscripts = UserscriptsManager.getInstance(this).getUserscripts();
+				final String json = gson.toJson(userscripts);
+				return json;
 			}
 
 			default:

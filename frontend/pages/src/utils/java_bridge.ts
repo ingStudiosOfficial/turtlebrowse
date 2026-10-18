@@ -3,6 +3,7 @@ import type { HistoryItem } from '@/interfaces/HistoryItem';
 import type { NewtabSettings } from '@/interfaces/NewtabSettings';
 import type { SearchEngineObject } from '@/interfaces/SearchEngineObject';
 import type { UpdateInfo } from '@/interfaces/UpdateInfo';
+import type { Userscript } from '@/interfaces/Userscript';
 import type { Appearance } from '@/types/Appearance';
 import { M3eSnackbar } from '@m3e/web/snackbar';
 
@@ -330,5 +331,25 @@ export async function appImageUpdate() {
 		await fetchFromJavaText('UPDATE_APPIMAGE');
 	} catch (error) {
 		console.error(error);
+	}
+}
+
+export async function getUserscripts(): Promise<Userscript[] | null> {
+	try {
+		const userscripts = (await fetchFromJavaJson('GET_USERSCRIPTS')) as Userscript[];
+		return userscripts;
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
+export async function addUserscript(): Promise<Userscript | null> {
+	try {
+		const script = (await fetchFromJavaJson('ADD_USERSCRIPT')) as Userscript;
+		return script;
+	} catch (error) {
+		console.error(error);
+		return null;
 	}
 }
