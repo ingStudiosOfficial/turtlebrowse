@@ -101,7 +101,7 @@ public class UpdateManager {
 	}
 
 	public void updateAppImage() {
-		final String appImagePath = "%s_%s".formatted(AppImageUtils.getAppImagePath(), latestVersion);
+		final String appImagePath = "%s_%s".formatted(latestVersion, AppImageUtils.getAppImagePath());
 		if (appImagePath != null && !appImagePath.isBlank()) {
 			try {
 				final URL scriptUrl = getClass().getResource("/updates/update-appimage.sh");
