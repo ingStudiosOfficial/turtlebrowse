@@ -191,6 +191,7 @@ public class ZoomSidebar extends ToolSidebar {
 	}
 
 	private void setZoom() {
+		System.out.println("Zooming: " + zoom);
 		parent.currentBrowser.setZoomLevel(zoom / 100);
 	}
 

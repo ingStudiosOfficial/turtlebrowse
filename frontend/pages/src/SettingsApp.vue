@@ -77,7 +77,7 @@ const { showDialog } = useDialog();
 	display: flex;
 	flex-direction: row;
 	width: 100dvw;
-	height: 100dvh;
+	min-height: 100dvh;
 	box-sizing: border-box;
 	padding: 16px;
 	display: flex;

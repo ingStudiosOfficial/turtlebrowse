@@ -246,7 +246,6 @@ tasks.jpackage {
         winShortcutPrompt = true
         installDir = "ingStudios\\Turtlebrowse"
         winUpgradeUuid = "6f701d42-0c33-443a-98fa-6543c3e7b3df"
-        winPerUserInstall = true
     }
 
     mac {

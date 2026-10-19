@@ -178,6 +178,13 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			handleRequest.set(true);
 			callback.Continue();
 			return true;
+		} else if (url.startsWith("turtlebrowse://love")) {
+			this.data = "i love u too, %s\n\nfrom the bottom of my heart, ethan lee"
+					.formatted(parent.currentProfile.name()).getBytes(StandardCharsets.UTF_8);
+			this.mimeType = "text/plain";
+			this.statusCode = 143;
+			callback.Continue();
+			return true;
 		} else if (url.startsWith("turtlebrowse://api")) {
 			final String action = url.replace("turtlebrowse://api/", "");
 
