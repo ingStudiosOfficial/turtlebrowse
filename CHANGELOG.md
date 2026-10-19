@@ -2,6 +2,11 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.12.0
+
+- Scaffold basic userscripts functionality
+- Add Windows per user install
+
 ## v1.11.14
 
 **16/10/2026**
