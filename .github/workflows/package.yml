@@ -166,7 +166,7 @@ jobs:
       - name: Upload Native Distribution Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: turtlebrowse_${{ matrix.os-name }}_${{ matrix.arch }}
+          name: turtlebrowse_${{ matrix.os-name }}_${{ matrix.arch }}_${{ matrix.pkg-type }}
           path: |
             app/build/libs/app-all.jar
             app/build/dist/*.deb
@@ -175,6 +175,7 @@ jobs:
             app/build/dist/*.msi
             app/build/dist/*.dmg
             app/build/dist/*.pkg
+            app/build/dist/*.zip
             app/build/dist/*.AppImage
           if-no-files-found: error
 
@@ -221,7 +222,7 @@ jobs:
           for dir in turtlebrowse_*; do
             [ -d "$dir" ] || continue
 
-            IFS='_' read -r _ os_name arch_name <<< "$dir"
+            IFS='_' read -r _ os_name arch_name _ <<< "$dir"
 
             os_lower=$(echo "$os_name" | tr '[:upper:]' '[:lower:]')
             arch_lower=$(echo "$arch_name" | tr '[:upper:]' '[:lower:]')
