@@ -351,7 +351,7 @@ tasks.register<Exec>("buildWinStandalone") {
     workingDir = layout.buildDirectory.dir("dist").get().asFile
 
     commandLine(
-        "bash", "-c",
+        "cmd", "/c",
         """
        tar -a -c -f turtlebrowse_standalone.zip Turtlebrowse
         """
