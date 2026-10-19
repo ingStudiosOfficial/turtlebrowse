@@ -239,17 +239,42 @@ tasks.jpackage {
     javaOptions = jvmArgs
 
     windows {
-        type = org.panteleyev.jpackage.ImageType.EXE
-        winDirChooser = true
-        winMenu = true
-        winShortcut = true
-        winShortcutPrompt = true
-        installDir = "ingStudios\\Turtlebrowse"
-        winUpgradeUuid = "6f701d42-0c33-443a-98fa-6543c3e7b3df"
+        if (pkgType != null) {
+            type = if (pkgType == "exe") {
+                org.panteleyev.jpackage.ImageType.EXE
+            } else if (pkgType == "msi") {
+                org.panteleyev.jpackage.ImageType.MSI
+            } else if (pkgType == "win-standalone") {
+                org.panteleyev.jpackage.ImageType.APP_IMAGE
+            } else {
+                org.panteleyev.jpackage.ImageType.EXE
+            }
+        } else {
+            type = org.panteleyev.jpackage.ImageType.EXE
+        }
+
+        if (pkgType != "win-standalone") {
+            winDirChooser = true
+            winMenu = true
+            winShortcut = true
+            winShortcutPrompt = true
+            installDir = "ingStudios\\Turtlebrowse"
+            winUpgradeUuid = "6f701d42-0c33-443a-98fa-6543c3e7b3df"
+        }
     }
 
     mac {
-        type = org.panteleyev.jpackage.ImageType.PKG
+        if (pkgType != null) {
+            type = if (pkgType == "dmg") {
+                org.panteleyev.jpackage.ImageType.DMG
+            } else if (pkgType == "pkg") {
+                org.panteleyev.jpackage.ImageType.PKG
+            } else {
+                org.panteleyev.jpackage.ImageType.DMG
+            }
+        } else {
+            type = org.panteleyev.jpackage.ImageType.DMG
+        }
         macPackageName = "Turtlebrowse"
         macPackageIdentifier = "dev.ingstudios.turtlebrowse"
     }
@@ -315,6 +340,20 @@ Categories=Network;WebBrowser;
 EOF
 
         appimagetool Turtlebrowse.AppDir Turtlebrowse_amd64.AppImage
+        """
+    )
+}
+
+tasks.register<Exec>("buildWinStandalone") {
+    dependsOn("jpackage")
+    onlyIf { (project.findProperty("targetPkgType") ?: "win-standalone").toString().lowercase() == "win-standalone" }
+
+    workingDir = layout.buildDirectory.dir("dist").get().asFile
+
+    commandLine(
+        "bash", "-c",
+        """
+       tar -a -c -f turtlebrowse_standalone.zip Turtlebrowse
         """
     )
 }

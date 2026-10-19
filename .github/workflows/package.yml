@@ -46,10 +46,27 @@ jobs:
           - os: macos-latest
             os-name: macOS
             arch: ARM64
+            pkg-type: dmg
+
+          - os: macos-latest
+            os-name: macOS
+            arch: ARM64
+            pkg-type: pkg
 
           - os: windows-latest
             os-name: Windows
             arch: AMD64
+            pkg-type: msi
+
+          - os: windows-latest
+            os-name: Windows
+            arch: AMD64
+            pkg-type: exe
+
+          - os: windows-latest
+            os-name: Windows
+            arch: AMD64
+            pkg-type: win-standalone
 
           - os: ubuntu-latest
             os-name: Ubuntu
@@ -117,7 +134,7 @@ jobs:
 
       - name: Run jpackage via Gradle
         shell: bash
-        if: matrix.pkg-type != 'appimage'
+        if: matrix.pkg-type != 'appimage' && matrix.pkg-type != 'win-standalone'
         run: |
           ./gradlew jpackage \
             -PtargetOs="${{ matrix.os-name }}" \
@@ -129,6 +146,15 @@ jobs:
         if: matrix.pkg-type == 'appimage'
         run: |
           ./gradlew buildAppImage \
+            -PtargetOs="${{ matrix.os-name }}" \
+            -PtargetArch="${{ matrix.arch }}" \
+            -PtargetPkgType="${{ matrix.pkg-type }}" --info
+
+      - name: Run jpackage via Gradle
+        shell: bash
+        if: matrix.pkg-type == 'win-standalone'
+        run: |
+          ./gradlew buildWinStandalone \
             -PtargetOs="${{ matrix.os-name }}" \
             -PtargetArch="${{ matrix.arch }}" \
             -PtargetPkgType="${{ matrix.pkg-type }}" --info
