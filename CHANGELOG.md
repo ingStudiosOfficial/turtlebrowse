@@ -4,6 +4,8 @@ All major and minor changes, alongside with bug fixes go here. More details avai
 
 ## v1.12.0
 
+**19/10/2026**
+
 - Scaffold basic userscripts functionality
 - Add Windows per user install
 
