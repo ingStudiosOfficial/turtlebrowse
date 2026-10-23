@@ -2,6 +2,7 @@ package dev.ingstudios.turtlebrowse.handlers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Vector;
 
@@ -37,18 +38,24 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			if (inputStream != null) {
 				this.data = inputStream.readAllBytes();
 
-				if (resourcePath.endsWith(".js"))
-					mimeType = "application/javascript";
-				else if (resourcePath.endsWith(".css"))
-					mimeType = "text/css";
-				else if (resourcePath.endsWith(".svg"))
-					mimeType = "image/svg+xml";
-				else if (resourcePath.endsWith(".png"))
-					mimeType = "image/png";
-				else if (resourcePath.endsWith(".jpeg") || resourcePath.endsWith(".jpg"))
-					mimeType = "image/jpeg";
-				else
-					mimeType = "text/html";
+				final String foundMimeType = URLConnection.guessContentTypeFromName(resourcePath);
+
+				if (foundMimeType == null) {
+					if (resourcePath.endsWith(".js"))
+						mimeType = "application/javascript";
+					else if (resourcePath.endsWith(".css"))
+						mimeType = "text/css";
+					else if (resourcePath.endsWith(".svg"))
+						mimeType = "image/svg+xml";
+					else if (resourcePath.endsWith(".png"))
+						mimeType = "image/png";
+					else if (resourcePath.endsWith(".jpeg") || resourcePath.endsWith(".jpg"))
+						mimeType = "image/jpeg";
+					else
+						mimeType = "text/html";
+				} else {
+					mimeType = foundMimeType;
+				}
 
 				this.statusCode = 200;
 			} else {
@@ -179,10 +186,51 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			callback.Continue();
 			return true;
 		} else if (url.startsWith("turtlebrowse://love")) {
-			this.data = "i love u too, %s\n\nfrom the bottom of my heart, ethan lee"
-					.formatted(parent.currentProfile.name()).getBytes(StandardCharsets.UTF_8);
+			this.data = """
+					dear %s,
+					you have always been the one in my heart. i love you sm. do text me back yea :)
+					from,
+					ethan lee
+					""".formatted(parent.currentProfile.name()).getBytes(StandardCharsets.UTF_8);
 			this.mimeType = "text/plain";
 			this.statusCode = 143;
+			handleRequest.set(true);
+			callback.Continue();
+			return true;
+		} else if (url.startsWith("turtlebrowse://kfc")) {
+			this.data = """
+					<p>
+						one little pigeon sitting in a tree
+						the rest got shot by kfc
+					</p>
+					<img src="turtlebrowse://image/angry-birds.webp" />
+
+					<script>
+						const audio = new Audio('turtlebrowse://audio/pigeon.mp3');
+
+						async function play() {
+							try {
+								if (!audio.paused && !audio.ended && audio.currentTime > 0) {
+									return;
+								}
+
+								await audio.play();
+								console.info('one little pigeon sitting in a tree');
+
+								setTimeout(() => {
+									console.warn('the rest got shot by kfc');
+								}, 3000);
+							} catch (error) {
+								console.error('the rest got shot by kfc:', error);
+							}
+						}
+
+						document.addEventListener('click', play);
+					</script>
+					""".getBytes(StandardCharsets.UTF_8);
+			this.mimeType = "text/html";
+			this.statusCode = 200;
+			handleRequest.set(true);
 			callback.Continue();
 			return true;
 		} else if (url.startsWith("turtlebrowse://api")) {
@@ -241,6 +289,16 @@ public class TurtlebrowseSchemeResourceHandler extends CefResourceHandlerAdapter
 			handleRequest.set(true);
 			callback.Continue();
 			return true;
+		} else if (url.startsWith("turtlebrowse://image")) {
+			final String res = url.replace("turtlebrowse://image/", "");
+			loadResource("/images/%s".formatted(res));
+			handleRequest.set(true);
+			callback.Continue();
+		} else if (url.startsWith("turtlebrowse://audio")) {
+			final String res = url.replace("turtlebrowse://audio/", "");
+			loadResource("/audio/%s".formatted(res));
+			handleRequest.set(true);
+			callback.Continue();
 		}
 
 		return false;
