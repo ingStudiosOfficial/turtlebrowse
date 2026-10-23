@@ -2,6 +2,13 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.12.2
+
+**23/10/2026**
+
+- Improved resource handing
+- Dedicated `images/` and `audio/` resource folder and scheme handling
+
 ## v1.12.1
 
 **19/10/2026**
