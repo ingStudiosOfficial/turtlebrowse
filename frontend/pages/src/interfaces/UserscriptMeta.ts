@@ -11,4 +11,5 @@ export interface UserscriptMeta {
 	author?: string[];
 	match?: string[];
 	license?: string[];
+	'run-at'?: string[];
 }

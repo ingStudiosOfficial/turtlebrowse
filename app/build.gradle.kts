@@ -98,6 +98,9 @@ dependencies {
 
     // Apache Batik
     implementation("org.apache.xmlgraphics:batik-all:1.19")
+
+    // Apache Commons IO
+    implementation("commons-io:commons-io:2.22.0")
 }
 
 // Apply a specific Java toolchain. 

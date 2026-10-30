@@ -673,7 +673,8 @@ public class MainWindow extends JFrame {
 			}
 
 			case "GET_USERSCRIPTS": {
-				final List<UserscriptMetadata> userscripts = UserscriptsManager.getInstance(this).getUserscripts();
+				final List<UserscriptMetadata> userscripts = UserscriptsManager.getInstance(this)
+						.getUserscripts();
 				final String json = gson.toJson(userscripts);
 				return json;
 			}

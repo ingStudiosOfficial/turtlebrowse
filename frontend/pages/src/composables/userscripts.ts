@@ -12,10 +12,11 @@ async function refresh() {
 	console.log('Userscripts:', userscripts.value);
 }
 
-async function newUserscript() {
+async function newUserscript(): Promise<Userscript> {
 	const script = generateDefaultUserscript();
 	userscripts.value.push(script);
 	await addUserscript(script);
+	return script;
 }
 
 async function upsertUserscript(userscript: Userscript) {
@@ -36,8 +37,9 @@ function generateDefaultUserscript(): Userscript {
 			version: ['0.0.1'],
 			description: ['Your userscript description'],
 			author: ['Your name'],
-			match: ['https://example.com/*'],
+			match: ['*://*/*'],
 			license: ['Apache-2.0; https://www.apache.org/licenses/LICENSE-2.0'],
+			'run-at': ['document-start'],
 		},
 		metablock: generateDefaultMetablock(),
 		content: generateDefaultContent(),
@@ -50,6 +52,7 @@ function generateDefaultContent(): string {
 ${generateDefaultMetablock()}
 
 (function() {
+	'use strict';
 	console.log('Hello, userscripts!');
 })();
 	`;

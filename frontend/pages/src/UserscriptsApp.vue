@@ -72,6 +72,11 @@ async function onDeleteUserscript() {
 	userscriptDialog.value?.hide();
 }
 
+async function createUserscript() {
+	const script = await newUserscript();
+	openDialog(script);
+}
+
 onMounted(async () => {
 	await refresh();
 });
@@ -127,7 +132,7 @@ onMounted(async () => {
 				</div>
 			</m3e-dialog>
 		</div>
-		<m3e-fab class="fab" @click="newUserscript()">
+		<m3e-fab class="fab" @click="createUserscript()">
 			<m3e-icon name="add"></m3e-icon>
 		</m3e-fab>
 	</div>

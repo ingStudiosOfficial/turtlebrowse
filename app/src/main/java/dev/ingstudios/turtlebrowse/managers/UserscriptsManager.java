@@ -16,9 +16,11 @@ import dev.ingstudios.turtlebrowse.windows.MainWindow;
 public class UserscriptsManager {
 	private static UserscriptsManager instance;
 	private final MainWindow parent;
+	private List<UserscriptMetadata> cachedUserscripts = new ArrayList<>();
 
 	private UserscriptsManager(MainWindow parent) {
 		this.parent = parent;
+		cachedUserscripts = getUserscripts();
 	}
 
 	public static synchronized UserscriptsManager getInstance(MainWindow parent) {
@@ -49,6 +51,10 @@ public class UserscriptsManager {
 		}
 	}
 
+	public List<UserscriptMetadata> getCachedUserscripts() {
+		return cachedUserscripts;
+	}
+
 	public void upsertUserscript(UserscriptMetadata userscript) {
 		final Path userscriptPath = parent.getProfileCachePath("userscripts", userscript.filename());
 		try {
@@ -57,6 +63,7 @@ public class UserscriptsManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		cachedUserscripts = getUserscripts();
 	}
 
 	public void deleteUserscript(String filename) {
@@ -66,5 +73,6 @@ public class UserscriptsManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		cachedUserscripts = getUserscripts();
 	}
 }

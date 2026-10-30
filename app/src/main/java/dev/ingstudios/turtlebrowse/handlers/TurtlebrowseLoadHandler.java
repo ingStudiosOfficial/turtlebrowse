@@ -5,16 +5,20 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.apache.commons.io.FilenameUtils;
 import org.cef.browser.CefBrowser;
 import org.cef.browser.CefFrame;
 import org.cef.handler.CefLoadHandlerAdapter;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import dev.ingstudios.turtlebrowse.managers.UserscriptsManager;
+import dev.ingstudios.turtlebrowse.userscript.UserscriptParser.UserscriptMetadata;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
@@ -46,6 +50,8 @@ public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 		queueStack.removeAll(toRemove);
 
 		updateSiteFavicon(browser);
+
+		injectUserscript(browser);
 	}
 
 	public void addToQueueStack(JSQueueItem item) {
@@ -108,6 +114,32 @@ public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 				parent.tabBar.updateFavicon(browser, urls.get(0));
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+		});
+	}
+
+	private void injectUserscript(CefBrowser browser) {
+		final List<UserscriptMetadata> userscripts = UserscriptsManager.getInstance(parent).getCachedUserscripts();
+		final String url = browser.getURL();
+		userscripts.forEach((script) -> {
+			final JsonElement match = script.meta().get("match");
+			boolean includesSite = false;
+			if (match != null) {
+				final JsonArray runAtArray = match.getAsJsonArray();
+				for (JsonElement el : runAtArray) {
+					final String site = el.getAsString();
+					final boolean matches = FilenameUtils.wildcardMatch(url, site);
+					System.out.println("Site: " + site);
+					System.out.println("Current URL: " + url);
+					System.out.println("Matches: " + matches);
+					if (matches) {
+						includesSite = true;
+						break;
+					}
+				}
+			}
+			if (includesSite) {
+				browser.executeJavaScript(script.content(), url, 0);
 			}
 		});
 	}
