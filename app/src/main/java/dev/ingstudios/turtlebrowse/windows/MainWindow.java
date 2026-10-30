@@ -678,6 +678,27 @@ public class MainWindow extends JFrame {
 				return json;
 			}
 
+			case "ADD_USERSCRIPT": {
+				final JsonObject userscript = params.get("userscript").getAsJsonObject();
+				final JsonObject meta = userscript.get("meta").getAsJsonObject();
+				final String metablock = userscript.get("metablock").getAsString();
+				final String content = userscript.get("content").getAsString();
+				final String filename = userscript.get("filename").getAsString();
+				final UserscriptMetadata metadata = new UserscriptMetadata(
+						meta,
+						metablock,
+						content,
+						filename);
+				UserscriptsManager.getInstance(this).upsertUserscript(metadata);
+				return "\"ok\"";
+			}
+
+			case "DELETE_USERSCRIPT": {
+				final String filename = params.get("filename").getAsString();
+				UserscriptsManager.getInstance(this).deleteUserscript(filename);
+				return "\"ok\"";
+			}
+
 			default:
 				return "\"Unknown action\"";
 		}

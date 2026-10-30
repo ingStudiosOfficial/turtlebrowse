@@ -10,7 +10,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class UserscriptParser {
-	public static UserscriptMetadata parse(String input) {
+	public static UserscriptMetadata parse(String input, String filename) {
 		final Pattern pattern = Pattern.compile(
 				"\\B(// ==UserScript==\\r?\\n(.*?)\\r?\\n// ==/UserScript==)(.*)",
 				Pattern.DOTALL);
@@ -19,7 +19,6 @@ public class UserscriptParser {
 		if (matcher.find()) {
 			final String metablock = matcher.group(1);
 			final String metas = matcher.group(2);
-			final String code = matcher.group(3);
 
 			final JsonObject meta = new JsonObject();
 
@@ -40,12 +39,12 @@ public class UserscriptParser {
 				}
 			});
 
-			return new UserscriptMetadata(meta, metablock, code);
+			return new UserscriptMetadata(meta, metablock, input, filename);
 		}
 
 		return null;
 	}
 
-	public record UserscriptMetadata(JsonObject meta, String metablock, String content) {
+	public record UserscriptMetadata(JsonObject meta, String metablock, String content, String filename) {
 	}
 }

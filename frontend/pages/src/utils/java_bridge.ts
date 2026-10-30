@@ -9,7 +9,7 @@ import { M3eSnackbar } from '@m3e/web/snackbar';
 
 async function communicateWithBackend(
 	request: string,
-	params?: Record<string, string>,
+	params?: Record<string, unknown>,
 ): Promise<Response> {
 	const response = await fetch(`turtlebrowse://api/${request}`, {
 		method: 'POST',
@@ -23,7 +23,7 @@ async function communicateWithBackend(
 
 export async function fetchFromJavaText(
 	request: string,
-	params?: Record<string, string>,
+	params?: Record<string, unknown>,
 ): Promise<string | void> {
 	const response = await communicateWithBackend(request, params);
 	return response.text();
@@ -31,7 +31,7 @@ export async function fetchFromJavaText(
 
 export async function fetchFromJavaJson(
 	request: string,
-	params?: Record<string, string>,
+	params?: Record<string, unknown>,
 ): Promise<unknown> {
 	const response = await communicateWithBackend(request, params);
 	return await response.json();
@@ -344,10 +344,22 @@ export async function getUserscripts(): Promise<Userscript[] | null> {
 	}
 }
 
-export async function addUserscript(): Promise<Userscript | null> {
+export async function addUserscript(userscript: Userscript) {
 	try {
-		const script = (await fetchFromJavaJson('ADD_USERSCRIPT')) as Userscript;
-		return script;
+		await fetchFromJavaJson('ADD_USERSCRIPT', {
+			userscript: userscript,
+		});
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+}
+
+export async function deleteUserscript(userscript: Userscript) {
+	try {
+		await fetchFromJavaJson('DELETE_USERSCRIPT', {
+			filename: userscript.filename,
+		});
 	} catch (error) {
 		console.error(error);
 		return null;

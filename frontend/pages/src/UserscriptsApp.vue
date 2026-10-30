@@ -12,8 +12,15 @@ import type { M3eDialogElement } from '@m3e/web/dialog';
 import { CodeJar, type Position } from 'codejar';
 import { highlightElement } from '@speed-highlight/core';
 import '@speed-highlight/core/themes/default.css';
+import '@m3e/web/fab';
 
-const { userscripts, refresh, newUserscript } = useUserscripts();
+const {
+	userscriptsNotNull: userscripts,
+	refresh,
+	newUserscript,
+	upsertUserscript,
+	removeUserscript,
+} = useUserscripts();
 
 const userscriptDialog = useTemplateRef<M3eDialogElement>('userscriptDialog');
 const editor = useTemplateRef<HTMLDivElement>('editor');
@@ -22,7 +29,7 @@ const currentUserscript = ref<Userscript | null>(null);
 
 let jar: ReturnType<typeof CodeJar> | null = null;
 
-function openDialog(userscript: Userscript) {
+async function openDialog(userscript: Userscript) {
 	currentUserscript.value = userscript;
 	userscriptDialog.value?.show();
 
@@ -34,9 +41,11 @@ function openDialog(userscript: Userscript) {
 
 	if (jar && userscript) {
 		jar.updateCode(userscript.content);
+		await highlightElement(editor.value!, 'js');
+		jar.onUpdate((code) => {
+			userscript.content = code;
+		});
 	}
-
-	if (editor.value) highlight(editor.value);
 }
 
 async function highlight(editor: HTMLElement) {
@@ -53,19 +62,25 @@ function handleDialogClosed() {
 	}
 }
 
+async function onDialogOk() {
+	if (currentUserscript.value) await upsertUserscript(currentUserscript.value);
+	userscriptDialog.value?.hide();
+}
+
+async function onDeleteUserscript() {
+	if (currentUserscript.value) await removeUserscript(currentUserscript.value);
+	userscriptDialog.value?.hide();
+}
+
 onMounted(async () => {
 	await refresh();
 });
 </script>
 
 <template>
-	<div class="history-wrapper">
-		<h1 class="history-header">Userscripts</h1>
+	<div class="userscripts-wrapper">
+		<h1 class="userscripts-header">Userscripts</h1>
 		<div class="content">
-			<m3e-button variant="text" @click="newUserscript">
-				<m3e-icon slot="icon" name="add"></m3e-icon>
-				Add userscript
-			</m3e-button>
 			<m3e-card>
 				<m3e-action-list slot="content" variant="segmented">
 					<m3e-list-action
@@ -88,7 +103,7 @@ onMounted(async () => {
 				</m3e-action-list>
 			</m3e-card>
 
-			<m3e-dialog ref="userscriptDialog" @closed="handleDialogClosed()">
+			<m3e-dialog ref="userscriptDialog" dismissible @closed="handleDialogClosed()">
 				<span slot="header">{{ currentUserscript?.meta.name[0] }}</span>
 				<p v-if="currentUserscript?.meta.namespace?.[0]">
 					Namespace: {{ currentUserscript?.meta.namespace[0] }}
@@ -100,18 +115,31 @@ onMounted(async () => {
 					Version: {{ currentUserscript?.meta.version[0] }}
 				</p>
 				<div ref="editor" class="code-editor"></div>
+				<div slot="actions" class="actions" end>
+					<m3e-button @click="onDeleteUserscript()">
+						<m3e-icon slot="icon" name="delete"></m3e-icon>
+						Delete
+					</m3e-button>
+					<m3e-button variant="filled" @click="onDialogOk()">
+						<m3e-icon slot="icon" name="check"></m3e-icon>
+						OK
+					</m3e-button>
+				</div>
 			</m3e-dialog>
 		</div>
+		<m3e-fab class="fab" @click="newUserscript()">
+			<m3e-icon name="add"></m3e-icon>
+		</m3e-fab>
 	</div>
 </template>
 
 <style scoped>
-.history-header {
+.userscripts-header {
 	margin: 16px 0;
 	font-size: 2.5rem;
 }
 
-.history-wrapper {
+.userscripts-wrapper {
 	display: flex;
 	flex-direction: row;
 	width: 100dvw;
@@ -149,5 +177,19 @@ onMounted(async () => {
 	padding: 16px;
 	white-space: pre-wrap;
 	border-radius: 16px;
+}
+
+.fab {
+	position: fixed;
+	bottom: 16px;
+	right: 16px;
+}
+
+.actions {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: right;
+	gap: 16px;
 }
 </style>

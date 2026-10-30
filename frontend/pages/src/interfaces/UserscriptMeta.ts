@@ -8,4 +8,7 @@ export interface UserscriptMeta {
 	resource?: string[];
 	version?: string[];
 	icon?: string[];
+	author?: string[];
+	match?: string[];
+	license?: string[];
 }
