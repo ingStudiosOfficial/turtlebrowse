@@ -8,6 +8,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 
@@ -101,7 +102,8 @@ public class UpdateManager {
 	}
 
 	public void updateAppImage() {
-		final String appImagePath = "%s_%s".formatted(latestVersion, AppImageUtils.getAppImagePath());
+		final Path parentPath = Path.of(AppImageUtils.getAppImagePath()).getParent().toAbsolutePath();
+		final String appImagePath = Path.of(parentPath, "turtlebrowse_%s.AppImage".formatted(latestVersion));
 		if (appImagePath != null && !appImagePath.isBlank()) {
 			try {
 				final URL scriptUrl = getClass().getResource("/updates/update-appimage.sh");
