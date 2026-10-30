@@ -2,6 +2,15 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.12.3
+
+**30/10/2026**
+
+- Userscript injection
+- Userscript editing
+- Userscript creation
+- Userscript deletion
+
 ## v1.12.2
 
 **23/10/2026**
