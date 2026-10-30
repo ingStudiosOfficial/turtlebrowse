@@ -102,8 +102,10 @@ public class UpdateManager {
 	}
 
 	public void updateAppImage() {
-		final Path parentPath = Path.of(AppImageUtils.getAppImagePath()).getParent().toAbsolutePath();
-		final String appImagePath = Path.of(parentPath, "turtlebrowse_%s.AppImage".formatted(latestVersion));
+		final Path parentPath = Path.of(AppImageUtils.getAppImagePath()).getParent();
+		final String appImagePath = parentPath
+				.resolve("turtlebrowse_%s.AppImage".formatted(latestVersion))
+				.toString();
 		if (appImagePath != null && !appImagePath.isBlank()) {
 			try {
 				final URL scriptUrl = getClass().getResource("/updates/update-appimage.sh");
