@@ -2,6 +2,16 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.12.4
+
+**1/11/2026**
+
+- Basic `GM_` APIs (synchronous and asynchronous)
+- `GM.addElement`
+- `GM.addStyle`
+- `GM.openInTab`
+- `GM.xmlhttpRequest` (work in progress)
+
 ## v1.12.3
 
 **30/10/2026**
