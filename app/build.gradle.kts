@@ -101,6 +101,11 @@ dependencies {
 
     // Apache Commons IO
     implementation("commons-io:commons-io:2.22.0")
+
+    // LuaJava
+    implementation("party.iroiro.luajava:luajava:4.1.0")
+    implementation("party.iroiro.luajava:lua55:4.1.0")
+    runtimeOnly("party.iroiro.luajava:lua55-platform:4.1.0:natives-desktop")
 }
 
 // Apply a specific Java toolchain. 

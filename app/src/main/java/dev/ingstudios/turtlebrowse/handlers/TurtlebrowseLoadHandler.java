@@ -1,5 +1,7 @@
 package dev.ingstudios.turtlebrowse.handlers;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -121,6 +123,15 @@ public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 	private void injectUserscript(CefBrowser browser) {
 		final List<UserscriptMetadata> userscripts = UserscriptsManager.getInstance(parent).getCachedUserscripts();
 		final String url = browser.getURL();
+
+		String globalJs;
+		try {
+			globalJs = Files.readString(Paths.get(getClass().getResource("/userscripts/js/global.js").toURI()));
+			browser.executeJavaScript(globalJs, url, 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		userscripts.forEach((script) -> {
 			final JsonElement match = script.meta().get("match");
 			boolean includesSite = false;

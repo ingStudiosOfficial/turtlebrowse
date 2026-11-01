@@ -15,5 +15,8 @@
     },
     "[go]": {
         "editor.defaultFormatter": "golang.go"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "oxc.oxc-vscode", 
     }
 }
