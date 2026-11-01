@@ -1,15 +1,88 @@
+/**
+ * *Since VM2.13.1*
+ *
+ * Appends and returns an element with the specified attributes with the primary purpose of circumventing a strict `Content-Security-Policy` that forbids adding inline code or style.
+ *
+ * @overload
+ * @param
+ * @param {string} tagName - A tag name like `'script'`.
+ * @param {object} attributes - The keys are HTML attributes, not DOM properties, except `textContent` which sets DOM property `textContent`. The values are strings so if you want to assign a private function to `onload` you can do it after the element is created.
+ * @return {void}
+ *
+ * @overload
+ * @param {Node | Element | ShadowRoot} parentNode - The parent node to which the new node will be appended.
+ * It can be inside ShadowDOM: `someElement.shadowRoot`.
+ *
+ * When omitted, it’ll be determined automatically:
+ *
+ * `document.head` (`<head>`) for `script`, `link`, `style`, `meta` tags.
+ * `document.body` (`<body>`) for other tags or when there’s no `<head>`.
+ * `document.documentElement` (`<html>` or an XML root node) otherwise.
+ * @param {string} tagName - A tag name like `'script'`.
+ * @param {object} attributes - The keys are HTML attributes, not DOM properties, except `textContent` which sets DOM property `textContent`. The values are strings so if you want to assign a private function to `onload` you can do it after the element is created.
+ * @return {Element}
+ */
+const addElement = (parentNode, tagName, attributes) => {
+	if (typeof parentNode === "string") {
+		attributes = tagName;
+		tagName = parentNode;
+
+		parentNode =
+			tagName === "script" || tagName === "link" || tagName === "style" || tagName === "meta"
+				? document.head
+				: document.body;
+	}
+
+	const el = document.createElement(tagName);
+
+	if (attributes) {
+		for (const [key, value] of Object.entries(attributes)) {
+			if (key === "textContent") {
+				el.textContent = value;
+			} else {
+				el.setAttribute(key, value);
+			}
+		}
+	}
+
+	parentNode.appendChild(el);
+
+	return el;
+};
+
+/**
+ * Appends and returns a `<style>` element with the specified CSS.
+ *
+ * @param {string} css - The CSS code to inject.
+ * @returns {HTMLStyleElement}
+ */
+const addStyle = (css) => {
+	const el = document.createElement("style");
+	el.innerHTML = css;
+	document.head.appendChild(el);
+	return el;
+};
+
+/**
+ * Opens URL in a new tab.
+ *
+ * @param {string} url - The URL to open in a new tab. URL relative to current page is also allowed.
+ * @param {{
+ * active: boolean,
+ * container: number,
+ * insert: boolean,
+ * pinned: boolean,
+ * }} [options]
+ * @returns {void}
+ */
+// oxlint-disable-next-line no-unused-vars
+const openInTab = (url, options) => {
+	window.open(url);
+};
+
 const GM = {
-	/**
-	 * Appends and returns a `<style>` element with the specified CSS.
-	 *
-	 * @param {string} css - The CSS code to inject.
-	 * @returns {Promise<HTMLStyleElement>}
-	 */
 	addStyle: async (css) => {
-		const el = document.createElement("style");
-		el.innerHTML = css;
-		document.head.appendChild(el);
-		return el;
+		return addStyle(css);
 	},
 	/**
 	 * *Since VM2.13.1*
@@ -36,35 +109,14 @@ const GM = {
 	 * @return {Promise<Element>}
 	 */
 	addElement: async (parentNode, tagName, attributes) => {
-		if (typeof parentNode === "string") {
-			attributes = tagName;
-			tagName = parentNode;
-
-			parentNode =
-				tagName === "script" ||
-				tagName === "link" ||
-				tagName === "style" ||
-				tagName === "meta"
-					? document.head
-					: document.body;
-		}
-
-		const el = document.createElement(tagName);
-
-		if (attributes) {
-			for (const [key, value] of Object.entries(attributes)) {
-				if (key === "textContent") {
-					el.textContent = value;
-				} else {
-					el.setAttribute(key, value);
-				}
-			}
-		}
-
-		parentNode.appendChild(el);
-
-		return el;
+		return addElement(parentNode, tagName, attributes);
 	},
+	/**
+	 * Appends and returns a `<style>` element with the specified CSS.
+	 *
+	 * @param {string} css - The CSS code to inject.
+	 * @returns {Promise<HTMLStyleElement>}
+	 */
 	/**
 	 * Opens URL in a new tab.
 	 *
@@ -79,7 +131,7 @@ const GM = {
 	 */
 	// oxlint-disable-next-line no-unused-vars
 	openInTab: async (url, options) => {
-		window.open(url);
+		openInTab(url, options);
 	},
 	/**
 	 * Makes a request like XMLHttpRequest, with some special capabilities, not restricted by same-origin policy.
@@ -147,3 +199,6 @@ const GM = {
 };
 
 window.GM = GM;
+window.GM_addElement = addElement;
+window.GM_addStyle = addStyle;
+window.GM_openInTab = openInTab;
