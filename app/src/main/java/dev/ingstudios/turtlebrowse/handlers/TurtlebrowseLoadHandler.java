@@ -1,7 +1,7 @@
 package dev.ingstudios.turtlebrowse.handlers;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -124,10 +124,11 @@ public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 		final List<UserscriptMetadata> userscripts = UserscriptsManager.getInstance(parent).getCachedUserscripts();
 		final String url = browser.getURL();
 
-		String globalJs;
-		try {
-			globalJs = Files.readString(Paths.get(getClass().getResource("/userscripts/js/global.js").toURI()));
-			browser.executeJavaScript(globalJs, url, 0);
+		try (InputStream inputStream = getClass().getResourceAsStream("/userscripts/js/global.js")) {
+			if (inputStream != null) {
+				final String globalJs = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+				browser.executeJavaScript(globalJs, url, 0);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
