@@ -1,5 +1,7 @@
 package dev.ingstudios.turtlebrowse.managers;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -8,6 +10,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+
+import org.cef.OS;
 
 import dev.ingstudios.turtlebrowse.userscript.UserscriptParser;
 import dev.ingstudios.turtlebrowse.userscript.UserscriptParser.UserscriptMetadata;
@@ -74,5 +78,45 @@ public class UserscriptsManager {
 			e.printStackTrace();
 		}
 		cachedUserscripts = getUserscripts();
+	}
+
+	public void openInTextEditor(String filename) {
+		Thread.ofVirtual().start(() -> {
+			final Path userscriptPath = parent.getProfileCachePath("userscripts", filename);
+			final File file = userscriptPath.toFile();
+
+			if (Desktop.isDesktopSupported()) {
+				final Desktop desktop = Desktop.getDesktop();
+				try {
+					desktop.edit(file);
+				} catch (Exception e) {
+					e.printStackTrace();
+					fallbackEdit(userscriptPath);
+				}
+			} else {
+				System.out.println("Desktop not supported.");
+				fallbackEdit(userscriptPath);
+			}
+		});
+	}
+
+	private void fallbackEdit(Path path) {
+		try {
+			if (OS.isLinux()) {
+				final ProcessBuilder processBuilder = new ProcessBuilder("xdg-open", path.toString());
+				processBuilder.inheritIO();
+				processBuilder.start();
+			} else if (OS.isWindows()) {
+				final ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c", "start", "", path.toString());
+				processBuilder.inheritIO();
+				processBuilder.start();
+			} else if (OS.isMacintosh()) {
+				final ProcessBuilder processBuilder = new ProcessBuilder("open", path.toString());
+				processBuilder.inheritIO();
+				processBuilder.start();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -700,6 +700,12 @@ public class MainWindow extends JFrame {
 				return "\"ok\"";
 			}
 
+			case "OPEN_USERSCRIPT_EDITOR": {
+				final String filename = params.get("filename").getAsString();
+				UserscriptsManager.getInstance(this).openInTextEditor(filename);
+				return "\"ok\"";
+			}
+
 			default:
 				return "\"Unknown action\"";
 		}

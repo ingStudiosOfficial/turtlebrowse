@@ -13,6 +13,7 @@ import { CodeJar, type Position } from 'codejar';
 import { highlightElement } from '@speed-highlight/core';
 import '@speed-highlight/core/themes/default.css';
 import '@m3e/web/fab';
+import { openUserscriptInTextEditor } from './utils/java_bridge';
 
 const {
 	userscriptsNotNull: userscripts,
@@ -121,6 +122,15 @@ onMounted(async () => {
 				</p>
 				<div ref="editor" class="code-editor"></div>
 				<div slot="actions" class="actions" end>
+					<m3e-button
+						@click="
+							if (currentUserscript != null)
+								openUserscriptInTextEditor(currentUserscript);
+						"
+					>
+						<m3e-icon slot="icon" name="open_in_new"></m3e-icon>
+						Open in text editor
+					</m3e-button>
 					<m3e-button @click="onDeleteUserscript()">
 						<m3e-icon slot="icon" name="delete"></m3e-icon>
 						Delete

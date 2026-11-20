@@ -351,7 +351,6 @@ export async function addUserscript(userscript: Userscript) {
 		});
 	} catch (error) {
 		console.error(error);
-		return null;
 	}
 }
 
@@ -362,6 +361,15 @@ export async function deleteUserscript(userscript: Userscript) {
 		});
 	} catch (error) {
 		console.error(error);
-		return null;
+	}
+}
+
+export async function openUserscriptInTextEditor(userscript: Userscript) {
+	try {
+		await fetchFromJavaText('OPEN_USERSCRIPT_EDITOR', {
+			filename: userscript.filename,
+		});
+	} catch (error) {
+		console.error(error);
 	}
 }

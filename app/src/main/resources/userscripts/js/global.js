@@ -182,23 +182,22 @@
 			context,
 			anonymous = false,
 		) => {
-			await fetch("turtlebrowse://api/userscript/xmlhttpRequest", {
-				headers: headers,
-				// oxlint-disable-next-line unicorn/no-invalid-fetch-options
-				body: {
-					url: url,
-					method: method,
-					user: user,
-					password: password,
-					overrideMimeType: overrideMimeType,
-					responseType: responseType,
-					timeout: timeout,
-					data: data,
-					binary: binary,
-					context: context,
-					anonymous: anonymous,
-				},
-			});
+			const xhr = new XMLHttpRequest();
+			xhr.open(method, "userscript://xmlhttpRequest", false);
+			xhr.send(
+				JSON.stringify({
+					headers,
+					user,
+					password,
+					overrideMimeType,
+					responseType,
+					timeout,
+					data,
+					binary,
+					context,
+					anonymous,
+				}),
+			);
 		},
 	};
 

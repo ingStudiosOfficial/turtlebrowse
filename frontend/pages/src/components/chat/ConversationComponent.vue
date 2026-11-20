@@ -53,7 +53,7 @@ onMounted(async () => {
 				<input id="prompt-field" v-model="prompt" @keydown="sendPromptKeyboard" />
 			</m3e-form-field>
 			<m3e-textarea-autosize for="prompt-field" max-rows="6"></m3e-textarea-autosize>
-			<m3e-icon-button variant="filled" :disabled="isGenerating" @click="sendPromptButton()">
+			<m3e-icon-button variant="filled" :disabled="isGenerating" @click="sendPromptButton">
 				<m3e-icon name="send"></m3e-icon>
 			</m3e-icon-button>
 		</div>
