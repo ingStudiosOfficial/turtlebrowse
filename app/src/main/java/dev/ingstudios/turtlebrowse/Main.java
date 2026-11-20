@@ -2,6 +2,7 @@ package dev.ingstudios.turtlebrowse;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.nio.file.Path;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.UUID;
 
 import javax.swing.JFrame;
@@ -454,5 +456,19 @@ public class Main {
 		} else { // Default fallback for standard web URLs
 			return "https://%s".formatted(url);
 		}
+	}
+
+	public static String getBrowserVersion() {
+		try (InputStream input = Main.class.getResourceAsStream("/version.properties")) {
+			final Properties properties = new Properties();
+			if (input != null) {
+				properties.load(input);
+				return properties.getProperty("version", "1.0.0");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "1.0.0";
 	}
 }

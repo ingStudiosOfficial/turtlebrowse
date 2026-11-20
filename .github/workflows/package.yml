@@ -63,10 +63,10 @@ jobs:
             arch: AMD64
             pkg-type: exe
 
-          - os: windows-latest
-            os-name: Windows
-            arch: AMD64
-            pkg-type: win-standalone
+          # - os: windows-latest
+          #   os-name: Windows
+          #   arch: AMD64
+          #   pkg-type: win-standalone
 
           - os: ubuntu-latest
             os-name: Ubuntu

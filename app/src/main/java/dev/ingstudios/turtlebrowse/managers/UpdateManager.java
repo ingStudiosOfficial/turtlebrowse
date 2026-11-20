@@ -10,14 +10,14 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Properties;
 
+import dev.ingstudios.turtlebrowse.Main;
 import dev.ingstudios.turtlebrowse.environment.AppImageUtils;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 
 public class UpdateManager {
 	private static UpdateManager instance;
-	public final String currentVersion = getVersion();
+	public final String currentVersion = Main.getBrowserVersion();
 	public String latestVersion = "1.0.0";
 	private final MainWindow parent;
 	private final HttpClient httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
@@ -33,20 +33,6 @@ public class UpdateManager {
 			instance = new UpdateManager(parent);
 		}
 		return instance;
-	}
-
-	private String getVersion() {
-		try (InputStream input = UpdateManager.class.getResourceAsStream("/version.properties")) {
-			final Properties properties = new Properties();
-			if (input != null) {
-				properties.load(input);
-				return properties.getProperty("version", "1.0.0");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return "1.0.0";
 	}
 
 	private String getLatestVersion() {

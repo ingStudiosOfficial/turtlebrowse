@@ -63,6 +63,7 @@ import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseLifeSpanHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseLoadHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowsePrintHandler;
 import dev.ingstudios.turtlebrowse.handlers.TurtlebrowseRequestHandler;
+import dev.ingstudios.turtlebrowse.lua.LuaPluginRunner;
 import dev.ingstudios.turtlebrowse.managers.CefAppManager;
 import dev.ingstudios.turtlebrowse.managers.DiscordPresenceManager;
 import dev.ingstudios.turtlebrowse.managers.FileSystemManager;
@@ -123,6 +124,7 @@ public class MainWindow extends JFrame {
 	public final SearchAutosuggest searchAutosuggest;
 	public final OsThemeDetector themeDetector = OsThemeDetector.getDetector();
 	private boolean isFullscreen = false;
+	private LuaPluginRunner luaPluginRunner;
 
 	public MainWindow(ProfileStructureWithId profile) {
 		this(profile, null);
@@ -185,6 +187,13 @@ public class MainWindow extends JFrame {
 		loadHandler = new TurtlebrowseLoadHandler(this);
 
 		searchAutosuggest = new SearchAutosuggest(userAgent, this);
+
+		try {
+			luaPluginRunner = new LuaPluginRunner();
+		} catch (Exception e) {
+			e.printStackTrace();
+			luaPluginRunner = null;
+		}
 
 		// Address bar
 		addressBar = new AddressBar(cefClient, this, startUrl);
