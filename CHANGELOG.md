@@ -2,6 +2,13 @@
 
 All major and minor changes, alongside with bug fixes go here. More details available with each releases' full changelog.
 
+## v1.12.5
+
+**20/11/2026**
+
+- Open userscript in external text program
+- Enable and disable userscripts
+
 ## v1.12.4
 
 **1/11/2026**
