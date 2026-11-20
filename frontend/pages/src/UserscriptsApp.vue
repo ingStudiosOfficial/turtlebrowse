@@ -5,6 +5,7 @@ import '@m3e/web/button';
 import '@m3e/web/icon';
 import '@m3e/web/dialog';
 import '@m3e/web/avatar';
+import '@m3e/web/switch';
 import { onMounted, ref, useTemplateRef } from 'vue';
 import { useUserscripts } from './composables/userscripts';
 import type { Userscript } from './interfaces/Userscript';
@@ -17,10 +18,12 @@ import { openUserscriptInTextEditor } from './utils/java_bridge';
 
 const {
 	userscriptsNotNull: userscripts,
+	userscriptConfigs,
 	refresh,
 	newUserscript,
 	upsertUserscript,
 	removeUserscript,
+	onUserscriptEnableChange,
 } = useUserscripts();
 
 const userscriptDialog = useTemplateRef<M3eDialogElement>('userscriptDialog');
@@ -105,6 +108,15 @@ onMounted(async () => {
 							<span v-else>{{ script.meta.name[0]?.[0] }}</span>
 						</m3e-avatar>
 						{{ script.meta.name[0] }}
+						<m3e-switch
+							slot="trailing"
+							:checked="
+								userscriptConfigs.find((c) => c.id === script.filename)?.enabled ??
+								true
+							"
+							@click.stop
+							@change="onUserscriptEnableChange(script.filename, $event.target)"
+						></m3e-switch>
 					</m3e-list-action>
 				</m3e-action-list>
 			</m3e-card>

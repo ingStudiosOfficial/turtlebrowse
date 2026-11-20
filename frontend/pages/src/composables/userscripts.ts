@@ -1,14 +1,24 @@
 import type { Userscript } from '@/interfaces/Userscript';
-import { addUserscript, deleteUserscript, getUserscripts } from '@/utils/java_bridge';
+import type { UserscriptConfig } from '@/interfaces/UserscriptConfig';
+import {
+	addUserscript,
+	deleteUserscript,
+	getUserscriptConfigs,
+	getUserscripts,
+	setUserscriptEnabled,
+} from '@/utils/java_bridge';
+import type { M3eSwitchElement } from '@m3e/web/switch';
 import { computed, ref } from 'vue';
 
 const userscripts = ref<Userscript[]>([]);
 const userscriptsNotNull = computed(() => {
 	return userscripts.value.filter((u) => u.meta && u.meta.name);
 });
+const userscriptConfigs = ref<UserscriptConfig[]>([]);
 
 async function refresh() {
 	userscripts.value = (await getUserscripts()) || [];
+	userscriptConfigs.value = await getUserscriptConfigs();
 	console.log('Userscripts:', userscripts.value);
 }
 
@@ -70,13 +80,20 @@ function generateDefaultMetablock(): string {
 // ==/UserScript==`;
 }
 
+async function onUserscriptEnableChange(id: string, el: M3eSwitchElement) {
+	console.log('Checked:', el.checked);
+	await setUserscriptEnabled(id, el.checked);
+}
+
 export function useUserscripts() {
 	return {
 		userscripts,
 		userscriptsNotNull,
+		userscriptConfigs,
 		refresh,
 		newUserscript,
 		upsertUserscript,
 		removeUserscript,
+		onUserscriptEnableChange,
 	};
 }

@@ -13,6 +13,9 @@ import java.util.stream.Stream;
 
 import org.cef.OS;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import dev.ingstudios.turtlebrowse.userscript.UserscriptParser;
 import dev.ingstudios.turtlebrowse.userscript.UserscriptParser.UserscriptMetadata;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
@@ -21,6 +24,7 @@ public class UserscriptsManager {
 	private static UserscriptsManager instance;
 	private final MainWindow parent;
 	private List<UserscriptMetadata> cachedUserscripts = new ArrayList<>();
+	private final Gson gson = new Gson();
 
 	private UserscriptsManager(MainWindow parent) {
 		this.parent = parent;
@@ -64,6 +68,8 @@ public class UserscriptsManager {
 		try {
 			Files.write(userscriptPath, userscript.content().getBytes(StandardCharsets.UTF_8),
 					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+
+			upsertConfig(new UserscriptConfig(userscript.filename(), true));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -118,5 +124,65 @@ public class UserscriptsManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public List<UserscriptConfig> getConfigs() {
+		try {
+			final Path configPath = getConfigPath();
+			final String raw = Files.readString(configPath);
+			final List<UserscriptConfig> configs = gson.fromJson(raw, new TypeToken<List<UserscriptConfig>>() {
+			}.getType());
+			return configs;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<>();
+		}
+	}
+
+	public void setEnabled(String id, boolean enabled) {
+		final List<UserscriptConfig> configs = getConfigs();
+		final UserscriptConfig config = configs.stream().filter(c -> c.id().equals(id)).findFirst().orElse(null);
+		if (config != null) {
+			final int index = configs.indexOf(config);
+			configs.set(index, new UserscriptConfig(id, enabled));
+		} else {
+			System.out.println("Could not find config.");
+		}
+		saveConfigs(configs);
+	}
+
+	public boolean isEnabled(String id) {
+		final List<UserscriptConfig> configs = getConfigs();
+		final UserscriptConfig config = configs.stream().filter(c -> c.id().equals(id)).findFirst().orElse(null);
+		return config != null ? config.enabled() : true;
+	}
+
+	private void upsertConfig(UserscriptConfig config) {
+		final List<UserscriptConfig> configs = getConfigs();
+		final UserscriptConfig found = configs.stream().filter(c -> c.id().equals(config.id())).findFirst()
+				.orElse(null);
+		if (found != null) {
+			final int index = configs.indexOf(config);
+			configs.set(index, config);
+		} else {
+			configs.add(config);
+		}
+		saveConfigs(configs);
+	}
+
+	private void saveConfigs(List<UserscriptConfig> configs) {
+		final Path configPath = getConfigPath();
+		try {
+			Files.writeString(configPath, gson.toJson(configs));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private Path getConfigPath() {
+		return parent.getProfileCachePath("userscripts.json");
+	}
+
+	public record UserscriptConfig(String id, boolean enabled) { // IMPORTANT: ID IS FILENAME
 	}
 }

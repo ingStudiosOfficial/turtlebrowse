@@ -4,6 +4,7 @@ import type { NewtabSettings } from '@/interfaces/NewtabSettings';
 import type { SearchEngineObject } from '@/interfaces/SearchEngineObject';
 import type { UpdateInfo } from '@/interfaces/UpdateInfo';
 import type { Userscript } from '@/interfaces/Userscript';
+import type { UserscriptConfig } from '@/interfaces/UserscriptConfig';
 import type { Appearance } from '@/types/Appearance';
 import { M3eSnackbar } from '@m3e/web/snackbar';
 
@@ -368,6 +369,27 @@ export async function openUserscriptInTextEditor(userscript: Userscript) {
 	try {
 		await fetchFromJavaText('OPEN_USERSCRIPT_EDITOR', {
 			filename: userscript.filename,
+		});
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export async function getUserscriptConfigs(): Promise<UserscriptConfig[]> {
+	try {
+		const configs = (await fetchFromJavaJson('GET_USERSCRIPT_CONFIGS')) as UserscriptConfig[];
+		return configs;
+	} catch (error) {
+		console.error(error);
+		return [];
+	}
+}
+
+export async function setUserscriptEnabled(id: string, enabled: boolean) {
+	try {
+		await fetchFromJavaText('SET_USERSCRIPT_ENABLED', {
+			id: id,
+			enabled: enabled,
 		});
 	} catch (error) {
 		console.error(error);

@@ -71,6 +71,7 @@ import dev.ingstudios.turtlebrowse.managers.UpdateManager;
 import dev.ingstudios.turtlebrowse.managers.UserscriptsManager;
 import dev.ingstudios.turtlebrowse.managers.WallpaperManager;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager;
+import dev.ingstudios.turtlebrowse.managers.UserscriptsManager.UserscriptConfig;
 import dev.ingstudios.turtlebrowse.managers.WindowsManager.WindowItem;
 import dev.ingstudios.turtlebrowse.ollama.OllamaChat;
 import dev.ingstudios.turtlebrowse.search.SearchAutosuggest;
@@ -703,6 +704,19 @@ public class MainWindow extends JFrame {
 			case "OPEN_USERSCRIPT_EDITOR": {
 				final String filename = params.get("filename").getAsString();
 				UserscriptsManager.getInstance(this).openInTextEditor(filename);
+				return "\"ok\"";
+			}
+
+			case "GET_USERSCRIPT_CONFIGS": {
+				final List<UserscriptConfig> configs = UserscriptsManager.getInstance(this).getConfigs();
+				final String json = gson.toJson(configs);
+				return json;
+			}
+
+			case "SET_USERSCRIPT_ENABLED": {
+				final String id = params.get("id").getAsString();
+				final boolean enabled = params.get("enabled").getAsBoolean();
+				UserscriptsManager.getInstance(this).setEnabled(id, enabled);
 				return "\"ok\"";
 			}
 

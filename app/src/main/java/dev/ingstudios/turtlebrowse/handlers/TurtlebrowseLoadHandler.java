@@ -134,6 +134,11 @@ public class TurtlebrowseLoadHandler extends CefLoadHandlerAdapter {
 		}
 
 		userscripts.forEach((script) -> {
+			if (!UserscriptsManager.getInstance(parent).isEnabled(script.filename())) {
+				System.out.println("Userscrupt not enabled.");
+				return;
+			}
+
 			final JsonElement match = script.meta().get("match");
 			boolean includesSite = false;
 			if (match != null) {
