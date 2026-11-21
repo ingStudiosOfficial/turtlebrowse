@@ -40,6 +40,7 @@ import dev.ingstudios.turtlebrowse.components.AISidebar;
 import dev.ingstudios.turtlebrowse.components.AddressBar;
 import dev.ingstudios.turtlebrowse.components.FindSidebar;
 import dev.ingstudios.turtlebrowse.components.MoreSidebar;
+import dev.ingstudios.turtlebrowse.components.PluginSidebar;
 import dev.ingstudios.turtlebrowse.components.TabBar;
 import dev.ingstudios.turtlebrowse.components.TerminalSidebar;
 import dev.ingstudios.turtlebrowse.components.ToolSidebar;
@@ -102,6 +103,7 @@ public class MainWindow extends JFrame {
 	public final ZoomSidebar zoomSidebar;
 	public final FindSidebar findSidebar;
 	public final TerminalSidebar terminalSidebar;
+	public final PluginSidebar pluginSidebar;
 	public final MoreSidebar moreSidebar;
 	private final JPanel sidePanel;
 	private final Gson gson = new Gson();
@@ -124,7 +126,7 @@ public class MainWindow extends JFrame {
 	public final SearchAutosuggest searchAutosuggest;
 	public final OsThemeDetector themeDetector = OsThemeDetector.getDetector();
 	private boolean isFullscreen = false;
-	private LuaPluginRunner luaPluginRunner;
+	public LuaPluginRunner luaPluginRunner;
 
 	public MainWindow(ProfileStructureWithId profile) {
 		this(profile, null);
@@ -217,6 +219,9 @@ public class MainWindow extends JFrame {
 
 		// Terminal sidebar
 		terminalSidebar = new TerminalSidebar(this);
+
+		// Plugin sidebar
+		pluginSidebar = new PluginSidebar(this);
 
 		// More sidebar
 		moreSidebar = new MoreSidebar(this);

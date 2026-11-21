@@ -104,8 +104,8 @@ dependencies {
 
     // LuaJava
     implementation("party.iroiro.luajava:luajava:4.1.0")
-    implementation("party.iroiro.luajava:lua55:4.1.0")
-    runtimeOnly("party.iroiro.luajava:lua55-platform:4.1.0:natives-desktop")
+    implementation("party.iroiro.luajava:lua54:4.1.0")
+    runtimeOnly("party.iroiro.luajava:lua54-platform:4.1.0:natives-desktop")
 }
 
 // Apply a specific Java toolchain. 
