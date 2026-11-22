@@ -3,11 +3,14 @@ package dev.ingstudios.turtlebrowse.lua.elements;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
-public class LuaTextElement {
-	public final Label node;
-
+public class LuaTextElement extends LuaElement<Label> {
 	public LuaTextElement(Label node) {
-		this.node = node;
+		super(node);
+	}
+
+	public LuaTextElement setText(String text) {
+		node.setText(text);
+		return this;
 	}
 
 	public LuaTextElement setColor(String color) {

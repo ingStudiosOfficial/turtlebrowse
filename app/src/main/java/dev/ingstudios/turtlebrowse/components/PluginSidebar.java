@@ -8,7 +8,6 @@ import org.kordamp.ikonli.material2.Material2OutlinedAL;
 
 import com.jfoenix.controls.JFXButton;
 
-import dev.ingstudios.turtlebrowse.lua.elements.LuaTextElement;
 import dev.ingstudios.turtlebrowse.windows.MainWindow;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -17,7 +16,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -73,7 +71,11 @@ public class PluginSidebar extends ToolSidebar {
 			root.getChildren().addAll(actionsBar, canvas);
 
 			parent.luaPluginRunner.run("""
-						plugin.canvas.createText('hi'):setColor('#11bedd')
+						local canvasElement = plugin.canvas.getCanvas()
+						local hiText = plugin.canvas.createText('hi'):setColor('#11bedd')
+						local byeText = plugin.canvas.createText('bye'):setColor('#dd6311')
+						local column = plugin.canvas.createColumn():appendChild(hiText):appendChild(byeText)
+						canvasElement:appendChild(column)
 					""");
 		});
 
@@ -132,20 +134,5 @@ public class PluginSidebar extends ToolSidebar {
 
 	public VBox getCanvas() {
 		return canvas;
-	}
-
-	public HBox createRow() {
-		return new HBox();
-	}
-
-	public VBox createColumn() {
-		return new VBox();
-	}
-
-	public LuaTextElement createText(String text) {
-		System.out.println("Creating text: " + text);
-		final Label label = new Label(text);
-		canvas.getChildren().add(label);
-		return new LuaTextElement(label);
 	}
 }

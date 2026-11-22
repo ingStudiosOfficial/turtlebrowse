@@ -36,10 +36,23 @@ public class LuaPluginRunner implements AutoCloseable {
 		canvasApi = lua.eval("return plugin.canvas")[0];
 
 		lua.run("""
-				plugin.canvas.createText = function(text)
 					local CanvasApi = java.import('dev.ingstudios.turtlebrowse.lua.LuaCanvasApi')
-					CanvasApi:createText(text)
-				end
+
+					plugin.canvas.getCanvas = function()
+						return CanvasApi:getCanvas()
+					end
+
+					plugin.canvas.createText = function(text)
+						return CanvasApi:createText(text)
+					end
+
+					plugin.canvas.createRow = function()
+						return CanvasApi:createRow()
+					end
+
+					plugin.canvas.createColumn = function()
+						return CanvasApi:createColumn()
+					end
 				""");
 	}
 
